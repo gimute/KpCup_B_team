@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 
+//GitHub Forkのテスト
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
