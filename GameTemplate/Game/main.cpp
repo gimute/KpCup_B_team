@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 
-//GitHub Forkのテスト
+//GitHub Forkのテストワシはオーキド博士じゃ
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
