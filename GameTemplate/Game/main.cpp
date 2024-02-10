@@ -5,7 +5,7 @@
 //コンフリクトテスト１
 //爆発オチなんてサイテー！！
 //テスト君２テスト
-//合体
+//衝突テスト
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
