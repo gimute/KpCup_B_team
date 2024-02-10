@@ -2,7 +2,7 @@
 #include "system/system.h"
 
 //GitHub Forkのテストワシはオーキド博士じゃ
-
+//テスト中やで
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
