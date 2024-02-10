@@ -1,44 +1,46 @@
 #include "stdafx.h"
 #include "system/system.h"
 
-//GitHub Fork�̃e�X�g���V�̓I�[�L�h���m����
-//�����I�`�Ȃ�ăT�C�e�[�I�I
-//�e�X�g�N�Q�e�X�g
+//GitHub Forkのテストワシはオーキド博士じゃ
+//コンフリクトテスト１
+//爆発オチなんてサイテー！！
+//テスト君２テスト
+//衝突テスト
 
-// K2EngineLow�̃O���[�o���A�N�Z�X�|�C���g�B
+// K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
 /// <summary>
-/// ���C���֐�
+/// メイン関数
 /// </summary>
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	// �Q�[���̏������B
+	// ゲームの初期化。
 	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
 	
-	// k2EngineLow�̏������B
+	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
 
-	// ��������Q�[�����[�v�B
+	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
-		// �t���[���̊J�n���ɌĂяo���K�v�����鏈�������s
+		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
-		// �Q�[���I�u�W�F�N�g�}�l�[�W���[�̍X�V�������Ăяo���B
+		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
-		// �Q�[���I�u�W�F�N�g�}�l�[�W���[�̕`�揈�����Ăяo���B
+		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-		// �f�o�b�O�`�揈�������s����B
+		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
 
-		// �t���[���̏I�����ɌĂяo���K�v�����鏈�������s�B
+		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();
 	}
 
