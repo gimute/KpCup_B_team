@@ -3,6 +3,7 @@
 
 //GitHub Forkのテストワシはオーキド博士じゃ
 //爆発オチなんてサイテー！！
+//テスト君２テスト
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
