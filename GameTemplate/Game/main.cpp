@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "system/system.h"
+#include "ModelTest.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -16,10 +17,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
+	g_camera3D->SetPosition({ 0.0f, 100.0f, 200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
-
+	ModelTest* modelTest = NewGO<ModelTest>(0);
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
@@ -38,6 +39,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();
 	}
+
+
+	DeleteGO(modelTest);
 
 	delete g_k2EngineLow;
 
