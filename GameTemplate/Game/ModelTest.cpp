@@ -48,13 +48,21 @@ bool ModelTest::Start()
 	m_light.spAngle = Math::DegToRad(25.0f);
 
 	//”¼‹…ƒ‰ƒCƒg
-	m_light.groundColor.x = 0.7f;
+	/*m_light.groundColor.x = 0.7f;
 	m_light.groundColor.y = 0.5f;
 	m_light.groundColor.z = 0.3f;
 
 	m_light.skyColor.x = 0.15f;
 	m_light.skyColor.y = 0.7f;
-	m_light.skyColor.z = 0.95f;
+	m_light.skyColor.z = 0.95f;*/
+
+	m_light.groundColor.x = 0.3f;
+	m_light.groundColor.y = 0.3f;
+	m_light.groundColor.z = 0.3f;
+
+	m_light.skyColor.x = 0.3f;
+	m_light.skyColor.y = 0.3f;
+	m_light.skyColor.z = 0.3f;
 
 	m_light.groundNormal.x = 0.0f;
 	m_light.groundNormal.y = 1.0f;

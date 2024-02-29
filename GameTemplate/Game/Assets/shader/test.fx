@@ -31,6 +31,7 @@ cbuffer LightCb : register(b1)
     float spLigAngle;       // スポットライトの射出角度
     
     float3 eyePos;          // 視点の位置
+    float specPow;          // スペキュラの絞り
     
     float3 groundColor;     // 照り返しのライト
     float3 skyColor;        // 天球ライト
@@ -50,7 +51,11 @@ struct SSkinVSIn
 struct SVSIn
 {
     float4 pos : POSITION; //モデルの頂点座標。
-    float3 normal : NORMAL;
+    float3 normal : NORMAL; //法線
+    
+    float3 tangent : TANGENT; //接ベクトル
+    float3 biNormal : BINORMAL; //従ベクトル
+    
     float2 uv : TEXCOORD0; //UV座標。
     SSkinVSIn skinVert; //スキン用のデータ。
 };
@@ -58,9 +63,13 @@ struct SVSIn
 struct SPSIn
 {
     float4 pos : SV_POSITION; //スクリーン空間でのピクセルの座標。
-    float3 normal : NORMAL;
+    float3 normal : NORMAL; //法線
+    
+    float3 tangent : TANGENT;   //接ベクトル
+    float3 biNormal : BINORMAL; //従ベクトル
+    
     float2 uv : TEXCOORD0; //uv座標。
-    float3 worldPos : TEXCOORD1;
+    float3 worldPos : TEXCOORD1;    //ワールド空間座標
     float3 normalInView : TEXCOORD2;    //カメラ空間の法線
 };
 
@@ -68,6 +77,7 @@ struct SPSIn
 // グローバル変数。
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0); //アルベドマップ
+Texture2D<float4> g_normalMap : register(t1);   //法線マップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
 sampler g_sampler : register(s0); //サンプラステート。
 
@@ -120,9 +130,11 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     psIn.worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos);
     psIn.pos = mul(mProj, psIn.pos);
-
-    psIn.normal = mul(mWorld, vsIn.normal);
+    psIn.normal = normalize(mul(mWorld, vsIn.normal));
 	
+    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
+    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
+    
     psIn.uv = vsIn.uv;
 
     //カメラ空間の法線
@@ -149,7 +161,19 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// ピクセルシェーダーのエントリー関数。
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
-{
+{   
+    //法線マップで法線の向きを変える
+    float3 localNormal = g_normalMap.Sample(g_sampler, psIn.uv);
+    
+    localNormal = (localNormal - 0.5) * 2.0f;
+    
+    psIn.normal = psIn.tangent * localNormal.x
+                + psIn.biNormal * localNormal.y
+                + psIn.normal * localNormal.z;
+    
+    psIn.normal = normalize(psIn.normal);
+    
+    
     //ディレクションライトによるライティングを計算
     float3 directionLig = CalcLigFromDirectionLight(psIn);
     //ポイントライトによるライティングを計算
@@ -163,7 +187,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     
     //最終的な光を求める
-    float3 finalLig = directionLig + hemiLig; //+ pointLig + spotLig;
+    float3 finalLig = directionLig + hemiLig;+ pointLig + spotLig;
     
     //float3 finalLig = directionLig;
     //float3 finalLig = pointLig;

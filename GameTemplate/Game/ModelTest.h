@@ -25,7 +25,7 @@ public:
 		float spAngle;
 
 		Vector3 eyePos;				// 視点の位置
-		float pad4;
+		float specPow;				//スペキュラの絞り
 
 		//半球ライト
 		Vector3 groundColor;
