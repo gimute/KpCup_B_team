@@ -21,7 +21,7 @@ bool ModelTest::Start()
 	//ポイントライト
 	m_light.ptPosition.x = 0.0f;
 	m_light.ptPosition.y = 50.0f;
-	m_light.ptPosition.z = 0.0f;
+	m_light.ptPosition.z = -100.0f;
 
 	m_light.ptColor.x = 15.0f;
 	m_light.ptColor.y = 0.0f;
@@ -32,7 +32,7 @@ bool ModelTest::Start()
 	//スポットライト
 	m_light.spPosition.x = 0.0f;
 	m_light.spPosition.y = 50.0f;
-	m_light.spPosition.z = 0.0f;
+	m_light.spPosition.z = -100.0f;
 
 	m_light.spColor.x = 10.0f;
 	m_light.spColor.y = 10.0f;
@@ -141,14 +141,15 @@ void ModelTest::Render(RenderContext& rc)
 
 void ModelTest::ModelMove()
 {
+	//カメラ基準の処理にしてない
+
 	//モデルの移動
 	m_position.x += g_pad[0]->GetLStickXF();
-	m_position.y += g_pad[0]->GetLStickYF();
+	m_position.z -= g_pad[0]->GetLStickYF();
 	//モデルの回転
 	m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
 	m_rotation.AddRotationX(g_pad[0]->GetRStickYF() * 0.05f);
 
-	//どちらもカメラ基準の処理にしていない
 	if (g_pad[0]->IsPress(enButtonUp)) {
 		m_scale.y += 0.02f;
 	}

@@ -187,14 +187,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     
     
-    
     //ç≈èIìIÇ»åıÇãÅÇﬂÇÈ
-    float3 finalLig = directionLig + hemiLig;+ pointLig + spotLig;
+    float3 finalLig = directionLig + hemiLig + pointLig + spotLig;
     
-    //float3 finalLig = directionLig;
-    //float3 finalLig = pointLig;
-    //float3 finalLig = spotLig;
-    //float3 finalLig = spotLig + ambientLight;
     
     float4 finalColor = g_albedo.Sample(g_sampler, psIn.uv);
     
