@@ -224,7 +224,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelRender.cpp" />
+    <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -234,7 +234,7 @@
     <ClCompile Include="system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ModelRender.h" />
+    <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

@@ -12,7 +12,7 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="ModelTest.cpp" />
-    <ClCompile Include="ModelRender.cpp" />
+    <ClCompile Include="ModelRenderTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -20,6 +20,6 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="ModelTest.h" />
-    <ClInclude Include="ModelRender.h" />
+    <ClInclude Include="ModelRenderTest.h" />
   </ItemGroup>
 </Project>
