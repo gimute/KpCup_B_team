@@ -3,7 +3,14 @@
 
 ModelRenderTest::ModelRenderTest()
 {
-	m_pModelRender.Init("Assets/modelData/unityChan.tkm");
+	animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
+	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+	animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
+	animationClips[enAnimationClip_Walk].SetLoopFlag(true);
+	animationClips[enAnimationClip_Jump].Load("Assets/animData/jump.tka");
+	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
+
+	m_pModelRender.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
 	m_bgModelRender.Init("Assets/modelData/bg.tkm");
 }
 
@@ -28,15 +35,23 @@ void ModelRenderTest::Update()
 		m_modelScale.y -= 0.02f;
 	}
 	if (g_pad[0]->IsPress(enButtonRight)) {
-		m_modelScale.x += 0.02f;
+		m_modelScale.z += 0.02f;
 	}
 	if (g_pad[0]->IsPress(enButtonLeft)) {
-		m_modelScale.x -= 0.02f;
+		m_modelScale.z -= 0.02f;
 	}
 
 	m_pModelRender.SetPosition(m_modelPos);
 	m_pModelRender.SetRotation(m_modelRot);
 	m_pModelRender.SetScale(m_modelScale);
+
+	if (g_pad[0]->IsTrigger(enButtonA))
+	{
+		m_animeState += 1;
+		m_animeState %= enAnimationClip_Num;
+	}
+
+	m_pModelRender.PlayAnimation(m_animeState);
 
 	m_pModelRender.Update();
 }

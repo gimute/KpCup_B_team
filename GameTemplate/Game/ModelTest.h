@@ -1,4 +1,6 @@
 #pragma once
+
+//モデルのライティングを試すために用意したクラス
 class ModelTest : public IGameObject
 {
 public:

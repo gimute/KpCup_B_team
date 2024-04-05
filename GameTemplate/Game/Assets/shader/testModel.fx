@@ -1,9 +1,17 @@
 //ライトの管理機能を追加していないので
 //ライトがディレクションライトと環境光のみのシェーダー
+//モーション対応
 
 ///////////////////////////////////////////
 // 構造体
 ///////////////////////////////////////////
+//スキニング用の頂点データをひとまとめ。
+struct SSkinVSIn
+{
+    int4 Indices : BLENDINDICES0;
+    float4 Weights : BLENDWEIGHT0;
+};
+
 // 頂点シェーダーへの入力
 struct SVSIn
 {
@@ -14,6 +22,8 @@ struct SVSIn
     float4 biNormal : BINORMAL; //従ベクトル
     
     float2 uv       : TEXCOORD0;//UV座標。
+    
+    SSkinVSIn skinVert; //スキン用のデータ。
 };
 
 // ピクセルシェーダーへの入力
@@ -61,6 +71,8 @@ Texture2D<float4> g_albedo : register(t0);
 Texture2D<float4> g_normalMap : register(t1); //法線マップ
 Texture2D<float4> g_speclarMap : register(t2); //スペキュラマップ
 
+StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
+
 ///////////////////////////////////////////
 // サンプラーステート
 ///////////////////////////////////////////
@@ -74,26 +86,66 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float specPow);
 float3 CalcLigFromDirectionLight(SPSIn psIn, float specPow);
 
+//スキン行列を計算する。
+float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
+{
+    float4x4 skinning = 0;
+    float w = 0.0f;
+	[unroll]
+    for (int i = 0; i < 3; i++)
+    {
+        skinning += g_boneMatrix[skinVert.Indices[i]] * skinVert.Weights[i];
+        w += skinVert.Weights[i];
+    }
+    
+    skinning += g_boneMatrix[skinVert.Indices[3]] * (1.0f - w);
+	
+    return skinning;
+}
+
+
 
 //モデル用の頂点シェーダーのエントリーポイント
-SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 {
     SPSIn psIn;
     
-    psIn.pos = mul(mWorld, vsIn.pos); // モデルの頂点をワールド座標系に変換
+    float4x4 m;
+    if (hasSkin)
+    {
+        m = CalcSkinMatrix(vsIn.skinVert);
+    }
+    else
+    {
+        m = mWorld;
+    }
+    
+    psIn.pos = mul(m, vsIn.pos); // モデルの頂点をワールド座標系に変換
     psIn.worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
-    psIn.normal = mul(mWorld, vsIn.normal); // 法線を回転させる
+    psIn.normal = mul(m, vsIn.normal); // 法線を回転させる
     
-    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
+    psIn.tangent = normalize(mul(m, vsIn.tangent));
+    psIn.biNormal = normalize(mul(m, vsIn.biNormal));
     
     psIn.uv = vsIn.uv;
 
     //psIn.normalInView = mul(mView, psIn.normal);
     
     return psIn;
+}
+
+/// スキンなしメッシュ用の頂点シェーダーのエントリー関数。
+SPSIn VSMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, false);
+}
+
+/// スキンありメッシュの頂点シェーダーのエントリー関数。
+SPSIn VSSkinMain(SVSIn vsIn)
+{
+    return VSMainCore(vsIn, true);
 }
 
 //モデル用のピクセルシェーダーのエントリーポイント
