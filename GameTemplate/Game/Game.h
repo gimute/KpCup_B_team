@@ -6,6 +6,8 @@ public:
 	~Game();
 	void Render(RenderContext& rc);
 private:
-	ModelRender m_modelrender;
+	ModelRender m_modelrenderA;
+	ModelRender m_modelrenderB;
+
 };
 
