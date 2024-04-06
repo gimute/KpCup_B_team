@@ -104,19 +104,4 @@ namespace nsK2EngineLow {
 		//アニメーションを進める
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 	}
-
-	void ModelRender::SetPosition(Vector3 pos)
-	{
-		m_pos = pos;
-	}
-
-	void ModelRender::SetRotation(Quaternion rot)
-	{
-		m_rot = rot;
-	}
-
-	void ModelRender::SetScale(Vector3 scale)
-	{
-		m_scale = scale;
-	}
 }

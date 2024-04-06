@@ -47,9 +47,36 @@ namespace nsK2EngineLow {
 		// 更新処理
 		void Update();
 
-		void SetPosition(Vector3 pos);
-		void SetRotation(Quaternion rot);
-		void SetScale(Vector3 scale);
+		//座標を設定。
+		void SetPosition(Vector3 pos)
+		{
+			m_pos = pos;
+		}
+		void SetPosition(float x, float y, float z)
+		{
+			SetPosition({ x, y, z });
+		}
+
+		//回転を設定
+		void SetRotation(Quaternion rot)
+		{
+			m_rot = rot;
+		}
+
+		//拡大率を設定。
+		void SetScale(Vector3 scale)
+		{
+			m_scale = scale;
+		}
+		void SetScale(float x, float y, float z)
+		{
+			SetScale({ x, y, z });
+		}
+
+		Model& GetModel()
+		{
+			return m_model;
+		}
 
 		// モデルのDrawを呼び出してるだけ
 		void Draw(RenderContext& rc)
