@@ -75,6 +75,10 @@ using namespace Microsoft::WRL;
 #include "graphics/Model.h"
 #include "HID/GamePad.h"
 
+//自分で追加した奴
+#include "ModelRender.h"
+//
+
 #include "graphics/GaussianBlur.h"
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。
