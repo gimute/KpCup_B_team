@@ -75,8 +75,9 @@ using namespace Microsoft::WRL;
 #include "graphics/Model.h"
 #include "HID/GamePad.h"
 
-//Ž©•ª‚Å’Ç‰Á‚µ‚½“z
+//’Ç‰Á‚µ‚½“z
 #include "ModelRender.h"
+#include "SpriteRender.h"
 //
 
 #include "graphics/GaussianBlur.h"
