@@ -14,6 +14,7 @@
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -23,5 +24,6 @@
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="SpriteTest.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>
