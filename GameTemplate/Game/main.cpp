@@ -3,7 +3,7 @@
 #include "ModelTest.h"
 #include "ModelRenderTest.h"
 #include "SpriteTest.h"
-
+#include "Game.h"
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
@@ -19,12 +19,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 100.0f, 200.0f });
+	g_camera3D->SetPosition({ 0.0f, 200.0f, 200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
 	//ModelTest* modelTest = NewGO<ModelTest>(0);
-	ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);
+	//ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);
 	//SpriteTest* spriteTest = NewGO<SpriteTest>(0);
+	Game* game = NewGO<Game>(0);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -47,8 +48,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 	//DeleteGO(modelTest);
-	DeleteGO(modelRenderTest);
+	//DeleteGO(modelRenderTest);
 	//DeleteGO(spriteTest);
+	DeleteGO(game);
 
 	delete g_k2EngineLow;
 
