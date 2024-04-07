@@ -1,10 +1,10 @@
 /*!
- * @brief	�X�v���C�g�p�̃V�F�[�_�[�B
+ * @brief	画像を表示するためのシェーダー
  */
 
 cbuffer cb : register(b0){
-	float4x4 mvp;		//���[���h�r���[�v���W�F�N�V�����s��B
-	float4 mulColor;	//��Z�J���[�B
+    float4x4 mvp;		//MVP行列
+    float4 mulColor;	//乗算カラー
 };
 struct VSInput{
 	float4 pos : POSITION;
@@ -16,7 +16,7 @@ struct PSInput{
 	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> colorTexture : register(t0);	//�J���[�e�N�X�`���B
+Texture2D<float4> colorTexture : register(t0); // カラーテクスチャ
 sampler Sampler : register(s0);
 
 PSInput VSMain(VSInput In) 
@@ -24,6 +24,7 @@ PSInput VSMain(VSInput In)
 	PSInput psIn;
 	psIn.pos = mul( mvp, In.pos );
 	psIn.uv = In.uv;
+	
 	return psIn;
 }
 float4 PSMain( PSInput In ) : SV_Target0
