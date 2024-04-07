@@ -33,5 +33,5 @@ void Game::Render(RenderContext& rc)
 {
 	m_modelrenderA.Draw(rc);
 	//m_modelrenderB.Draw(rc);
-	m_modelrenderC.Draw(rc);
+	//m_modelrenderC.Draw(rc);
 }

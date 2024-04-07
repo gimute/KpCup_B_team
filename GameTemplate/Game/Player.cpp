@@ -20,15 +20,16 @@ bool Player::Start()
 	return true;
 }
 
-void Player::Updata()
+void Player::Update()
 {
 	//移動処理。
 	Move();
 	//回転処理。
 	Rotation();
 	//アニメーションを再生する。
-	PlayAnimation();
-	
+	//PlayAnimation();
+
+	m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
 }
@@ -98,5 +99,5 @@ void Player::Rotation()
 void Player::Render(RenderContext& rc)
 {
 	//モデルの描画。
-	//m_modelRender.Draw(rc);
+	m_modelRender.Draw(rc);
 }

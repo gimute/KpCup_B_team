@@ -1,17 +1,17 @@
 #pragma once
 class Game;
-class Player
+class Player : public IGameObject
 {
 public:
 	Player();
 	~Player();
 	bool Start();
-	void Updata();
+	void Update();
 	void Render(RenderContext& rc);
 
 	void Rotation();
 	void Move();
-	void PlayAnimation();
+	//void PlayAnimation();
 
 
 
