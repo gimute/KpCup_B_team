@@ -4,6 +4,7 @@
 #include "ModelRenderTest.h"
 #include "SpriteTest.h"
 #include "Game.h"
+#include "Player.h"
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;

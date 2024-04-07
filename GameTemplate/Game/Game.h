@@ -1,4 +1,6 @@
 #pragma once
+
+class Player;
 class Game : public IGameObject
 {
 public:
@@ -11,5 +13,6 @@ private:
 	ModelRender m_modelrenderA;
 	ModelRender m_modelrenderB;
 	ModelRender m_modelrenderC;
+	Player* m_player;
 };
 
