@@ -78,6 +78,7 @@ using namespace Microsoft::WRL;
 //’Ç‰Á‚µ‚½“z
 #include "ModelRender.h"
 #include "SpriteRender.h"
+#include "FontRender.h"
 //
 
 #include "graphics/GaussianBlur.h"
