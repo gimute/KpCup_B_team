@@ -225,6 +225,7 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
@@ -237,6 +238,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="SpriteTest.h" />
