@@ -4,7 +4,6 @@ namespace nsK2EngineLow {
 	class ModelRender : public Noncopyable
 	{
 	public:
-		// 仮のライト、後でライトは別で管理できるようにしないといけない
 		struct Light
 		{
 			Vector3 dirLigDirection;	// ディレクションライトの方向
@@ -85,7 +84,7 @@ namespace nsK2EngineLow {
 		}
 
 	private:
-		Light m_light;
+		static Light m_light;
 		Model m_model;
 		Skeleton		m_skeleton;
 		AnimationClip* m_animationClips = nullptr;

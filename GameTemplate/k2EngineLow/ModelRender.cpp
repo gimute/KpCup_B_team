@@ -2,6 +2,9 @@
 #include "ModelRender.h"
 
 namespace nsK2EngineLow {
+
+	ModelRender::Light ModelRender::m_light;
+
 	ModelRender::ModelRender()
 	{
 		//ƒ‰ƒCƒg‚Ì‰Šú‰»
