@@ -1,4 +1,5 @@
 #pragma once
+class MiniTimer;
 class Game : public IGameObject
 {
 public:
@@ -11,5 +12,6 @@ private:
 	ModelRender m_modelrenderA;
 	ModelRender m_modelrenderB;
 	ModelRender m_modelrenderC;
+	MiniTimer* m_minitimer = nullptr;
 };
 
