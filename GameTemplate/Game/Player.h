@@ -14,7 +14,7 @@ public:
 	//void PlayAnimation();
 
 
-
+//メンバ変数
 	ModelRender m_modelRender;
 	Vector3 m_position;				//座標
 	CharacterController m_charaCon;	//キャラクターコントローラー

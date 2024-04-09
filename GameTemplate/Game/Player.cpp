@@ -29,7 +29,7 @@ void Player::Update()
 	//アニメーションを再生する。
 	//PlayAnimation();
 
-	m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
+	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
 }
@@ -64,8 +64,8 @@ void Player::Move()
 	{
 		//重力を無くす。
 		m_moveSpeed.y = 0.0f;
-		//Aボタンが押されたら。
-		if (g_pad[0]->IsTrigger(enButtonA))
+		//LBボタンが押されたら。
+		if (g_pad[0]->IsTrigger(enButtonLB1))
 		{
 			//ジャンプさせる。
 			m_moveSpeed.y = 300.0f;
@@ -77,6 +77,7 @@ void Player::Move()
 		//重力を発生させる。
 		m_moveSpeed.y -= 15.5f;
 	}
+	
 	//キャラクターコントローラーを使って座標を移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
 	//座標を設定。

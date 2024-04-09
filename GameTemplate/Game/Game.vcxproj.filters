@@ -16,6 +16,9 @@
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -27,5 +30,8 @@
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Car.h" />
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="GameCamera.h" />
   </ItemGroup>
 </Project>
