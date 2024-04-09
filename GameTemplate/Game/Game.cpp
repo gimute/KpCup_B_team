@@ -14,7 +14,7 @@ Game::Game()
 	m_modelrenderC.SetPosition(30.0f, 0.0f, 300.0f);
 	m_modelrenderC.Update();
 
-	m_minitimer = NewGO<MiniTimer>(0,"timer");
+	m_minitimer = NewGO<MiniTimer>(1,"timer");
 	m_minitimer->SetPosition(m_timerpos);
 	m_minitimer->SetTimer(10);
 }
