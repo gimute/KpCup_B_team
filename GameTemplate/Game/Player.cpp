@@ -37,27 +37,27 @@ void Player::Update()
 void Player::Move()
 {
 	//xzの移動速度を0.0fにする。
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
+	//m_moveSpeed.x = 0.0f;
+	//m_moveSpeed.z = 0.0f;
 
 	//左スティックの入力量を取得。
-	Vector3 stickL;
-	stickL.x = g_pad[0]->GetLStickXF();
-	stickL.y = g_pad[0]->GetLStickYF();
+	//Vector3 stickL;
+	//stickL.x = g_pad[0]->GetLStickXF();
+	//stickL.y = g_pad[0]->GetLStickYF();
 
 	//カメラの前方向と右方向のベクトルを持ってくる。
-	Vector3 forward = g_camera3D->GetForward();
-	Vector3 right = g_camera3D->GetRight();
-	//y方向には移動させない。
-	forward.y = 0.0f;
-	right.y = 0.0f;
+	//Vector3 forward = g_camera3D->GetForward();
+	//Vector3 right = g_camera3D->GetRight();
+	////y方向には移動させない。
+	//forward.y = 0.0f;
+	//right.y = 0.0f;
 
-	//左スティックの入力量と120.0fを乗算。
-	right *= stickL.x * 1000.0f;
-	forward *= stickL.y * 1000.0f;
+	////左スティックの入力量と120.0fを乗算。
+	//right *= stickL.x * 1000.0f;
+	//forward *= stickL.y * 1000.0f;
 
-	//移動速度にスティックの入力量を加算する。
-	m_moveSpeed += right + forward;
+	////移動速度にスティックの入力量を加算する。
+	//m_moveSpeed += right + forward;
 
 	//地面に付いていたら。
 	if (m_charaCon.IsOnGround())
@@ -78,6 +78,41 @@ void Player::Move()
 		m_moveSpeed.y -= 15.5f;
 	}
 	
+	//Aボタン押されたら。
+	if (g_pad[0]->IsPress(enButtonA)) {
+		//スピード上がっていく。
+		if (m_speed < 600.0f) {
+			m_speed += 3;
+		}
+		m_moveforward.Normalize();
+		m_moveforward *= m_speed;
+		//アクセル中にブレーキをかける。
+		if (g_pad[0]->IsPress(enButtonB)) {	
+			m_speed *= 0.95;
+			m_moveforward.Normalize();
+			m_moveforward *= m_speed;
+		}
+	}
+	//アクセル押さないでブレーキをかける。
+	else if (g_pad[0]->IsPress(enButtonB)) {
+		m_speed *= 0.95;
+		m_moveforward.Normalize();
+		m_moveforward *= m_speed;
+	}
+	//Aボタン押されなかったら。
+	else {
+		//スピード落ちていく。
+		if (m_speed >= 1) {
+			m_speed -= 1;
+			m_moveforward.Normalize();
+			m_moveforward *= m_speed;
+		}
+	}
+	m_position = m_charaCon.Execute(m_moveforward, g_gameTime->GetFrameDeltaTime());
+	Vector3 modelPosition = m_position;
+	//ちょっとだけモデルの座標を挙げる。
+	modelPosition.y += 2.5f;
+	m_modelRender.SetPosition(modelPosition);
 	//キャラクターコントローラーを使って座標を移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
 	//座標を設定。
@@ -88,13 +123,26 @@ void Player::Move()
 void Player::Rotation()
 {
 	//xかzの移動速度があったら(スティックの入力があったら)。
-	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
-	{
-		//キャラクターの方向を変える。
-		m_rotation.SetRotationYFromDirectionXZ(m_moveSpeed);
-		//絵描きさんに回転を教える。
-		m_modelRender.SetRotation(m_rotation);
-	}
+	//if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
+	//{
+	//	//キャラクターの方向を変える。
+	//	m_rotation.SetRotationYFromDirectionXZ(m_moveSpeed);
+	//	//絵描きさんに回転を教える。
+	//	m_modelRender.SetRotation(m_rotation);
+	//}
+
+
+	float Stick_y = g_pad[0]->GetLStickXF();
+
+	m_rotation.AddRotationY(Stick_y /= 100);
+
+	//回転を想定する。
+	m_modelRender.SetRotation(m_rotation);
+
+	//プレイヤーの平面ベクトルを計算する。
+	m_moveforward = Vector3::AxisZ;
+	m_rotation.Apply(m_moveforward);
+
 }
 
 void Player::Render(RenderContext& rc)

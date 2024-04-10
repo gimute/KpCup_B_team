@@ -232,6 +232,7 @@
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -249,6 +250,7 @@
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

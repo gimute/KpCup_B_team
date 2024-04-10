@@ -20,6 +20,7 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
+    <ClCompile Include="SpeedMeter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -35,5 +36,6 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="MiniTimer.h" />
+    <ClInclude Include="SpeedMeter.h" />
   </ItemGroup>
 </Project>
