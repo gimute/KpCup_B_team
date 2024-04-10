@@ -19,6 +19,7 @@
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="MiniTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -33,5 +34,6 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="MiniTimer.h" />
   </ItemGroup>
 </Project>

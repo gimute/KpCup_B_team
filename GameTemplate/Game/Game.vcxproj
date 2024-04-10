@@ -228,6 +228,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="Player.h" />

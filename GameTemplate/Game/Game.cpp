@@ -3,17 +3,18 @@
 #include "Player.h"
 #include "Car.h"
 #include "BackGround.h"
+#include "MiniTimer.h"
 
 Game::Game()
 {
-	//ステージのオブジェクトを作る。
+	//ﾆ湛ﾆ弾ﾂーﾆ淡窶堙姑棚ﾆ置ﾆ淡ﾆ巽ﾆ誰ﾆ暖窶堙ｰﾂ催ｬ窶堙ｩﾂ。
 	m_background = NewGO<BackGround>(0, "background");
 	
-	//プレイヤーのオブジェクトを作る。
+	//ﾆ致ﾆ椎槌辰ﾆ停楪ー窶堙姑棚ﾆ置ﾆ淡ﾆ巽ﾆ誰ﾆ暖窶堙ｰﾂ催ｬ窶堙ｩﾂ。
 	m_player = NewGO<Player>(0, "player");
 	m_player->m_position = { 0.0f,0.0f,0.0f };
 
-	//車のオブジェクトを作る。
+	//ﾅｽﾃ披堙姑棚ﾆ置ﾆ淡ﾆ巽ﾆ誰ﾆ暖窶堙ｰﾂ催ｬ窶堙ｩﾂ。
 	m_car = NewGO<Car>(0, "car");
 	m_car->m_position = { 30.0f,0.0f,300.0f };
 }
@@ -31,7 +32,5 @@ void Game::Update()
 
 void Game::Render(RenderContext& rc)
 {
-	//m_modelrenderA.Draw(rc);
-	//m_modelrenderB.Draw(rc);
-	//m_modelrenderC.Draw(rc);
+
 }
