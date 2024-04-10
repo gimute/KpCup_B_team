@@ -1,22 +1,22 @@
 #include "stdafx.h"
 #include "Game.h"
-//�e�X�g��
+#include "Player.h"
+#include "Car.h"
+#include "BackGround.h"
 #include "MiniTimer.h"
-namespace {
-	const Vector3 m_timerpos = { 50.0,0.0,0.0 };
-}
+
 Game::Game()
 {
-	m_modelrenderA.Init("Assets/modelData/background/proto_map/proto_map.tkm");
-	m_modelrenderB.Init("Assets/modelData/player/proto_player/proto_player.tkm");
+	//ƒXƒe[ƒW‚ÌƒIƒuƒWƒFƒNƒg‚ðì‚éB
+	m_background = NewGO<BackGround>(0, "background");
+	
+	//ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚ðì‚éB
+	m_player = NewGO<Player>(0, "player");
+	m_player->m_position = { 0.0f,0.0f,0.0f };
 
-	m_modelrenderC.Init("Assets/modelData/car/proto_car/proto_car.tkm");
-	m_modelrenderC.SetPosition(30.0f, 0.0f, 300.0f);
-	m_modelrenderC.Update();
-
-	m_minitimer = NewGO<MiniTimer>(1,"timer");
-	m_minitimer->SetPosition(m_timerpos);
-	m_minitimer->SetTimer(10);
+	//ŽÔ‚ÌƒIƒuƒWƒFƒNƒg‚ðì‚éB
+	m_car = NewGO<Car>(0, "car");
+	m_car->m_position = { 30.0f,0.0f,300.0f };
 }
 
 Game::~Game()
@@ -32,7 +32,5 @@ void Game::Update()
 
 void Game::Render(RenderContext& rc)
 {
-	m_modelrenderA.Draw(rc);
-	m_modelrenderB.Draw(rc);
-	m_modelrenderC.Draw(rc);
+
 }
