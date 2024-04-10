@@ -223,10 +223,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Car.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -236,9 +241,14 @@
     <ClCompile Include="system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Car.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
