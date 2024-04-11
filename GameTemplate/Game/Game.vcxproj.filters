@@ -21,6 +21,7 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="SpeedMeter.cpp" />
+    <ClCompile Include="MainTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -37,5 +38,6 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="SpeedMeter.h" />
+    <ClInclude Include="MainTimer.h" />
   </ItemGroup>
 </Project>

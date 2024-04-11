@@ -1,12 +1,13 @@
 #pragma once
-
+///////////////////////////////
 class Player;
 class Car;
 class BackGround;
 class GameCamera;
 class MiniTimer;
 class SpeedMeter;
-
+class MainTimer;
+///////////////////////////////
 class Game : public IGameObject
 {
 public:
@@ -27,6 +28,7 @@ public:
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	MiniTimer* m_minitimer = nullptr;
+	MainTimer* m_maintimer = nullptr;
 	SpeedMeter* m_speedmeter = nullptr;
 	FontRender m_fontrender;	//フォントレンダー。
 	
