@@ -8,6 +8,7 @@
 #include "SpeedMeter.h"
 #include "MiniTimer.h"
 #include "MainTimer.h"
+#include "PointYazirushi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -45,6 +46,11 @@ Game::Game()
 	//メインタイマーのUIを作る
 	m_maintimer = NewGO<MainTimer>(2, "UI");
 	m_maintimer->SetTimer(10);
+
+	//矢印を作る
+	m_pointyazi = NewGO<PointYazirushi>(0);
+	m_pointyazi->SetPosition(m_player->m_position);
+	m_pointyazi->SetTarget(m_car5->m_position);
 }
 
 Game::~Game()

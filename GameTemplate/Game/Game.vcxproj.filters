@@ -22,6 +22,7 @@
     <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="MainTimer.cpp" />
+    <ClCompile Include="PointYazirushi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -39,5 +40,6 @@
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="MainTimer.h" />
+    <ClInclude Include="PointYazirushi.h" />
   </ItemGroup>
 </Project>

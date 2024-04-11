@@ -7,6 +7,7 @@ class GameCamera;
 class MiniTimer;
 class SpeedMeter;
 class MainTimer;
+class PointYazirushi;
 ///////////////////////////////
 class Game : public IGameObject
 {
@@ -31,6 +32,6 @@ public:
 	MainTimer* m_maintimer = nullptr;
 	SpeedMeter* m_speedmeter = nullptr;
 	FontRender m_fontrender;	//フォントレンダー。
-	
+	PointYazirushi* m_pointyazi = nullptr;
 };
 
