@@ -53,11 +53,13 @@ public:
 	//タイマープラス
 	void purasuTimer(int addtime) {
 		m_timer += addtime;
+		m_1timer = m_1time;
 		return;
 	}
 	//タイマーマイナス
 	void mainasuTimer(int reductiontime) {
 		m_timer -= reductiontime;
+		m_1timer = m_1time;
 		return;
 	}
 	//時間位置設定

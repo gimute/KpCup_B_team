@@ -44,7 +44,7 @@ Game::Game()
 
 	//メインタイマーのUIを作る
 	m_maintimer = NewGO<MainTimer>(2, "UI");
-	m_maintimer->SetTimer(100);
+	m_maintimer->SetTimer(10);
 }
 
 Game::~Game()
