@@ -41,9 +41,7 @@ private:
 	//時間色
 	Vector4 m_timercolor = { 0.0f,0.0f,0.0f,1.0f };
 	//UI位置
-	Vector3 m_uiposition = { 0.0f,0.0f,0.0f };
-	//UI大きさ
-	Vector3 m_uiscale = { 0.1,0.1,0.1 };
+	Vector3 m_uiposition = { -630.0f,-330.0f,0.0f };
 	/////////////////////////////////////////初期設定系統
 public:
 	//タイマーセット

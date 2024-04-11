@@ -8,14 +8,13 @@ namespace {
 	const Vector3 n_timerpos1 = { -740.0f,-320.0f,0.0f };
 }
 
+//1920.0f, 1080.0f
 bool MainTimer::Start()
 {
 	//スプライトレンダー設定
-	m_spriterender.Init("Assets/modelData/maintimer/maintimer.DDS", 1920.0f, 1080.0f);
+	m_spriterender.Init("Assets/modelData/maintimer/maintimer.DDS", 300.0f, 200.0f);
 	//スプライトレンダーの位置を設定
 	m_spriterender.SetPosition(m_uiposition);
-	//スプライトレンダーの大きさを設定
-	m_spriterender.SetScale(m_uiscale);
 	//フォントの位置を設定。
 	m_fontrender.SetPosition(m_timerposition);
 	//フォントの大きさを設定。
@@ -35,6 +34,8 @@ void MainTimer::Update()
 	TimerPositionUpdate();
 	//描画文字設定
 	FontDrow();
+	//描画処理
+	m_spriterender.Update();
 }
 
 void MainTimer::ReductionTimer()
