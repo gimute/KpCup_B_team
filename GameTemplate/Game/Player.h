@@ -22,6 +22,8 @@ public:
 	Quaternion m_rotation;	//クォータニオン。
 	Player* m_player = nullptr;
 
+	Vector3 m_moveforward = Vector3::AxisZ;		//プレイヤーの移動用正面ベクトル。
+	int m_speed = 0;
 
 };
 

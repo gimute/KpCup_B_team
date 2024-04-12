@@ -228,10 +228,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PointYazirushi.cpp" />
+    <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -245,10 +248,13 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="MainTimer.h" />
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PointYazirushi.h" />
+    <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
