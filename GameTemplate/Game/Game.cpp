@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "Game.h"
+///////////////////////////////
 #include "Player.h"
 #include "Car.h"
 #include "BackGround.h"
 #include "GameCamera.h"
 #include "SpeedMeter.h"
 #include "MiniTimer.h"
+#include "MainTimer.h"
+///////////////////////////////
 
 Game::Game()
 {
@@ -32,11 +35,16 @@ Game::Game()
 	m_car5 = NewGO<Car>(0, "car");
 	m_car5->m_position = { -1200.0f,0.0f,3000.0f };
 
+
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	//スピードメータのUIを作る。
 	m_speedmeter = NewGO<SpeedMeter>(1, "UI");
+
+	//メインタイマーのUIを作る
+	m_maintimer = NewGO<MainTimer>(2, "UI");
+	m_maintimer->SetTimer(10);
 }
 
 Game::~Game()
