@@ -9,6 +9,7 @@
 #include "MiniTimer.h"
 #include "MainTimer.h"
 #include "PointYazirushi.h"
+#include "HpUi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -46,6 +47,9 @@ Game::Game()
 	//メインタイマーのUIを作る
 	m_maintimer = NewGO<MainTimer>(2, "UI");
 	m_maintimer->SetTimer(10);
+
+	//HPUIを作る
+	m_hpui = NewGO<HpUi>(3, "UI");
 
 	//矢印を作る
 	m_pointyazi = NewGO<PointYazirushi>(0);
