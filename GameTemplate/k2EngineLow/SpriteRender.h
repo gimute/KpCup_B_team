@@ -44,6 +44,17 @@ namespace nsK2EngineLow {
 			return m_rotation;
 		}
 
+		//ピボットを設定。
+		void SetPivot(const Vector2& pivot)
+		{
+			m_pivot = pivot;
+		}
+		/// ピボットを取得。
+		const Vector2& GetPivot() const
+		{
+			return m_pivot;
+		}
+
 		//更新処理
 		void Update()
 		{
