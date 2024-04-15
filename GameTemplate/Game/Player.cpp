@@ -13,7 +13,19 @@ Player::~Player()
 
 bool Player::Start()
 {
-	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player.tkm");
+
+	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
+	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/proto_player/run.tka");
+	m_animationclips[enAnimationClip_Walk].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Crouching].Load("Assets/modelData/player/proto_player/crouching.tka");
+	m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
+	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
+
+	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
 	m_charaCon.Init(25.0f, 75.0f, m_position);
 
@@ -28,10 +40,12 @@ void Player::Update()
 	Rotation();
 	//アニメーションを再生する。
 	//PlayAnimation();
+	m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
 
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
+
 }
 
 void Player::Move()
