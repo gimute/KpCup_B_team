@@ -234,6 +234,9 @@
     <ClCompile Include="FontRender.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="SceneLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -517,6 +520,9 @@
     <ClInclude Include="FontRender.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="SceneLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -575,6 +581,9 @@
     </Filter>
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\light">
+      <UniqueIdentifier>{f34902b0-eb2c-4f33-ad17-14bf0260e3cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
