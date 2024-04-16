@@ -65,7 +65,10 @@ Game::~Game()
 
 void Game::Update()
 {
-
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		m_hpui->DecreaseHP(20);
+	}
 }
 
 

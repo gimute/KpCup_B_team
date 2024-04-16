@@ -9,7 +9,7 @@ namespace nsK2EngineLow {
 
 		// 初期化。
 		// αブレンディングはとりあえず無しで
-		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_None);
+		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 
 		//座標を設定。zは0.0fで。
 		void SetPosition(const Vector3& pos)

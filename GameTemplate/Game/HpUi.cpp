@@ -15,9 +15,9 @@
 
 namespace {
 	//Aの位置
-	const Vector3 n_position_A{ -600.0f,400.0f,0.0f };
+	const Vector3 n_position_A{ -440.0f,350.0f,0.0f };
 	//BとCの位置
-	const Vector3 n_position_BC{ -940.0f,400.0f,0.0f };
+	const Vector3 n_position_BC{ -765.0f,350.0f,0.0f };
 	//BとCの基点
 	const Vector2 n_pivot_BC{ 0,0.5 };
 	//delaytimerの初期設定時間
@@ -27,9 +27,9 @@ namespace {
 bool HpUi::Start()
 {
 	//画像設定
-	m_hpUI_A.Init("Assets/modelData/ui_hp/UI_A.DDS", 700.0f, 120.0f);
-	m_hpUI_B.Init("Assets/modelData/ui_hp/UI_B.DDS", 670.0f, 90.0f);
-	m_hpUI_C.Init("Assets/modelData/ui_hp/UI_C.DDS", 670.0f, 90.0f);
+	m_hpUI_A.Init("Assets/modelData/ui_hp/UI_A.DDS", 670.0f, 90.0f);
+	m_hpUI_B.Init("Assets/modelData/ui_hp/UI_B.DDS", 630.0f, 60.0f);
+	m_hpUI_C.Init("Assets/modelData/ui_hp/UI_C.DDS", 630.0f, 60.0f);
 	//位置設定
 	m_hpUI_A.SetPosition(n_position_A);
 	m_hpUI_B.SetPosition(n_position_BC);
