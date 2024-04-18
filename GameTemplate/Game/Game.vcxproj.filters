@@ -23,6 +23,7 @@
     <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
+    <ClCompile Include="HpUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -41,5 +42,6 @@
     <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="PointYazirushi.h" />
+    <ClInclude Include="HpUi.h" />
   </ItemGroup>
 </Project>
