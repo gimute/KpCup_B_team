@@ -9,6 +9,7 @@
 #include "MiniTimer.h"
 #include "MainTimer.h"
 #include "PointYazirushi.h"
+#include "HpUi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -47,6 +48,9 @@ Game::Game()
 	m_maintimer = NewGO<MainTimer>(2, "UI");
 	m_maintimer->SetTimer(10);
 
+	//HPUIを作る
+	m_hpui = NewGO<HpUi>(3, "UI");
+
 	//矢印を作る
 	m_pointyazi = NewGO<PointYazirushi>(0);
 	m_pointyazi->SetPosition(m_player->m_position);
@@ -61,7 +65,10 @@ Game::~Game()
 
 void Game::Update()
 {
-
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		m_hpui->DecreaseHP(20);
+	}
 }
 
 
