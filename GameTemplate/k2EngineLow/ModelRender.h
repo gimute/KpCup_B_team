@@ -4,19 +4,6 @@ namespace nsK2EngineLow {
 	class ModelRender : public Noncopyable
 	{
 	public:
-		struct Light
-		{
-			Vector3 dirLigDirection;	// ディレクションライトの方向
-			float pad0;					// パディング
-			Vector3 dirColor;			// ディレクションライトのカラー
-			float pad1;
-
-			Vector3 ambientLight;		// アンビエントライト
-			float pad2;
-
-			Vector3 eyePos;				// 視点の位置
-		};
-
 		ModelRender();
 		~ModelRender();
 
@@ -84,7 +71,6 @@ namespace nsK2EngineLow {
 		}
 
 	private:
-		static Light m_light;
 		Model m_model;
 		Skeleton		m_skeleton;
 		AnimationClip* m_animationClips = nullptr;
