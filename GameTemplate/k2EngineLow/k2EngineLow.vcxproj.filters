@@ -237,6 +237,9 @@
     <ClCompile Include="SceneLight.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>graphics\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -521,6 +524,9 @@
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="SceneLight.h">
+      <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
       <Filter>graphics\light</Filter>
     </ClInclude>
   </ItemGroup>
