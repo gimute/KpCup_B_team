@@ -24,9 +24,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
 	
+	//í«â¡ÉRÅ[Éh
 	SceneLight m_sceneLight;
 	m_sceneLight.Init();
 	g_sceneLight = &m_sceneLight;
+
+	CollisionObjectManager m_collisionObjectManager;
+	g_collisionObjectManager = &m_collisionObjectManager;
+	//
+
 
 	//ModelTest* modelTest = NewGO<ModelTest>(0);
 	//ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);

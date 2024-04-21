@@ -243,6 +243,9 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionObject.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -534,6 +537,9 @@
     </ClInclude>
     <ClInclude Include="SpotLight.h">
       <Filter>graphics\light</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionObject.h">
+      <Filter>physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
