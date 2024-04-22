@@ -1,5 +1,6 @@
 #pragma once
 class Game;
+class Bullet;
 class Player : public IGameObject
 {
 public:
@@ -42,7 +43,7 @@ public:
 	Player* m_player = nullptr;
 	AnimationClip m_animationclips[enAnimationClip_Num];	//アニメーションクリップ
 	EnPlayerState m_playerstate = enPlayerState_Idle;
-
+	Bullet* m_bullet = nullptr;
 	Vector3 m_forward = Vector3::AxisZ;		//プレイヤーの移動用正面ベクトル。
 	int m_speed = 0;
 

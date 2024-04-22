@@ -24,6 +24,7 @@
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
     <ClCompile Include="HpUi.cpp" />
+    <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -43,5 +44,6 @@
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="PointYazirushi.h" />
     <ClInclude Include="HpUi.h" />
+    <ClInclude Include="Bullet.h" />
   </ItemGroup>
 </Project>
