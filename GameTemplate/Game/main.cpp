@@ -25,6 +25,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	
 	//追加コード
+	RenderingEngine m_renderingEngine;
+	g_renderingEngine = &m_renderingEngine;
+
 	SceneLight m_sceneLight;
 	m_sceneLight.Init();
 	g_sceneLight = &m_sceneLight;
@@ -42,19 +45,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		//追加したコード
+		auto& renderContext = g_graphicsEngine->GetRenderContext();
+		// 
+
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
+		//追加コード
 		//ライトの更新処理
-		//オブジェクトマネージャーで呼ばれるRender関数の中にライトの処理を入れられると、反映できない可能性があるので
-		//レンダリングエンジンができたらそっちに移動する
 		m_sceneLight.Update();
+		//
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
+
+		//追加コード
+		m_renderingEngine.Execute(renderContext);
+		//
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();

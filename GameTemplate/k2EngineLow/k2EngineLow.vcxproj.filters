@@ -225,15 +225,6 @@
     <ClCompile Include="graphics\FrameBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ModelRender.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteRender.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="FontRender.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="SceneLight.cpp">
       <Filter>graphics\light</Filter>
     </ClCompile>
@@ -245,6 +236,18 @@
     </ClCompile>
     <ClCompile Include="CollisionObject.cpp">
       <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="FontRender.cpp">
+      <Filter>graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRender.cpp">
+      <Filter>graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRender.cpp">
+      <Filter>graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingEngine.cpp">
+      <Filter>graphics\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,15 +523,6 @@
     <ClInclude Include="graphics\FrameBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRender.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteRender.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="FontRender.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="SceneLight.h">
       <Filter>graphics\light</Filter>
     </ClInclude>
@@ -540,6 +534,21 @@
     </ClInclude>
     <ClInclude Include="CollisionObject.h">
       <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="FontRender.h">
+      <Filter>graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRender.h">
+      <Filter>graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRender.h">
+      <Filter>graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer.h">
+      <Filter>graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingEngine.h">
+      <Filter>graphics\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -602,6 +611,9 @@
     </Filter>
     <Filter Include="graphics\light">
       <UniqueIdentifier>{f34902b0-eb2c-4f33-ad17-14bf0260e3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\Render">
+      <UniqueIdentifier>{25b452bb-5fa4-4e34-8e85-72acd176390e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
