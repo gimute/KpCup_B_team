@@ -55,15 +55,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
-		//追加コード
-		//ライトの更新処理
-		m_sceneLight.Update();
-		//
-
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
 		//追加コード
+		//ライトの更新処理
+		m_sceneLight.Update();
+
+		//レンダリングエンジンの描画処理
 		m_renderingEngine.Execute(renderContext);
 		//
 

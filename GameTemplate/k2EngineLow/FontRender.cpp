@@ -3,9 +3,12 @@
 
 namespace nsK2EngineLow {
 
-	//FontのDrawにデータをぶち込むだけ
-	//表示するテキストが設定されていなかったら何もせず返す
 	void FontRender::Draw(RenderContext& rc)
+	{
+		g_renderingEngine->AddRenderObject(this);
+	}
+
+	void FontRender::OnRender2D(RenderContext& rc)
 	{
 		if (m_text == nullptr)
 		{
