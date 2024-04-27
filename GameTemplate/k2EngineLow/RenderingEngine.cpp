@@ -12,6 +12,31 @@ namespace nsK2EngineLow {
 
     }
 
+    void RenderingEngine::Init()
+    {
+        m_mainRenderTarget.Create(
+            1280,
+            720,
+            1,
+            1,
+            DXGI_FORMAT_R32G32B32A32_FLOAT,
+            DXGI_FORMAT_D32_FLOAT
+        );
+
+        m_luminanceRenderTarget.Create(
+            1280,
+            720,
+            1,
+            1,
+            DXGI_FORMAT_R32G32B32A32_FLOAT,
+            DXGI_FORMAT_D32_FLOAT
+        );
+
+        SpriteInitData spriteInitData;
+
+
+    }
+
     void RenderingEngine::Execute(RenderContext& rc)
     {
         Render3DModel(rc);
