@@ -8,8 +8,6 @@ namespace nsK2EngineLow {
 		RenderingEngine();
 		~RenderingEngine();
 
-		void Init();
-
 		//描画オブジェクトを追加
 		void AddRenderObject(IRenderer* renderObject)
 		{
@@ -25,11 +23,6 @@ namespace nsK2EngineLow {
 		void Execute(RenderContext& rc);
 
 	private:
-		RenderTarget m_luminanceRenderTarget;	//輝度抽出用のレンダリング
-		Sprite m_luminanceSprite;				//輝度抽出用のスプライト
-		RenderTarget m_mainRenderTarget;
-		GaussianBlur m_gaussianBulur;
-
 		std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
 	};
 }
