@@ -7,7 +7,7 @@
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyattackspeed 300.0f                         //攻撃時移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
-//#define enemyattack 
+#define enemyattack 300.0f * 300.0f						//攻撃可能範囲
 
 namespace
 {
@@ -23,8 +23,8 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
-	//m_animationclips[enAnimationClip_Attack].Load("Assets/animData/Enemy/enemy_002/attack.tka");
-	//m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);//
 	//m_animationclips[enAnimationClip_ReceiveDamage].Load("Assets/animData/Enemy/enemy_002/receivedamage.tka");
 	//m_animationclips[enAnimationClip_ReceiveDamage].SetLoopFlag(false);
 	//m_animationclips[enAnimationClip_Down].Load("Assets/animData/Enemy/enemy_002/down.tka");
@@ -70,7 +70,7 @@ void Enemy::Update()
 	//回転処理
 	Rotation();
 	//攻撃処理
-	//Attack();
+	//Attack();//
 	//当たり判定処理
 	//Collision();
 	//アニメーション
@@ -93,15 +93,15 @@ void Enemy::PlayAnimation()
 	case enEnemyState_Chase:
 		m_modelRender.PlayAnimation(enAnimationClip_Chase, 0.1f);
 		break;
-	/*case enEnemyState_Attack:
+	case enEnemyState_Attack:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
-		break;
-	case enEnemyState_ReceiveDamage:
-		m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
-		break;
-	case enEnemyState_Down:
-		m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
-		break;*/
+		break;//
+	//case enEnemyState_ReceiveDamage:
+	//	m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
+	//	break;
+	//case enEnemyState_Down:
+	//	m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
+	//	break;
 
 	}
 }
@@ -116,15 +116,15 @@ void Enemy::ManageState()
 	case enEnemyState_Chase:
 		ProcessChaseStateTransition();
 		break;
-	/*case enEnemyState_Attack:
+	case enEnemyState_Attack:
 		ProcessAttackStateTransition();
-		break;
-	case enEnemyState_ReceiveDamage:
-		ProcessReceiveDamageStateTransition();
-		break;
-	case enEnemyState_Down:
-		ProcessDownStateTransition();
-		break;*/
+		break;//
+	//case enEnemyState_ReceiveDamage:
+	//	ProcessReceiveDamageStateTransition();
+	//	break;
+	//case enEnemyState_Down:
+	//	ProcessDownStateTransition();
+	//	break;
 	}
 }
 
@@ -244,9 +244,10 @@ void Enemy::Rotation()
 	m_rotation.Apply(m_forward);
 }
 
-//void Enemy::Attack()
-//{
-//	if (m_enemystate == enEnemyState_Attack) {
+void Enemy::Attack()
+{
+	if (m_enemystate == enEnemyState_Attack) {
+		return;
 //		//攻撃当たり判定用のコリジョンオブジェクトを作成する。
 //		m_attackcoll = NewGO<CollisionObject>(0);
 //		//球状のコリジョンを作成する。
@@ -254,8 +255,8 @@ void Enemy::Rotation()
 //		m_attackcoll->SetName("enemy_attack");
 //		Vector3 position = m_position + m_forward * 40.0f;
 //		m_attackcoll->SetPosition(position + corre1);
-//	}
-//}
+	}
+}
 
 //void Enemy::Collision()
 //{
@@ -347,7 +348,7 @@ const bool Enemy::SearchAttackDistance() const
 	Vector3 diff = m_player->GetPosition() - m_position;
 	//プレイヤーにある程度近かったら.。
 
-	if (diff.LengthSq() <= enemyserch)
+	if (diff.LengthSq() <= enemyattack)
 	{
 		//プレイヤーが射程圏内に入った！
 		return true;
@@ -384,6 +385,15 @@ void Enemy::ProcessCommonStateTransition()
 		//移動速度を設定する。
 		m_movespeed = diff * enemyspeed;
 
+		//攻撃出来る距離かどうか
+		if (SearchAttackDistance() == true) {
+			m_enemystate = enEnemyState_Attack;
+
+			Rotation();
+			m_movespeed = diff * 0.0f;
+
+			return;
+		}
 		////追跡できる距離かどうか
 		//if (SearchChaseDistance() == true) {
 		//	if(m_chaseTimer<0.0f)

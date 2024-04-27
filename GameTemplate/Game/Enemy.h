@@ -8,7 +8,7 @@ public:
 	enum EnEnemyState {
 		enEnemyState_Idle,			//待機
 		enEnemyState_Chase,			//追跡
-		//enEnemyState_Attack,		//攻撃
+		enEnemyState_Attack,		//攻撃
 		//enEnemyState_ReceiveDamage,	//被ダメージ
 		//enEnemyState_Down,			//ダウン
 	};
@@ -38,7 +38,7 @@ public:
 	void Update();                                         //アップデート
 	void Rotation();                                       //回転
 	void Chase();										   //追跡
-	//void Attack();										   //攻撃
+	void Attack();										   //攻撃
 	//void Collision();										//本体の当たり判定
 	const bool SearchPlayer() const;                       //プレイヤー探知
 	const bool SearchChaseDistance() const;					//追跡距離探知
