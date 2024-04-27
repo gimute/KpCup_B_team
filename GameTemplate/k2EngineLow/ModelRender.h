@@ -1,7 +1,7 @@
 #pragma once
 
 namespace nsK2EngineLow {
-	class ModelRender : public Noncopyable
+	class ModelRender : public IRenderer
 	{
 	public:
 		ModelRender();
@@ -64,11 +64,11 @@ namespace nsK2EngineLow {
 			return m_model;
 		}
 
-		// ƒ‚ƒfƒ‹‚ÌDraw‚ğŒÄ‚Ño‚µ‚Ä‚é‚¾‚¯
-		void Draw(RenderContext& rc)
-		{
-			m_model.Draw(rc);
-		}
+		//•`‰æˆ—
+		void Draw(RenderContext& rc);
+
+		//3Dƒ‚ƒfƒ‹‚Ì•`‰æˆ—
+		void OnRenderModel(RenderContext& rc) override;
 
 	private:
 		Model m_model;

@@ -88,4 +88,14 @@ namespace nsK2EngineLow {
 		//アニメーションを進める
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 	}
+
+	void ModelRender::Draw(RenderContext& rc)
+	{
+		g_renderingEngine->AddRenderObject(this);
+	}
+
+	void ModelRender::OnRenderModel(RenderContext& rc)
+	{
+		m_model.Draw(rc);
+	}
 }

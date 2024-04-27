@@ -8,7 +8,7 @@ namespace nsK2EngineLow {
 
 	//追加したコード
 	SceneLight* g_sceneLight = nullptr;
-
+	RenderingEngine* g_renderingEngine = nullptr;
 	CollisionObjectManager* g_collisionObjectManager = nullptr;
 	//
 
@@ -19,7 +19,7 @@ namespace nsK2EngineLow {
 		g_gameTime = nullptr;
 		//追加コード
 		g_sceneLight = nullptr;
-
+		g_renderingEngine = nullptr;
 		g_collisionObjectManager = nullptr;
 		//
 

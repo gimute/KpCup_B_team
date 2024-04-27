@@ -1,6 +1,6 @@
 #pragma once
 namespace nsK2EngineLow {
-	class FontRender : public Noncopyable
+	class FontRender : public IRenderer
 	{
 	public:
 		static const int MAX_TEXT_SIZE = 256;
@@ -75,6 +75,9 @@ namespace nsK2EngineLow {
 
 		//•`‰æˆ—B
 		void Draw(RenderContext& rc);
+
+		//2D‚Ì•`‰æˆ—
+		void OnRender2D(RenderContext& rc) override;
 
 
 	private:
