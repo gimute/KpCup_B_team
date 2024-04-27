@@ -28,7 +28,7 @@ bool Player::Start()
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
-	m_charaCon.Init(25.0f, 75.0f, m_position);
+	m_charaCon.Init(25.0f, 40.0f, m_position);
 
 	return true;
 }
@@ -68,8 +68,8 @@ void Player::Move()
 	right.y = 0.0f;
 
 	//左スティックの入力量と120.0fを乗算。
-	right *= stickL.x * 1000.0f;
-	forward *= stickL.y * 1000.0f;
+	right *= stickL.x * 200.0f;
+	forward *= stickL.y * 200.0f;
 
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;

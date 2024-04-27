@@ -76,10 +76,12 @@ using namespace Microsoft::WRL;
 #include "HID/GamePad.h"
 
 //’Ç‰Á‚µ‚½“z
+#include "IRenderer.h"
 #include "ModelRender.h"
 #include "SpriteRender.h"
 #include "FontRender.h"
 #include "SceneLight.h"
+#include "RenderingEngine.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 //
