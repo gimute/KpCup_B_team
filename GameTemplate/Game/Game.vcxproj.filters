@@ -24,6 +24,7 @@
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
     <ClCompile Include="HpUi.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +45,7 @@
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="PointYazirushi.h" />
     <ClInclude Include="HpUi.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
   </ItemGroup>
 </Project>
