@@ -18,6 +18,7 @@ public:
 		enPlayerState_Walk,				//•à‚«B
 		enPlayerState_Attack,			//UŒ‚
 	};
+
 	Player();
 	~Player();
 	bool Start();
@@ -31,7 +32,11 @@ public:
 	void ProcessCommonStateTransition();	//‹¤’Êˆ—
 	void ProcessIdleStateTransition();		//‘Ò‹@‘JˆÚ
 	void ProcessWalkStateTransition();		//•à‚«‘JˆÚ
-
+	//À•Wæ“¾
+	const Vector3& GetPosition() const
+	{
+		return m_position;
+	}
 
 //ƒƒ“ƒo•Ï”
 	ModelRender m_modelRender;

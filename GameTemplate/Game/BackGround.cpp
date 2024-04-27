@@ -14,7 +14,7 @@ BackGround::~BackGround()
 bool BackGround::Start()
 {
 	//モデルを読み込む。
-	m_modelRender.Init("Assets/modelData/background/proto_map/proto_map.tkm");
+	m_modelRender.Init("Assets/modelData/Map/Map3.tkm");
 	//座標を設定する。
 	m_modelRender.SetPosition(m_position);
 	//大きさを設定する。

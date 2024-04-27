@@ -9,6 +9,7 @@ class SpeedMeter;
 class MainTimer;
 class PointYazirushi;
 class HpUi;
+class Enemy;
 ///////////////////////////////
 class Game : public IGameObject
 {
@@ -35,5 +36,6 @@ public:
 	FontRender m_fontrender;	//フォントレンダー。
 	PointYazirushi* m_pointyazi = nullptr;
 	HpUi* m_hpui = nullptr;
+	Enemy* m_enemy;
 };
 
