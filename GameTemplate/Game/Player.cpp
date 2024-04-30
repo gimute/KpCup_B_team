@@ -32,6 +32,8 @@ bool Player::Start()
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
 	
+	m_sphereCollider.Create(1.0f);
+
 	m_game = FindGO<Game>("game");
 
 	return true;
@@ -193,6 +195,25 @@ void Player::AttackRotation()
 	m_bullet->SetPosition(m_position);
 }
 
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//壁とぶつかっていなかったら
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//衝突したのは壁ではない
+			return 0.0f;
+		}
+
+		//壁とぶつかったらフラグをtrueにする
+		isHit = true;
+		return 0.0f;
+	}
+};
+
 bool Player::AngleCheck(const Vector3& position)
 {
 	m_forward = Vector3::AxisZ;
@@ -205,6 +226,26 @@ bool Player::AngleCheck(const Vector3& position)
 	{
 		return false;
 	}
+
+	Vector3 EnemyPosition = position;
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+	//始点はプレイヤーの座標
+	start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+	//終点はエネミーの座標
+	end.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
+
+	SweepResultWall callback;
+	//制作したコライダーを始点から終点まで動かして壁に接触したか判定
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+	//壁と衝突した時
+	if (callback.isHit == true)
+	{
+		return false;
+	}
+	
+
 	return true;
 }
 

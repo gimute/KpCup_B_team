@@ -58,8 +58,15 @@ Game::Game()
 	//m_pointyazi->SetTarget(m_car5->m_position);
 
 	//追いかけてくる敵を作る
-	m_enemy = NewGO<Enemy>(0, "enemy");
-	m_enemy->m_position = { 10.0f,0.0f,500.0f };
+	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
+	m_enemy1->m_position = { 10.0f,0.0f,500.0f };
+
+	Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
+	m_enemy2->m_position = { 300.0f,0.0f,500.0f };
+
+	Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
+	m_enemy3->m_position = { -300.0f,0.0f,500.0f };
+
 }
 
 Game::~Game()
@@ -76,7 +83,13 @@ void Game::Update()
 	}
 }
 
-
+void Game::Delete_EnemyVec(const int num)
+{
+	m_EnemyList.erase(m_EnemyList.begin() + num);
+	for (int VecNow = num; VecNow < m_EnemyList.size(); VecNow++) {
+		m_EnemyList[VecNow]->m_Vectornum -= 1;
+	}
+}
 
 void Game::Render(RenderContext& rc)
 {

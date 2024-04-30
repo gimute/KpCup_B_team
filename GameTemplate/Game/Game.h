@@ -20,8 +20,8 @@ public:
 	
 	void Update();
 	void Render(RenderContext& rc);
-
-//ƒƒ“ƒo•Ï”
+	void Delete_EnemyVec(const int num);
+//ãƒ¡ãƒ³ãƒå¤‰æ•°
 	Player* m_player;
 	Car* m_car1;
 	Car* m_car2;
@@ -33,10 +33,10 @@ public:
 	MiniTimer* m_minitimer = nullptr;
 	MainTimer* m_maintimer = nullptr;
 	SpeedMeter* m_speedmeter = nullptr;
-	FontRender m_fontrender;	//ƒtƒHƒ“ƒgƒŒƒ“ƒ_[B
+	FontRender m_fontrender;	//ãƒ•ã‚©ãƒ³ãƒˆãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
 	PointYazirushi* m_pointyazi = nullptr;
 	HpUi* m_hpui = nullptr;
-	Enemy* m_enemy;
 	std::vector<Enemy*> m_EnemyList;
+	int m_EnemyQua = 0;
 };
 
