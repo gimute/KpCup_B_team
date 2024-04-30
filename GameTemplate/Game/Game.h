@@ -37,5 +37,6 @@ public:
 	PointYazirushi* m_pointyazi = nullptr;
 	HpUi* m_hpui = nullptr;
 	Enemy* m_enemy;
+	std::vector<Enemy*> m_EnemyList;
 };
 

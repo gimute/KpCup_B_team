@@ -1,5 +1,6 @@
 #pragma once
 class Game;
+class Enemy;
 class Bullet;
 class Player : public IGameObject
 {
@@ -27,12 +28,15 @@ public:
 	void Render(RenderContext& rc);
 	void PlayAnimation();
 	void Rotation();
+	void AttackRotation();
+	bool AngleCheck(const Vector3& position);
 	void Move();
 	void ManageState();					//ステート遷移処理
 	//void PlayAnimation();
 	void ProcessCommonStateTransition();	//共通処理
 	void ProcessIdleStateTransition();		//待機遷移
 	void ProcessWalkStateTransition();		//歩き遷移
+	void ProcessAttackStateTransition();    //攻撃遷移
 	//座標取得
 	const Vector3& GetPosition() const
 	{
@@ -50,7 +54,13 @@ public:
 	EnPlayerState m_playerstate = enPlayerState_Idle;
 	Bullet* m_bullet = nullptr;
 	Vector3 m_forward = Vector3::AxisZ;		//プレイヤーの移動用正面ベクトル。
+	Vector3 m_up = Vector3::AxisY;
 	int m_speed = 0;
-
+	Game* m_game = nullptr;									//ゲーム
+	//向けるヤツ
+	int m_numenemy = 0;										//現在エネミーの数
+	int ListnumB = 0;										//リストナンバーB(ロックオン時固定)
+	int ListnumA = 0;										//リストナンバーA(ロックオン計算時)
+	Vector3 enemyposUltimate = { 500.0f,60.0f,500.0f };		//ロックオン計算に使うヤツ
 };
 
