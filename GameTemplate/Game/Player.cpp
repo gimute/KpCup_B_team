@@ -175,7 +175,7 @@ void Player::AttackRotation()
 	m_rotation.Apply(m_forward);
 	Vector3 MinVec = m_forward * 500.0f;
 
-	for (ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
+	for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
 		Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
 		if (AngleCheck(pos)) {
 			Vector3 diffA = pos - m_position;
@@ -201,10 +201,8 @@ bool Player::AngleCheck(const Vector3& position)
 
 	diff.Normalize();
 	float angle = acosf(diff.Dot(m_forward));
-	//プレイヤーが視界内に居なかったら。
 	if (Math::PI * 0.35f <= fabsf(angle))
 	{
-		//プレイヤーは見つかっていない。
 		return false;
 	}
 	return true;
