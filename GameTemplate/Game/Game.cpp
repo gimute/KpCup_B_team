@@ -58,8 +58,14 @@ Game::Game()
 	//m_pointyazi->SetTarget(m_car5->m_position);
 
 	//追いかけてくる敵を作る
-	m_enemy = NewGO<Enemy>(0, "enemy");
-	m_enemy->m_position = { 10.0f,0.0f,500.0f };
+	m_enemy[0] = NewGO<Enemy>(0, "enemy");
+	m_enemy[0]->m_position = {10.0f,0.0f,500.0f};
+
+	m_enemy[1] = NewGO<Enemy>(0, "enemy");
+	m_enemy[1]->m_position = { 100.0f,0.0f,200.0f };
+
+	m_enemy[2] = NewGO<Enemy>(0, "enemy");
+	m_enemy[2]->m_position = { 120.0f,0.0f,100.0f };
 }
 
 Game::~Game()

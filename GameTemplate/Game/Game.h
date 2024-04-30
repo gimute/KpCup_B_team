@@ -36,7 +36,7 @@ public:
 	FontRender m_fontrender;	//フォントレンダー。
 	PointYazirushi* m_pointyazi = nullptr;
 	HpUi* m_hpui = nullptr;
-	Enemy* m_enemy;
+	Enemy* m_enemy[3];
 	std::vector<Enemy*> m_EnemyList;
 };
 
