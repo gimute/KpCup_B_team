@@ -45,17 +45,18 @@ public:
 
 //メンバ変数
 	ModelRender m_modelRender;
-	Vector3 m_position;				//座標
-	CharacterController m_charaCon;	//キャラクターコントローラー
-	Vector3 m_moveSpeed;			//移動速度。
-	Quaternion m_rotation;	//クォータニオン。
+	Vector3 m_position;										//座標
+	CharacterController m_charaCon;							//キャラクターコントローラー
+	Vector3 m_moveSpeed;									//移動速度。
+	Quaternion m_rotation;									//クォータニオン。
 	Player* m_player = nullptr;
 	AnimationClip m_animationclips[enAnimationClip_Num];	//アニメーションクリップ
 	EnPlayerState m_playerstate = enPlayerState_Idle;
 	Bullet* m_bullet = nullptr;
-	Vector3 m_forward = Vector3::AxisZ;		//プレイヤーの移動用正面ベクトル。
+	Vector3 m_forward = Vector3::AxisZ;						//プレイヤーの移動用正面ベクトル。
 	Vector3 m_up = Vector3::AxisY;
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
+	SphereCollider m_sphereCollider;						//コリダー
 };
 
