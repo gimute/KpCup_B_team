@@ -57,10 +57,5 @@ public:
 	Vector3 m_up = Vector3::AxisY;
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
-	//向けるヤツ
-	int m_numenemy = 0;										//現在エネミーの数
-	int ListnumB = 0;										//リストナンバーB(ロックオン時固定)
-	int ListnumA = 0;										//リストナンバーA(ロックオン計算時)
-	Vector3 enemyposUltimate = { 500.0f,60.0f,500.0f };		//ロックオン計算に使うヤツ
 };
 
