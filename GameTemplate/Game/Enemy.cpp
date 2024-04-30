@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Game.h"
-//#include "collision/CollisionObject.h"
 #include "Player.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
-#define enemyattackspeed 300.0f                         //攻撃時移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
 #define enemyattack 300.0f * 300.0f						//攻撃可能範囲
 
@@ -24,12 +22,7 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
-	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);//
-	//m_animationclips[enAnimationClip_ReceiveDamage].Load("Assets/animData/Enemy/enemy_002/receivedamage.tka");
-	//m_animationclips[enAnimationClip_ReceiveDamage].SetLoopFlag(false);
-	//m_animationclips[enAnimationClip_Down].Load("Assets/animData/Enemy/enemy_002/down.tka");
-	//m_animationclips[enAnimationClip_Down].SetLoopFlag(false);
-
+	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
 
 	//モデル読み込み
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
@@ -161,31 +154,6 @@ void Enemy::ProcessIdleStateTransition()
 {
 	// 待機状態からはいつでも他のステートに遷移可能
 	ProcessCommonStateTransition();
-}
-
-void Enemy::ProcessReceiveDamageStateTransition()
-{
-	//被ダメージアニメーションの再生が終わったら。
-	//if (m_modelRender.IsPlayingAnimation() == false)
-	//{
-	//	ProcessCommonStateTransition();
-	//}
-}
-
-void Enemy::ProcessDownStateTransition()
-{
-	////被ダメージアニメーションの再生が終わったら。
-	//if (m_modelRender.IsPlayingAnimation() == false)
-	//{
-	//	SoundSource* se = NewGO<SoundSource>(11);
-	//	se = NewGO<SoundSource>(11);
-	//	se->Init(11);
-	//	se->Play(false);
-	//	ItemDrop();
-	//	DeleteGoEnemyList();
-	//	DeleteGO(m_collisionObject);//消去処理
-	//	DeleteGO(this);
-	//}
 }
 
 void Enemy::Chase()

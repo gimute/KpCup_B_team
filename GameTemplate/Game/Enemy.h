@@ -9,8 +9,6 @@ public:
 		enEnemyState_Idle,			//待機
 		enEnemyState_Chase,			//追跡
 		enEnemyState_Attack,		//攻撃
-		//enEnemyState_ReceiveDamage,	//被ダメージ
-		//enEnemyState_Down,			//ダウン
 	};
 	//アニメーション類/////////////////////////////
 //アニメーションステート
@@ -18,8 +16,6 @@ public:
 		enAnimationClip_Idle,			//棒立ち
 		enAnimationClip_Chase,			//追跡
 		enAnimationClip_Attack,			//攻撃
-		//enAnimationClip_ReceiveDamage,	//被ダメージ
-		//enAnimationClip_Down,			//ダウン
 		enAnimationClip_Num,			//アニメーション数
 	};
 	void PlayAnimation();
@@ -29,8 +25,6 @@ public:
 	void ProcessIdleStateTransition();			//待機遷移
 	void ProcessChaseStateTransition();			//追跡遷移
 	void ProcessAttackStateTransition();		//攻撃遷移
-	void ProcessReceiveDamageStateTransition();	//被ダメ遷移
-	void ProcessDownStateTransition();			//ダウン遷移
 	/////////////////////////////////////////////////////////////
 	Enemy() {};
 	~Enemy() {};
