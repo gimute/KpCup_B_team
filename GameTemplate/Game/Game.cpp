@@ -66,6 +66,7 @@ Game::Game()
 
 	Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
 	m_enemy3->m_position = { -300.0f,0.0f,500.0f };
+
 }
 
 Game::~Game()

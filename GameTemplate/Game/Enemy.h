@@ -39,7 +39,7 @@ public:
 	void Rotation();                                       //回転
 	void Chase();										   //追跡
 	void Attack();										   //攻撃
-	//void Collision();										//本体の当たり判定
+	void Collision();										//本体の当たり判定
 	const bool SearchPlayer() const;                       //プレイヤー探知
 	const bool SearchChaseDistance() const;					//追跡距離探知
 	const bool SearchAttackDistance() const;               //攻撃距離探知
@@ -64,10 +64,10 @@ public:
 	Quaternion m_rotation;					//回転
 	Vector3 m_scale = Vector3::One;			//大きさ
 	ModelRender m_modelRender;	//モデルレンダー
-	//CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
+	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
 	CharacterController m_charaCon;        //キャラコン
-	int m_hp = 0;                           //HP
-	int m_sh = 0;							//シールド
+	int m_hp = 50;                           //HP
+	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。
 	float m_chaseTimer = 0.0f;								//追跡時間タイマー。

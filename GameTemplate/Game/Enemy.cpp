@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Game.h"
-//#include "collision/CollisionObject.h"
 #include "Player.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
@@ -49,13 +48,13 @@ bool Enemy::Start()
 	m_charaCon.Init(20.0f, 0.0f, m_position);
 
 	//コリジョンオブジェクトを作成する。
-	//m_collisionObject = NewGO<CollisionObject>(0);
+	m_collisionObject = NewGO<CollisionObject>(0);
 	//球状のコリジョンを作成する。
-	//m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 60.0f * m_scale.z);
-	//m_collisionObject->SetName("enemy_col");
-	//m_collisionObject->SetPosition(m_position + corre1);
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 60.0f * m_scale.z);
+	m_collisionObject->SetName("enemy_col");
+	m_collisionObject->SetPosition(m_position + corre1);
 	////コリジョンオブジェクトが自動で削除されないようにする。
-	//m_collisionObject->SetIsEnableAutoDelete(false);
+	m_collisionObject->SetIsEnableAutoDelete(false);
 
 	m_player = FindGO<Player>("player");
 	m_game = FindGO<Game>("game");
@@ -80,7 +79,7 @@ void Enemy::Update()
 	//攻撃処理
 	//Attack();//
 	//当たり判定処理
-	//Collision();
+	Collision();
 	//アニメーション
 	PlayAnimation();
 	//ステート遷移処理
@@ -266,56 +265,57 @@ void Enemy::Attack()
 	}
 }
 
-//void Enemy::Collision()
-//{
-//	//被ダメージ、あるいはダウンステートの時は。
-////当たり判定処理はしない。
-//	if (m_enemystate == enEnemyState_ReceiveDamage ||
-//		m_enemystate == enEnemyState_Down)
-//	{
-//		return;
-//	}
-//	//無敵時間中は処理しない
-//	if (m_mutekitimer > 0)
-//	{
-//		m_mutekitimer -= g_gameTime->GetFrameDeltaTime();
-//		return;
-//	}
-//	//プレイヤーの攻撃用のコリジョンを取得する。
-//	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_attack");
-//	//コリジョンの配列をfor文で回す。
-//	for (auto collision : collisions)
-//	{
-//		//コリジョンとキャラコンが衝突したら。
-//		if (collision->IsHit(m_collisionObject))
-//		{
-//			SoundSource* se = NewGO<SoundSource>(5);
-//			se = NewGO<SoundSource>(5);
-//			se->Init(5);
-//			se->Play(false);
-//			if (m_sh > 0) {
-//				m_sh--;
-//				//被ダメージステートに遷移する。
-//				m_enemystate = enEnemyState_ReceiveDamage;
-//				return;
-//			}
-//			else {
-//				//HPを1減らす。
-//				m_hp -= 1;
-//				m_mutekitimer = mutekitime;
-//				//HPが0になったら。
-//				if (m_hp == 0) {
-//					//ダウンステートに遷移する。
-//					m_enemystate = enEnemyState_Down;
-//				}
-//				else {
-//					//被ダメージステートに遷移する。
-//					m_enemystate = enEnemyState_ReceiveDamage;
-//				}
-//			}
-//		}
-//	}
-//}
+void Enemy::Collision()
+{
+	//被ダメージ、あるいはダウンステートの時は。
+//当たり判定処理はしない。
+	/*if (m_enemystate == enEnemyState_ReceiveDamage ||
+		m_enemystate == enEnemyState_Down)
+	{
+		return;
+	}*/
+	//無敵時間中は処理しない
+	/*if (m_mutekitimer > 0)
+	{
+		m_mutekitimer -= g_gameTime->GetFrameDeltaTime();
+		return;
+	}*/
+	//プレイヤーの攻撃用のコリジョンを取得する。
+	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_attack");
+	//コリジョンの配列をfor文で回す。
+	for (auto collision : collisions)
+	{
+		//コリジョンとキャラコンが衝突したら。
+		if (collision->IsHit(m_collisionObject))
+		{
+			//SoundSource* se = NewGO<SoundSource>(5);
+			//se = NewGO<SoundSource>(5);
+			//se->Init(5);
+			//se->Play(false);
+			//if (m_sh > 0) {
+			//	m_sh--;
+			//	//被ダメージステートに遷移する。
+			//	m_enemystate = enEnemyState_ReceiveDamage;
+			//	return;
+			//}
+			
+				//HPを1減らす。
+				m_hp -= 1;
+				//m_mutekitimer = mutekitime;
+				//HPが0になったら。
+				if (m_hp == 0) {
+					//ダウンステートに遷移する。
+					//m_enemystate = enEnemyState_Idle;
+					DeleteGO(this);
+				}
+				else {
+					//被ダメージステートに遷移する。
+					m_enemystate = enEnemyState_Idle; //被ダメージステートが無いので、仮として待機ステート置いている
+				}
+			
+		}
+	}
+}
 
 
 const bool Enemy::SearchPlayer() const
