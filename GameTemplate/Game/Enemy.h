@@ -64,7 +64,6 @@ public:
 	ModelRender m_modelRender;	//モデルレンダー
 	CharacterController m_charaCon;        //キャラコン
 	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
-	CharacterController m_charaCon;        //キャラコン
 	int m_hp = 50;                           //HP
 	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー

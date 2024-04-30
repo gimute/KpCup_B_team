@@ -16,6 +16,7 @@ namespace
 Enemy::~Enemy()
 {
 	m_game->Delete_EnemyVec(m_Vectornum);
+	DeleteGO(m_collisionObject);
 }
 
 bool Enemy::Start()
@@ -44,7 +45,7 @@ bool Enemy::Start()
 	//コリジョンオブジェクトを作成する。
 	m_collisionObject = NewGO<CollisionObject>(0);
 	//球状のコリジョンを作成する。
-	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 60.0f * m_scale.z);
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 30.0f * m_scale.z);
 	m_collisionObject->SetName("enemy_col");
 	m_collisionObject->SetPosition(m_position + corre1);
 	////コリジョンオブジェクトが自動で削除されないようにする。
@@ -259,6 +260,9 @@ void Enemy::Attack()
 
 void Enemy::Collision()
 {
+	Vector3 tmp = m_position;
+	tmp.y += 30.0f;
+	m_collisionObject->SetPosition(tmp);
 	//被ダメージ、あるいはダウンステートの時は。
 //当たり判定処理はしない。
 	/*if (m_enemystate == enEnemyState_ReceiveDamage ||
