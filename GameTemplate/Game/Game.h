@@ -20,7 +20,7 @@ public:
 	
 	void Update();
 	void Render(RenderContext& rc);
-
+	void Delete_EnemyVec(const int num);
 //ƒƒ“ƒo•Ï”
 	Player* m_player;
 	Car* m_car1;
@@ -38,5 +38,6 @@ public:
 	HpUi* m_hpui = nullptr;
 	Enemy* m_enemy;
 	std::vector<Enemy*> m_EnemyList;
+	int m_EnemyQua = 0;
 };
 
