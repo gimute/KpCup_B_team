@@ -133,12 +133,17 @@ void Enemy::ManageState()
 
 void Enemy::ProcessChaseStateTransition()
 {
-	//射程圏内に入ったら
+	//攻撃範囲内に入ったら
 	if (SearchAttackDistance() == true)
 	{
 		//他のステートに遷移する。
 		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
 		ProcessCommonStateTransition();
+		return;
+	}
+
+	if (SearchChaseDistance())
+	{
 		return;
 	}
 	ProcessCommonStateTransition();
@@ -151,7 +156,7 @@ void Enemy::ProcessAttackStateTransition()
 	}
 	else
 	{
-		m_enemystate = enEnemyState_Idle;
+		//m_enemystate = enEnemyState_Idle;
 		//DeleteGO(m_attackcoll);
 		m_attackcooltimer = attackcooltime;
 		ProcessCommonStateTransition();
@@ -340,6 +345,11 @@ const bool Enemy::SearchPlayer() const
 }
 const bool Enemy::SearchChaseDistance() const
 {
+	Vector3 diff = m_player->GetPosition() - m_position;
+	if (diff.Length() <= 300.0f)
+	{
+		return true;
+	}
 	return false;
 }
 
@@ -364,15 +374,15 @@ void Enemy::ProcessCommonStateTransition()
 	m_chaseTimer = 0.0f;
 	//エネミーからプレイヤーに向かうベクトルを計算する。
 
-	if (m_attackcooltimer > 0) {
+	/*if (m_attackcooltimer > 0) {
 		m_attackcooltimer -= g_gameTime->GetFrameDeltaTime();
 		return;
-	}
+	}*/
 	//if (m_enemystate == enEnemyState_Attack) {
 	//	return;
 	//}
 	Vector3 diff = m_player->GetPosition() - m_position;
-
+	diff.z += 100.0f;
 	//ベクトルを正規化する。
 	//diff.Normalize();
 	//移動速度を設定する。
@@ -412,6 +422,10 @@ void Enemy::ProcessCommonStateTransition()
 			}*/
 		m_enemystate = enEnemyState_Chase;
 		return;
+	}
+	else if ((m_enemystate == enEnemyState_Attack || m_enemystate == enEnemyState_Chase) && SearchChaseDistance())
+	{
+		m_enemystate = enEnemyState_Chase;
 	}
 	else
 	{
