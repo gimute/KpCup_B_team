@@ -33,7 +33,7 @@ public:
 	void ProcessDownStateTransition();			//ダウン遷移
 	/////////////////////////////////////////////////////////////
 	Enemy() {};
-	~Enemy() {};
+	~Enemy();
 	bool Start();						//アップデート
 	void Update();                                         //アップデート
 	void Rotation();                                       //回転
