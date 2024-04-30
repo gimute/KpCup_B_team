@@ -32,7 +32,7 @@ public:
 	void ProcessReceiveDamageStateTransition();	//被ダメ遷移
 	void ProcessDownStateTransition();			//ダウン遷移
 	/////////////////////////////////////////////////////////////
-	Enemy() {};
+	Enemy();
 	~Enemy() {};
 	bool Start();						//アップデート
 	void Update();                                         //アップデート

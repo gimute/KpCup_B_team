@@ -15,6 +15,7 @@ namespace
 	const Vector3 corre2 = { 2.0f,2.0f,2.0f };
 }
 
+
 bool Enemy::Start()
 {
 
@@ -54,6 +55,7 @@ bool Enemy::Start()
 
 	m_player = FindGO<Player>("player");
 	m_game = FindGO<Game>("game");
+	m_game->m_EnemyList.push_back(this);
 
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
