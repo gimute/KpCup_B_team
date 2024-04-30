@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Game.h"
+#include "Enemy.h"
 
 Player::Player()
 {
@@ -29,6 +31,8 @@ bool Player::Start()
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
+	
+	m_game = FindGO<Game>("game");
 
 	return true;
 }
@@ -51,6 +55,9 @@ void Player::Update()
 
 void Player::Move()
 {
+	if (m_playerstate == enPlayerState_Attack)
+		return;
+
 	//xzの移動速度を0.0fにする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -67,6 +74,8 @@ void Player::Move()
 	forward.y = 0.0f;
 	right.y = 0.0f;
 
+	forward.Normalize();
+	right.Normalize();
 	//左スティックの入力量と120.0fを乗算。
 	right *= stickL.x * 200.0f;
 	forward *= stickL.y * 200.0f;
@@ -137,6 +146,9 @@ void Player::Move()
 
 void Player::Rotation()
 {
+	if (m_playerstate == enPlayerState_Attack)
+		return;
+
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
@@ -152,7 +164,48 @@ void Player::Rotation()
 	//m_modelRender.SetRotation(m_rotation);
 	//m_moveforward = Vector3::AxisZ;
 	//m_rotation.Apply(m_moveforward);
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
 
+}
+
+void Player::AttackRotation()
+{
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
+	Vector3 MinVec = m_forward * 500.0f;
+
+	for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
+		Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
+		if (AngleCheck(pos)) {
+			Vector3 diffA = pos - m_position;
+			if (diffA.Length() <= MinVec.Length()){
+				MinVec = diffA;
+			}
+		}
+	}
+
+	m_bullet = NewGO<Bullet>(0, "bullet");
+	Quaternion rot;
+	rot.SetRotation(Vector3::AxisZ, MinVec);
+	m_bullet->SetMoveDirection(m_forward);
+	m_bullet->Setrotation(rot);
+	m_bullet->SetPosition(m_position);
+}
+
+bool Player::AngleCheck(const Vector3& position)
+{
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
+	Vector3 diff = position - m_position;
+
+	diff.Normalize();
+	float angle = acosf(diff.Dot(m_forward));
+	if (Math::PI * 0.35f <= fabsf(angle))
+	{
+		return false;
+	}
+	return true;
 }
 
 void Player::ManageState()
@@ -164,6 +217,9 @@ void Player::ManageState()
 		break;
 	case Player::enPlayerState_Walk:
 		ProcessWalkStateTransition();
+		break;
+	case Player::enPlayerState_Attack:
+		ProcessAttackStateTransition();
 		break;
 	}
 }
@@ -189,6 +245,11 @@ void Player::PlayAnimation()
 
 void Player::ProcessCommonStateTransition()
 {
+	if (g_pad[0]->IsTrigger(enButtonB))
+	{
+		m_playerstate = enPlayerState_Attack;
+		return;
+	}
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
 		//歩きステートにする
@@ -210,6 +271,13 @@ void Player::ProcessIdleStateTransition()
 
 void Player::ProcessWalkStateTransition()
 {
+	ProcessCommonStateTransition();
+}
+
+void Player::ProcessAttackStateTransition()
+{
+	AttackRotation();
+
 	ProcessCommonStateTransition();
 }
 

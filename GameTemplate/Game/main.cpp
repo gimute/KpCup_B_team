@@ -40,7 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ModelTest* modelTest = NewGO<ModelTest>(0);
 	//ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);
 	//SpriteTest* spriteTest = NewGO<SpriteTest>(0);
-	Game* game = NewGO<Game>(0);
+	Game* game = NewGO<Game>(0,"game");
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
