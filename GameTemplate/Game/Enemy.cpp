@@ -43,15 +43,6 @@ bool Enemy::Start()
 	//キャラコン初期化
 	m_charaCon.Init(20.0f, 0.0f, m_position);
 
-	//コリジョンオブジェクトを作成する。
-	//m_collisionObject = NewGO<CollisionObject>(0);
-	//球状のコリジョンを作成する。
-	//m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 60.0f * m_scale.z);
-	//m_collisionObject->SetName("enemy_col");
-	//m_collisionObject->SetPosition(m_position + corre1);
-	////コリジョンオブジェクトが自動で削除されないようにする。
-	//m_collisionObject->SetIsEnableAutoDelete(false);
-
 	m_player = FindGO<Player>("player");
 	m_game = FindGO<Game>("game");
 
@@ -65,18 +56,35 @@ bool Enemy::Start()
 
 void Enemy::Update()
 {
-	//追跡処理
-	Chase();
+	//ステート遷移処理
+	ManageState();
+	
+	switch (m_enemystate)
+	{
+	case enEnemyState_Idle:
+
+		break;
+
+	case enEnemyState_Chase:
+		//追跡処理
+		Chase();
+		break;
+
+	case enEnemyState_Attack:
+		//攻撃処理
+		Attack();
+		break;
+	}
+
 	//回転処理
 	Rotation();
-	//攻撃処理
-	//Attack();//
+	
 	//当たり判定処理
 	//Collision();
 	//アニメーション
 	PlayAnimation();
-	//ステート遷移処理
-	ManageState();
+	
+	
 	//描画更新
 	m_modelRender.Update();
 }
@@ -95,14 +103,7 @@ void Enemy::PlayAnimation()
 		break;
 	case enEnemyState_Attack:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
-		break;//
-	//case enEnemyState_ReceiveDamage:
-	//	m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
-	//	break;
-	//case enEnemyState_Down:
-	//	m_modelRender.PlayAnimation(enAnimationClip_ReceiveDamage, 0.1f);
-	//	break;
-
+		break;
 	}
 }
 
@@ -118,13 +119,7 @@ void Enemy::ManageState()
 		break;
 	case enEnemyState_Attack:
 		ProcessAttackStateTransition();
-		break;//
-	//case enEnemyState_ReceiveDamage:
-	//	ProcessReceiveDamageStateTransition();
-	//	break;
-	//case enEnemyState_Down:
-	//	ProcessDownStateTransition();
-	//	break;
+		break;
 	}
 }
 
@@ -133,38 +128,38 @@ void Enemy::ManageState()
 
 void Enemy::ProcessChaseStateTransition()
 {
-	//攻撃範囲内に入ったら
+	// プレイヤーが攻撃範囲内に入ったら
 	if (SearchAttackDistance() == true)
 	{
-		//他のステートに遷移する。
-		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
+		// 他のステートに遷移する。
 		ProcessCommonStateTransition();
 		return;
 	}
-
-	if (SearchChaseDistance())
+	// プレイヤーがまだ近くにいるなら
+	else if (SearchChaseDistance())
 	{
+		// ステートを変更せず返す。
 		return;
 	}
-	ProcessCommonStateTransition();
+	// プレイヤーが近くにいないなら
+	else
+	{
+		// 他のステートに遷移する
+		ProcessCommonStateTransition();
+	}
+	
 }
 
 void Enemy::ProcessAttackStateTransition()
 {
-	if (m_attackGotimer >= 0) {
-		ProcessCommonStateTransition();
-	}
-	else
-	{
-		//m_enemystate = enEnemyState_Idle;
-		//DeleteGO(m_attackcoll);
-		m_attackcooltimer = attackcooltime;
-		ProcessCommonStateTransition();
-	}
+	// 今のところはいつでも他のステートに遷移可能
+	// 後でモーションが終了するまで等の条件を追加
+	ProcessCommonStateTransition();
 }
 
 void Enemy::ProcessIdleStateTransition()
 {
+	// 待機状態からはいつでも他のステートに遷移可能
 	ProcessCommonStateTransition();
 }
 
@@ -195,72 +190,86 @@ void Enemy::ProcessDownStateTransition()
 
 void Enemy::Chase()
 {
-	////追跡ステートでないなら、追跡処理はしない。
-	//if (IsAttack()) {
-	//	return;
-	//}
-	//if (m_attackGotimer > 0) {
-	//	m_attackGotimer -= g_gameTime->GetFrameDeltaTime();
-	//}
-	//エネミーを移動させる。
-	if (m_enemystate == enEnemyState_Idle)
+	//念のためステート確認
+	if (m_enemystate != enEnemyState_Chase)
+	{
 		return;
+	}
+
+	//プレイヤーに向かうベクトル求める
+	Vector3 diff = m_player->GetPosition() - m_position;
+	
+	diff.Normalize();
+
+	m_movespeed = diff * enemyspeed;
 
 	m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
-	if (m_charaCon.IsOnGround()) {
-		//地面についた。
-		//重力を0にする。
-		m_movespeed.y = 0.0f;
-	}
-	Vector3 modelPosition = m_position;
-	//m_collisionObject->SetRotation(m_rotation);
-	//m_collisionObject->SetPosition(m_position + corre1);
-	//ちょっとだけモデルの座標を挙げる。
-	modelPosition.y += 2.5f;
-	//座標を設定する。
-	m_modelRender.SetPosition(modelPosition);
+
+	m_modelRender.SetPosition(m_position);
 }
 
 void Enemy::Rotation()
 {
-	//if (m_enemystate == enEnemyState_Attack) {
-	//	return;
-	//}
-	if (fabsf(m_movespeed.x) < 0.001f
-		&& fabsf(m_movespeed.z) < 0.001f) {
-		//m_moveSpeed.xとm_moveSpeed.zの絶対値がともに0.001以下ということは
-		//このフレームではキャラは移動していないので旋回する必要はない。
-		return;
+	// プレイヤーに向かうベクトルを求める。
+	Vector3 diff = m_player->GetPosition() - m_position;
+
+	// ステートによって処理を変える
+	switch (m_enemystate)
+	{
+	case Enemy::enEnemyState_Idle:
+		break;
+
+		//追跡ステートの場合///////////////////////////////////////////////////////
+		//進行方向に向かせる
+	case Enemy::enEnemyState_Chase:
+		if (fabsf(m_movespeed.x) < 0.001f
+			&& fabsf(m_movespeed.z) < 0.001f) {
+			//m_moveSpeed.xとm_moveSpeed.zの絶対値がともに0.001以下ということは
+			//このフレームではキャラは移動していないので旋回する必要はない。
+			return;
+		}
+
+		//movespeedからエネミーの向きを求める
+		m_rotation.SetRotationY(-atan2(-m_movespeed.x, m_movespeed.z));
+
+		//回転を設定する。
+		m_modelRender.SetRotation(m_rotation);
+
+		//エネミーの正面方向ベクトルを求める
+		m_forward = Vector3::AxisZ;
+		m_rotation.Apply(m_forward);
+		break;
+		///////////////////////////////////////////////////////////////////////////
+
+		//アタックステートの場合///////////////////////////////////////////////////
+		//プレイヤーのいる方向に向かせる
+	case Enemy::enEnemyState_Attack:
+		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。
+		m_rotation.SetRotation(Vector3::AxisZ, diff);
+		//作成したクオータニオンをモデルのローテーションに適応。
+		m_modelRender.SetRotation(m_rotation);
+
+		//エネミーの正面方向ベクトルを求める
+		m_forward = Vector3::AxisZ;
+		m_rotation.Apply(m_forward);
+		break;
+		//////////////////////////////////////////////////////////////////////////
+
+	default:
+		break;
 	}
-	//atan2はtanθの値を角度(ラジアン単位)に変換してくれる関数。
-	//m_moveSpeed.x / m_moveSpeed.zの結果はtanθになる。
-	//atan2を使用して、角度を求めている。
-	//これが回転角度になる。
-	float angle = atan2(-m_movespeed.x, m_movespeed.z);
-	//atanが返してくる角度はラジアン単位なので
-	//SetRotationDegではなくSetRotationを使用する。
-	m_rotation.SetRotationY(-angle);
-
-	//回転を設定する。
-	m_modelRender.SetRotation(m_rotation);
-
-	//プレイヤーの前ベクトルを計算する。
-	m_forward = Vector3::AxisZ;
-	m_rotation.Apply(m_forward);
 }
 
 void Enemy::Attack()
 {
-	if (m_enemystate == enEnemyState_Attack) {
+	//念のためステート確認
+	if (m_enemystate != enEnemyState_Attack)
+	{
 		return;
-//		//攻撃当たり判定用のコリジョンオブジェクトを作成する。
-//		m_attackcoll = NewGO<CollisionObject>(0);
-//		//球状のコリジョンを作成する。
-//		m_attackcoll->CreateSphere(m_position, Quaternion::Identity, 50.0f * m_scale.z);
-//		m_attackcoll->SetName("enemy_attack");
-//		Vector3 position = m_position + m_forward * 40.0f;
-//		m_attackcoll->SetPosition(position + corre1);
 	}
+
+	//攻撃処理
+	//弾飛ばしたりとか書く
 }
 
 //void Enemy::Collision()
@@ -333,8 +342,8 @@ const bool Enemy::SearchPlayer() const
 		}
 		//内積(cosθ)から角度(θ)を求める。
 		float angle = acosf(cos);
-		//角度(θ)が120°(視野角)より小さければ。
-		if (angle <= (Math::PI / 180.0f) * 120.0f)
+		//角度(θ)が90°(視野角)より小さければ。
+		if (angle <= (Math::PI / 180.0f) * 90.0f)
 		{
 			//プレイヤーを見つけた！
 			return true;
@@ -345,18 +354,22 @@ const bool Enemy::SearchPlayer() const
 }
 const bool Enemy::SearchChaseDistance() const
 {
+	//プレイヤーに向かうベクトルを計算
 	Vector3 diff = m_player->GetPosition() - m_position;
+	//求めたベクトルの距離が一定より短ければ
 	if (diff.Length() <= 300.0f)
 	{
+		//プレイヤーが近くにいる
 		return true;
 	}
+	//プレイヤーが近くにいない
 	return false;
 }
 
 const bool Enemy::SearchAttackDistance() const
 {
 	Vector3 diff = m_player->GetPosition() - m_position;
-	//プレイヤーにある程度近かったら.。
+	//プレイヤーにある程度近かったら。
 
 	if (diff.LengthSq() <= enemyattack)
 	{
@@ -369,68 +382,27 @@ const bool Enemy::SearchAttackDistance() const
 
 void Enemy::ProcessCommonStateTransition()
 {
-	//各タイマーを初期化。
-	m_idleTimer = 0.0f;
-	m_chaseTimer = 0.0f;
-	//エネミーからプレイヤーに向かうベクトルを計算する。
-
-	/*if (m_attackcooltimer > 0) {
-		m_attackcooltimer -= g_gameTime->GetFrameDeltaTime();
-		return;
-	}*/
-	//if (m_enemystate == enEnemyState_Attack) {
-	//	return;
-	//}
-	Vector3 diff = m_player->GetPosition() - m_position;
-	diff.z += 100.0f;
-	//ベクトルを正規化する。
-	//diff.Normalize();
-	//移動速度を設定する。
-	//m_movespeed = diff * enemyspeed;
-	//プレイヤーを見つけたら
-	if (SearchPlayer() == true)
+	//プレイヤーが視界内に居るか、
+	if (SearchPlayer())
 	{
-		//ベクトルを正規化する。
-		diff.Normalize();
-		//移動速度を設定する。
-		m_movespeed = diff * enemyspeed;
-
-		//攻撃出来る距離かどうか
-		if (SearchAttackDistance() == true) {
+		//攻撃できる距離なら
+		if (SearchAttackDistance())
+		{
+			//ステートをアタックにする。
 			m_enemystate = enEnemyState_Attack;
-
-			Rotation();
-			m_movespeed = diff * 0.0f;
-
-			return;
 		}
-		////追跡できる距離かどうか
-		//if (SearchChaseDistance() == true) {
-		//	if(m_chaseTimer<0.0f)
-		//}
-		/*if (SearchAttackDistance()) {
-			if (m_attackTimer < 0.0f) {
-				m_enemystate = enEnemyState_Attack;
-				m_attackTimer = attacktime;
-				m_attackGotimer = attackGotime;
-				m_movespeed = diff * enemyattackspeed;
-				return;
-			}
-			if (m_enemystate == enEnemyState_Attack) {
-				m_enemystate = enEnemyState_Chase;
-				return;
-			}*/
-		m_enemystate = enEnemyState_Chase;
-		return;
+		//視界内だが攻撃範囲内ではないなら
+		else
+		{
+			//ステートを追跡にする。
+			m_enemystate = enEnemyState_Chase;
+		}
 	}
-	else if ((m_enemystate == enEnemyState_Attack || m_enemystate == enEnemyState_Chase) && SearchChaseDistance())
-	{
-		m_enemystate = enEnemyState_Chase;
-	}
+	//プレイヤーが視界内に居ないなら
 	else
 	{
+		//ステートを待機にする
 		m_enemystate = enEnemyState_Idle;
-		return;
 	}
 }
 

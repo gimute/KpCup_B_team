@@ -36,26 +36,28 @@ public:
 	~Enemy() {};
 	bool Start();						//アップデート
 	void Update();                                         //アップデート
+	//モデルの回転をする関数
 	void Rotation();                                       //回転
 	void Chase();										   //追跡
 	void Attack();										   //攻撃
 	//void Collision();										//本体の当たり判定
-	const bool SearchPlayer() const;                       //プレイヤー探知
-	const bool SearchChaseDistance() const;					//追跡距離探知
-	const bool SearchAttackDistance() const;               //攻撃距離探知
-	void Render(RenderContext& rc);                        //モデルレンダー
-	//bool IsAttack() const				//移動できるかどうか
-	//{
-	//	return m_enemystate != enAnimationClip_Chase &&
-	//		m_enemystate != enAnimationClip_Attack;
-	//}
+	
+	//プレイヤーが視界内に居るか確かめる関数
+	const bool SearchPlayer() const;
+
+	//プレイヤーが一定範囲内に居るか確かめる関数
+	const bool SearchChaseDistance() const;
+
+	//プレイヤーが攻撃範囲内に居るか確かめる関数
+	const bool SearchAttackDistance() const;
+
+	void Render(RenderContext& rc);
 	///////////////////////////////////////////////////////////
 	//初期設定系統
 	//メンバ関数宣言
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
-	//CollisionObject* m_attackcoll;		//コリジョンオブジェクト。
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
 	Vector3	m_forward = Vector3::AxisZ;						//エネミーの正面ベクトル。
@@ -64,22 +66,6 @@ public:
 	Quaternion m_rotation;					//回転
 	Vector3 m_scale = Vector3::One;			//大きさ
 	ModelRender m_modelRender;	//モデルレンダー
-	//CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
 	CharacterController m_charaCon;        //キャラコン
-	int m_hp = 0;                           //HP
-	int m_sh = 0;							//シールド
-	int m_Vectornum = 0;					//配列のナンバー
-	float m_idleTimer= 0.0f;								//待機時間タイマー。
-	float m_chaseTimer = 0.0f;								//追跡時間タイマー。
-	float m_attackTimer = 5.0f;								//攻撃時間タイマー。
-	float attacktime = 5.0f;
-	float m_attackGotimer = 0.0;							//攻撃時間タイマー
-	float attackGotime = 2.0;								//攻撃時間
-	float m_attackcooltimer = 0.0f;
-	float attackcooltime = 3.0f;
-	float m_looptimer = 0.0f;								//ループタイマー
-	float looptime = 1.16;									//ループ時間
-	float m_mutekitimer = 0.0f;								//無敵タイマー
-	float mutekitime = 0.1f;								//無敵時間
 };
 
