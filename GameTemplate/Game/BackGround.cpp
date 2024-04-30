@@ -24,7 +24,8 @@ bool BackGround::Start()
 	m_modelRender.Update();
 	//静的物理オブジェクトを作成
 	physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
-
+	// 当たり判定を可視化する。
+	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 	return true;
 }
