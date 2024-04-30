@@ -4,82 +4,81 @@ class Player;
 class Enemy : public IGameObject
 {
 public:
-	//s“®ƒXƒe[ƒg
+	//è¡Œå‹•ã‚¹ãƒ†ãƒ¼ãƒˆ
 	enum EnEnemyState {
-		enEnemyState_Idle,			//‘Ò‹@
-		enEnemyState_Chase,			//’ÇÕ
-		enEnemyState_Attack,		//UŒ‚
-		//enEnemyState_ReceiveDamage,	//”íƒ_ƒ[ƒW
-		//enEnemyState_Down,			//ƒ_ƒEƒ“
+		enEnemyState_Idle,			//å¾…æ©Ÿ
+		enEnemyState_Chase,			//è¿½è·¡
+		enEnemyState_Attack,		//æ”»æ’ƒ
 	};
-	//ƒAƒjƒ[ƒVƒ‡ƒ“—Ş/////////////////////////////
-//ƒAƒjƒ[ƒVƒ‡ƒ“ƒXƒe[ƒg
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é¡/////////////////////////////
+//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆ
 	enum EnAnimationClip {
-		enAnimationClip_Idle,			//–_—§‚¿
-		enAnimationClip_Chase,			//’ÇÕ
-		enAnimationClip_Attack,			//UŒ‚
-		//enAnimationClip_ReceiveDamage,	//”íƒ_ƒ[ƒW
-		//enAnimationClip_Down,			//ƒ_ƒEƒ“
-		enAnimationClip_Num,			//ƒAƒjƒ[ƒVƒ‡ƒ“”
+		enAnimationClip_Idle,			//æ£’ç«‹ã¡
+		enAnimationClip_Chase,			//è¿½è·¡
+		enAnimationClip_Attack,			//æ”»æ’ƒ
+		enAnimationClip_Num,			//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ•°
 	};
 	void PlayAnimation();
-	//ƒXƒe[ƒg‘JˆÚŠÖ”///////////////////////////////////////////
-	void ManageState();							//‘JˆÚˆ—
-	void ProcessCommonStateTransition();		//‹¤’Ê‘JˆÚˆ—
-	void ProcessIdleStateTransition();			//‘Ò‹@‘JˆÚ
-	void ProcessChaseStateTransition();			//’ÇÕ‘JˆÚ
-	void ProcessAttackStateTransition();		//UŒ‚‘JˆÚ
-	void ProcessReceiveDamageStateTransition();	//”íƒ_ƒ‘JˆÚ
-	void ProcessDownStateTransition();			//ƒ_ƒEƒ“‘JˆÚ
+	//ã‚¹ãƒ†ãƒ¼ãƒˆé·ç§»é–¢æ•°///////////////////////////////////////////
+	void ManageState();							//é·ç§»å‡¦ç†
+	void ProcessCommonStateTransition();		//å…±é€šé·ç§»å‡¦ç†
+	void ProcessIdleStateTransition();			//å¾…æ©Ÿé·ç§»
+	void ProcessChaseStateTransition();			//è¿½è·¡é·ç§»
+	void ProcessAttackStateTransition();		//æ”»æ’ƒé·ç§»
 	/////////////////////////////////////////////////////////////
 	Enemy() {};
 	~Enemy();
-	bool Start();						//ƒAƒbƒvƒf[ƒg
-	void Update();                                         //ƒAƒbƒvƒf[ƒg
-	void Rotation();                                       //‰ñ“]
-	void Chase();										   //’ÇÕ
-	void Attack();										   //UŒ‚
-	void Collision();										//–{‘Ì‚Ì“–‚½‚è”»’è
-	const bool SearchPlayer() const;                       //ƒvƒŒƒCƒ„[’T’m
-	const bool SearchChaseDistance() const;					//’ÇÕ‹——£’T’m
-	const bool SearchAttackDistance() const;               //UŒ‚‹——£’T’m
-	void Render(RenderContext& rc);                        //ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
-	//bool IsAttack() const				//ˆÚ“®‚Å‚«‚é‚©‚Ç‚¤‚©
-	//{
-	//	return m_enemystate != enAnimationClip_Chase &&
-	//		m_enemystate != enAnimationClip_Attack;
-	//}
+	bool Start();						//ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
+	void Update();                                         //ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
+	//ãƒ¢ãƒ‡ãƒ«ã®å›è»¢ã‚’ã™ã‚‹é–¢æ•°
+	void Rotation();                                       //å›è»¢
+	void Chase();										   //è¿½è·¡
+	void Attack();										   //æ”»æ’ƒ
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒè¦–ç•Œå†…ã«å±…ã‚‹ã‹ç¢ºã‹ã‚ã‚‹é–¢æ•°
+	const bool SearchPlayer() const;
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒä¸€å®šç¯„å›²å†…ã«å±…ã‚‹ã‹ç¢ºã‹ã‚ã‚‹é–¢æ•°
+	const bool SearchChaseDistance() const;
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæ”»æ’ƒç¯„å›²å†…ã«å±…ã‚‹ã‹ç¢ºã‹ã‚ã‚‹é–¢æ•°
+	const bool SearchAttackDistance() const;
+
+	void Render(RenderContext& rc);
+
+	void Collision();										//æœ¬ä½“ã®å½“ãŸã‚Šåˆ¤å®š
+
 	///////////////////////////////////////////////////////////
-	//‰Šúİ’èŒn“
-	//ƒƒ“ƒoŠÖ”éŒ¾
+	//åˆæœŸè¨­å®šç³»çµ±
+	//ãƒ¡ãƒ³ãƒé–¢æ•°å®£è¨€
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
-	//CollisionObject* m_attackcoll;		//ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgB
-	AnimationClip m_animationclips[enAnimationClip_Num];     //ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv
-	EnEnemyState m_enemystate = enEnemyState_Idle;          //ƒGƒlƒ~[ƒXƒe[ƒg
-	Vector3	m_forward = Vector3::AxisZ;						//ƒGƒlƒ~[‚Ì³–ÊƒxƒNƒgƒ‹B
-	Vector3 m_movespeed;									//ˆÚ“®‘¬“x
-	Vector3 m_position;										//À•W
-	Quaternion m_rotation;					//‰ñ“]
-	Vector3 m_scale = Vector3::One;			//‘å‚«‚³
-	ModelRender m_modelRender;	//ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
-	CollisionObject* m_collisionObject;		//ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgB
-	CharacterController m_charaCon;        //ƒLƒƒƒ‰ƒRƒ“
+	AnimationClip m_animationclips[enAnimationClip_Num];     //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—
+	EnEnemyState m_enemystate = enEnemyState_Idle;          //ã‚¨ãƒãƒŸãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆ
+	Vector3	m_forward = Vector3::AxisZ;						//ã‚¨ãƒãƒŸãƒ¼ã®æ­£é¢ãƒ™ã‚¯ãƒˆãƒ«ã€‚
+	Vector3 m_movespeed;									//ç§»å‹•é€Ÿåº¦
+	Vector3 m_position;										//åº§æ¨™
+	Quaternion m_rotation;					//å›è»¢
+	Vector3 m_scale = Vector3::One;			//å¤§ãã•
+	ModelRender m_modelRender;	//ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ¼
+	CharacterController m_charaCon;        //ã‚­ãƒ£ãƒ©ã‚³ãƒ³
+	CollisionObject* m_collisionObject;		//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚
+	CharacterController m_charaCon;        //ã‚­ãƒ£ãƒ©ã‚³ãƒ³
 	int m_hp = 50;                           //HP
-	//int m_sh = 0;							//ƒV[ƒ‹ƒh
-	int m_Vectornum = 0;					//”z—ñ‚Ìƒiƒ“ƒo[
-	float m_idleTimer= 0.0f;								//‘Ò‹@ŠÔƒ^ƒCƒ}[B
-	float m_chaseTimer = 0.0f;								//’ÇÕŠÔƒ^ƒCƒ}[B
-	float m_attackTimer = 5.0f;								//UŒ‚ŠÔƒ^ƒCƒ}[B
+	//int m_sh = 0;							//ã‚·ãƒ¼ãƒ«ãƒ‰
+	int m_Vectornum = 0;					//é…åˆ—ã®ãƒŠãƒ³ãƒãƒ¼
+	float m_idleTimer= 0.0f;								//å¾…æ©Ÿæ™‚é–“ã‚¿ã‚¤ãƒãƒ¼ã€‚
+	float m_chaseTimer = 0.0f;								//è¿½è·¡æ™‚é–“ã‚¿ã‚¤ãƒãƒ¼ã€‚
+	float m_attackTimer = 5.0f;								//æ”»æ’ƒæ™‚é–“ã‚¿ã‚¤ãƒãƒ¼ã€‚
 	float attacktime = 5.0f;
-	float m_attackGotimer = 0.0;							//UŒ‚ŠÔƒ^ƒCƒ}[
-	float attackGotime = 2.0;								//UŒ‚ŠÔ
+	float m_attackGotimer = 0.0;							//æ”»æ’ƒæ™‚é–“ã‚¿ã‚¤ãƒãƒ¼
+	float attackGotime = 2.0;								//æ”»æ’ƒæ™‚é–“
 	float m_attackcooltimer = 0.0f;
 	float attackcooltime = 3.0f;
-	float m_looptimer = 0.0f;								//ƒ‹[ƒvƒ^ƒCƒ}[
-	float looptime = 1.16;									//ƒ‹[ƒvŠÔ
-	float m_mutekitimer = 0.0f;								//–³“Gƒ^ƒCƒ}[
-	float mutekitime = 0.1f;								//–³“GŠÔ
+	float m_looptimer = 0.0f;								//ãƒ«ãƒ¼ãƒ—ã‚¿ã‚¤ãƒãƒ¼
+	float looptime = 1.16;									//ãƒ«ãƒ¼ãƒ—æ™‚é–“
+	float m_mutekitimer = 0.0f;								//ç„¡æ•µã‚¿ã‚¤ãƒãƒ¼
+	float mutekitime = 0.1f;								//ç„¡æ•µæ™‚é–“
 };
 
