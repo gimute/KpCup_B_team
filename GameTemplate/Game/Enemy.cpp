@@ -139,6 +139,21 @@ void Enemy::ManageState()
 
 void Enemy::ProcessChaseStateTransition()
 {
+	if (m_enemeAttackPoint != nullptr)
+	{
+		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+		if (diff.Length() <= 10.0f)
+		{
+			m_enemystate = enEnemyState_Attack;
+			//ProcessCommonStateTransition();
+			return;
+		}
+		else
+		{
+			return;
+		}
+	}
+
 	// プレイヤーが攻撃範囲内に入ったら
 	if (SearchAttackDistance() == true)
 	{
@@ -182,8 +197,42 @@ void Enemy::Chase()
 		return;
 	}
 
+	//エネミーアタックポイントが取得で来てなかったら
+	if (m_enemeAttackPoint == nullptr)
+	{
+		//空いているポイントのアドレスを受け取る
+		m_enemeAttackPoint = m_game->GetEnemyAttackPoint();
+
+		//受け取れずnullptrのままだったら
+		if (m_enemeAttackPoint == nullptr)
+		{
+			Vector3 diff = m_player->GetPosition() - m_position;
+
+			diff.Normalize();
+
+			m_movespeed = diff * enemyspeed;
+
+			m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+
+			m_modelRender.SetPosition(m_position);
+		}
+	}
+
+	//エネミーアタックポイントに向かわせる
+	if (m_enemeAttackPoint != nullptr)
+	{
+		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+
+		diff.Normalize();
+
+		m_movespeed = diff * enemyspeed;
+
+		m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+
+		m_modelRender.SetPosition(m_position);
+	}
 	//プレイヤーに向かうベクトル求める
-	Vector3 diff = m_player->GetPosition() - m_position;
+	/*Vector3 diff = m_player->GetPosition() - m_position;
 	
 	diff.Normalize();
 
@@ -191,7 +240,7 @@ void Enemy::Chase()
 
 	m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
 
-	m_modelRender.SetPosition(m_position);
+	m_modelRender.SetPosition(m_position);*/
 }
 
 void Enemy::Rotation()

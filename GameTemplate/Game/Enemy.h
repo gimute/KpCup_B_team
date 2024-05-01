@@ -1,6 +1,8 @@
 #pragma once
+#include "Game.h"
 class Game;
 class Player;
+
 class Enemy : public IGameObject
 {
 public:
@@ -54,6 +56,8 @@ public:
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
+	Game::EnemyAttackPoint* m_enemeAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
+
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
 	Vector3	m_forward = Vector3::AxisZ;						//エネミーの正面ベクトル。
