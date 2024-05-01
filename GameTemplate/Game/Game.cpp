@@ -12,6 +12,7 @@
 #include "HpUi.h"
 #include "Enemy.h"
 #include "EnemyHpUi.h"
+
 ///////////////////////////////
 
 Game::Game()
@@ -91,6 +92,7 @@ void Game::Delete_EnemyVec(const int num)
 	for (int VecNow = num; VecNow < m_EnemyList.size(); VecNow++) {
 		m_EnemyList[VecNow]->m_Vectornum -= 1;
 		m_EnemyHpUiList[VecNow]->m_Vectornum -= 1;
+
 	}
 	m_EnemyQua--;
 }

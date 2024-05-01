@@ -1,22 +1,9 @@
 #pragma once
 
 namespace nsK2EngineLow {
-	class ModelRender : public Noncopyable
+	class ModelRender : public IRenderer
 	{
 	public:
-		struct Light
-		{
-			Vector3 dirLigDirection;	// ディレクションライトの方向
-			float pad0;					// パディング
-			Vector3 dirColor;			// ディレクションライトのカラー
-			float pad1;
-
-			Vector3 ambientLight;		// アンビエントライト
-			float pad2;
-
-			Vector3 eyePos;				// 視点の位置
-		};
-
 		ModelRender();
 		~ModelRender();
 
@@ -77,14 +64,13 @@ namespace nsK2EngineLow {
 			return m_model;
 		}
 
-		// モデルのDrawを呼び出してるだけ
-		void Draw(RenderContext& rc)
-		{
-			m_model.Draw(rc);
-		}
+		//描画処理
+		void Draw(RenderContext& rc);
+
+		//3Dモデルの描画処理
+		void OnRenderModel(RenderContext& rc) override;
 
 	private:
-		static Light m_light;
 		Model m_model;
 		Skeleton		m_skeleton;
 		AnimationClip* m_animationClips = nullptr;

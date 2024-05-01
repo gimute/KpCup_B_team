@@ -1,14 +1,13 @@
 #pragma once
 
 namespace nsK2EngineLow {
-	class SpriteRender : public Noncopyable
+	class SpriteRender : public IRenderer
 	{
 	public:
 		SpriteRender() {};
 		~SpriteRender() {};
 
 		// 初期化。
-		// αブレンディングはとりあえず無しで
 		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 
 		//座標を設定。zは0.0fで。
@@ -65,11 +64,11 @@ namespace nsK2EngineLow {
 				m_pivot);
 		}
 
-		//ただSpriteのDrawを呼び出すだけ
-		void Draw(RenderContext& rc)
-		{
-			m_sprite.Draw(rc);
-		}
+		//描画処理
+		void Draw(RenderContext& rc);
+
+		//2Dの描画処理
+		void OnRender2D(RenderContext& rc) override;
 
 	private:
 		Sprite		m_sprite;

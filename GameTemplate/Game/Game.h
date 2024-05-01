@@ -11,7 +11,7 @@ class PointYazirushi;
 class HpUi;
 class Enemy;
 class EnemyHpUi;
-///////////////////////////////
+//
 class Game : public IGameObject
 {
 public:
