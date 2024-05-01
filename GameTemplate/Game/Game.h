@@ -10,7 +10,8 @@ class MainTimer;
 class PointYazirushi;
 class HpUi;
 class Enemy;
-///////////////////////////////
+class EnemyHpUi;
+//
 class Game : public IGameObject
 {
 public:
@@ -37,6 +38,7 @@ public:
 	PointYazirushi* m_pointyazi = nullptr;
 	HpUi* m_hpui = nullptr;
 	std::vector<Enemy*> m_EnemyList;
+	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
 };
 

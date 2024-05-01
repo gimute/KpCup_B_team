@@ -26,6 +26,8 @@
     <ClCompile Include="HpUi.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyHpUi.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -47,5 +49,7 @@
     <ClInclude Include="HpUi.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyHpUi.h" />
+
   </ItemGroup>
 </Project>

@@ -227,6 +227,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="HpUi.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Car.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="HpUi.h" />

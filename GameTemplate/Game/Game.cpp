@@ -11,6 +11,8 @@
 #include "PointYazirushi.h"
 #include "HpUi.h"
 #include "Enemy.h"
+#include "EnemyHpUi.h"
+
 ///////////////////////////////
 
 Game::Game()
@@ -79,15 +81,18 @@ void Game::Update()
 {
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
-		m_hpui->DecreaseHP(20);
+		m_EnemyHpUiList[0]->DecreaseHP(20);
 	}
 }
 
 void Game::Delete_EnemyVec(const int num)
 {
 	m_EnemyList.erase(m_EnemyList.begin() + num);
+	m_EnemyHpUiList.erase(m_EnemyHpUiList.begin() + num);
 	for (int VecNow = num; VecNow < m_EnemyList.size(); VecNow++) {
 		m_EnemyList[VecNow]->m_Vectornum -= 1;
+		m_EnemyHpUiList[VecNow]->m_Vectornum -= 1;
+
 	}
 	m_EnemyQua--;
 }

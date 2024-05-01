@@ -1,4 +1,14 @@
 #pragma once
+#define DecreaseTransitionIN0	m_decrease_TRAN = en_Standby_TRAN;
+#define DecreaseTransitionIN1	m_decrease_TRAN = en_DelayTimeON_TRAN
+#define DecreaseTransitionIN2	m_decrease_TRAN = en_DelayTimeLoop_TRAN;
+#define DecreaseTransitionIN3	m_decrease_TRAN = en_TransparentDecreaseCalc_TRAN;
+#define DecreaseTransitionIN4	m_decrease_TRAN = en_TransparentDecreaseON_TRAN;
+#define DecreaseTransition0 m_decrease_TRAN == en_Standby_TRAN
+#define DecreaseTransition1 m_decrease_TRAN == en_DelayTimeON_TRAN
+#define DecreaseTransition2	m_decrease_TRAN == en_DelayTimeLoop_TRAN
+#define DecreaseTransition3	m_decrease_TRAN == en_TransparentDecreaseCalc_TRAN
+#define DecreaseTransition4	m_decrease_TRAN == en_TransparentDecreaseON_TRAN
 class HpUi : public IGameObject
 {
 
@@ -51,8 +61,6 @@ public:
 	Vector3 m_scale_C = { 1.0,1.0,1.0 };
 	//減少遅延タイマー
 	float m_delaytimer = 0.0;
-	//透過減少タイマー
-	float m_transparentdecreasetimer = 0.0;
 	//透過減少割合
 	Vector3 m_changeS_C = m_scale_C;
 	//現在透過減少値
