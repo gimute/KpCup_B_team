@@ -143,18 +143,29 @@ void Enemy::ProcessChaseStateTransition()
 	// アタックポイントを確保できている場合、
 	if (HaveAttackPoint() == true)
 	{
-		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
-		// アタックポイントとの距離が一定以下なら
-		if (diff.Length() <= 10.0f)
+		// アタックポイントとの距離が一定以下、もしくはプレイヤーとの距離が一定以下なら
+		if ((m_enemeAttackPoint->m_position - m_position).Length() <= 10.0f || (m_player->m_position - m_position).Length() <= 200.0f)
 		{
 			// 直接アタックステートにする。
 			m_enemystate = enEnemyState_Attack;
+			m_chaseTimer = 3.0f;
 			return;
 		}
-		// アタックポイントとの距離が一定以上なら
 		else
 		{
-			// ステートを変更せずに返す。
+			if (SearchChaseDistance())
+			{
+				m_chaseTimer = 3.0f;
+			}
+			else
+			{
+				m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
+			}
+
+			if (m_chaseTimer <= 0)
+			{
+				ProcessCommonStateTransition();
+			}
 			return;
 		}
 	}
@@ -169,20 +180,28 @@ void Enemy::ProcessChaseStateTransition()
 			{
 				// ステートを遷移する。
 				ProcessCommonStateTransition();
+				m_chaseTimer = 3.0f;
 				return;
 			}
 			// 攻撃範囲内で無ければ
 			else
 			{
 				// 追跡ステートのまま返す。
+				m_chaseTimer = 3.0f;
 				return;
 			}	
 		}
 		// プレイヤーが近くに居ない場合
 		else
 		{
-			// ステートを遷移する
-			ProcessCommonStateTransition();
+			//チェイスタイマーを進める(値を減らす)
+			m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
+			//タイマーが0以下なら
+			if (m_chaseTimer <= 0)
+			{
+				// ステートを遷移する
+				ProcessCommonStateTransition();
+			}
 			return;
 		}
 	}
@@ -405,7 +424,7 @@ const bool Enemy::SearchChaseDistance() const
 	//プレイヤーに向かうベクトルを計算
 	Vector3 diff = m_player->GetPosition() - m_position;
 	//求めたベクトルの距離が一定より短ければ
-	if (diff.Length() <= 300.0f)
+	if (diff.Length() <= 500.0f)
 	{
 		//プレイヤーが近くにいる
 		return true;

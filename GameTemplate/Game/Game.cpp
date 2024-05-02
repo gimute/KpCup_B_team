@@ -132,9 +132,11 @@ void Game::EnemyAttackPointUpdate()
 Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
 {
 	//距離比較用のベクトル
-	//最初は極端に大きいベクトルにしておく
-	Vector3 diff = g_vec3One * 1000.0f;
-	int tmp = ENEMY_ATTACK_POINT_NUM;
+	Vector3 diff = g_vec3One * 1000.0f;	//最初は極端に大きいベクトルにしておく
+
+	//この変数tmpには一番近いアタックポイントの要素番号を保存する。
+	int tmp = ENEMY_ATTACK_POINT_NUM;	//最初はアタックポイントの数を入れておく(最大の要素番号+1の値になる)
+
 	for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
 	{
 		//アタックポイントが使用中なら処理を飛ばす
@@ -143,40 +145,30 @@ Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
 			continue;
 		}
 
+
+		//より距離が近いアタックポイントが見つかったら、
 		if (diff.Length() > (m_enemyAttackPointList[i].m_position - pos).Length())
 		{
-			//おとなしくもう一つベクトル作ったほうが良いかもなぁ
+			//ベクトルdiffを近い方のアタックポイントに向かうベクトルに変更し
 			diff = m_enemyAttackPointList[i].m_position - pos;
-
+			//そのアタックポイントの要素番号を保存する
 			tmp = i;
 		}
 	}
 
+	//tmpの値が変わっていなかったら(実質空いているアタックポイントが無かったらになるはず)
 	if (tmp == ENEMY_ATTACK_POINT_NUM)
 	{
 		return nullptr;
 	}
+	//tmpの値が変わっていたら
 	else
 	{
+		//一番近いアタックポイントを使用中にして
 		m_enemyAttackPointList[tmp].m_use = true;
+		//そのアタックポイントのアドレスを返す
 		return &m_enemyAttackPointList[tmp];
 	}
-	////使用中じゃないアタックポイントを探す
-	//for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
-	//{
-	//	//未使用のアタックポイントが見つかれば
-	//	if (m_enemyAttackPointList[i].m_use == false)
-	//	{
-	//		//ポイントを使用中にして
-	//		m_enemyAttackPointList[i].m_use = true;
-	//		//アドレスを返す
-	//		return &m_enemyAttackPointList[i];
-	//	}
-	//}
-
-	//無ければnullptrを返す
-	return nullptr;
-
 }
 /////////////////////////////////////////////////////////////////////////////////
 
