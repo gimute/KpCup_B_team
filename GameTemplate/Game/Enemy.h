@@ -34,6 +34,7 @@ public:
 	void Update();                                         //アップデート
 	//モデルの回転をする関数
 	void Rotation();                                       //回転
+	void Collision();										//本体の当たり判定
 	void Chase();										   //追跡
 	void Attack();										   //攻撃
 
@@ -50,9 +51,15 @@ public:
 	//確保で来ていたらtrue、できていなかったらfalse;
 	const bool HaveAttackPoint() const;
 
+	void GetAttackPoint();
+
+	//確保しているアタックポイントをリリースする関数
+	void ReleaseAttackPoint();
+
+	//モデルの描画処理
 	void Render(RenderContext& rc);
 
-	void Collision();										//本体の当たり判定
+	
 
 	///////////////////////////////////////////////////////////
 	//初期設定系統

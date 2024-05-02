@@ -209,14 +209,10 @@ void Enemy::Chase()
 		return;
 	}
 
-	//アタックポイントを確保できてないなら
-	if (HaveAttackPoint() == false)
-	{
-		//空いているアタックポイントを確保しにいく
-		m_enemeAttackPoint = m_game->GetEnemyAttackPoint();
-	}
+	//アタックポイントを確保
+	GetAttackPoint();
 
-	//アックポイントが確保できてないままなら
+	//アックポイントが確保できなければ
 	if (HaveAttackPoint() == false)
 	{
 		//プレイヤーに直接向かう
@@ -235,7 +231,18 @@ void Enemy::Chase()
 	{
 		//アタックポイントに向かわせる
 
+		//アタックポイントに向かうベクトルを求める
 		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+
+		//アタックポイントとの距離が一定以上離れていたら、
+		if (diff.Length() < 300.0f)
+		{
+			//一度アタックポイントをリリースし、
+			ReleaseAttackPoint();
+			//近くにあるポイントを確保しなおす。
+			GetAttackPoint();
+		}
+
 		diff.Normalize();
 
 		m_movespeed = diff * enemyspeed;
@@ -442,6 +449,8 @@ void Enemy::ProcessCommonStateTransition()
 	//プレイヤーが視界内に居ないなら
 	else
 	{
+		//アタックポイントを解放して
+		ReleaseAttackPoint();
 		//ステートを待機にする
 		m_enemystate = enEnemyState_Idle;
 	}
@@ -459,6 +468,30 @@ const bool Enemy::HaveAttackPoint() const
 		return true;
 	}
 
+}
+
+void Enemy::GetAttackPoint()
+{
+	//アタックポイント持っていなければ
+	if (m_enemeAttackPoint == nullptr)
+	{
+		//空いている一番近いアタックポイントを受け取る
+		m_enemeAttackPoint = m_game->GetEnemyAttackPoint(m_position);
+	}
+}
+
+void Enemy::ReleaseAttackPoint()
+{
+	//そもそもアタックポイントを持っていなかったら何もせず返す。
+	if (m_enemeAttackPoint == nullptr)
+	{
+		return;
+	}
+
+	//確保しているアタックポイントを未使用中にし、
+	m_enemeAttackPoint->m_use = false;
+	//アタックポイントを開放する
+	m_enemeAttackPoint = nullptr;
 }
 
 void Enemy::Render(RenderContext& rc)

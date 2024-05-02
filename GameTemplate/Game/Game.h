@@ -35,9 +35,9 @@ public:
 
 	//エネミーアタックポイントの座標更新
 	void EnemyAttackPointUpdate();
-	//使用可能なエネミーアタックポイントのアドレスの取得
-	//使用可能なポイントが無ければnullptrを返す
-	EnemyAttackPoint* GetEnemyAttackPoint();
+	//引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
+	//使用可能なアタックポイントが無ければnullptrを返す
+	EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
 
 //メンバ変数
 	Player* m_player;
