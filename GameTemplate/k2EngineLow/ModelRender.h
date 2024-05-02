@@ -30,6 +30,25 @@ namespace nsK2EngineLow {
 			m_animation.Play(animNo, interpolateTime);
 		}
 
+		// アニメーション再生中?
+		bool IsPlayingAnimation() const
+		{
+			return m_animation.IsPlaying();
+		}
+
+		/// アニメーション再生の速度を設定
+		void SetAnimationSpeed(const float animationSpeed)
+		{
+			m_animationSpeed = animationSpeed;
+		}
+
+		//アニメーションイベント
+		//ただコピペしただけで、何やってるは調べ中
+		void AddAnimationEvent(AnimationEventListener eventListener)
+		{
+			m_animation.AddAnimationEventListener(eventListener);
+		}
+
 		// 更新処理
 		void Update();
 
@@ -80,6 +99,8 @@ namespace nsK2EngineLow {
 		Vector3 m_pos = Vector3::Zero;
 		Quaternion m_rot = Quaternion::Identity;
 		Vector3 m_scale = Vector3::One;
+
+		float m_animationSpeed = 1.0f;			//アニメーションの再生スピード
 	};
 
 }
