@@ -113,9 +113,13 @@ void Game::Delete_EnemyVec(const int num)
 	for (int VecNow = num; VecNow < m_EnemyList.size(); VecNow++) {
 		m_EnemyList[VecNow]->m_Vectornum -= 1;
 		m_EnemyHpUiList[VecNow]->m_Vectornum -= 1;
-
 	}
 	m_EnemyQua--;
+}
+
+Vector3 Game::GetEnemyListPos(int num)
+{
+	return m_EnemyList[num]->m_position;
 }
 
 void Game::Render(RenderContext& rc)
