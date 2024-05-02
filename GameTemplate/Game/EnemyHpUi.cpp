@@ -2,6 +2,7 @@
 #include "EnemyHpUi.h"
 #include "Game.h"
 #include "Enemy.h"
+#include "Player.h"
 
 namespace {
 	/// <summary>
@@ -12,6 +13,10 @@ namespace {
 	/// BとCの基点
 	/// </summary>
 	const Vector2 n_pivot_BC{ 0,0.5 };
+	/// <summary>
+	/// 表示限界距離
+	/// </summary>
+	const float LimitedRange = 600.0f;
 }
 
 bool EnemyHpUi::Start()
@@ -26,6 +31,8 @@ bool EnemyHpUi::Start()
 
 	//ゲームのインスタンスを持ってきて
 	m_game = FindGO<Game>("game");
+	//プレイヤーのインスタンスも持ってくる
+	m_player = FindGO<Player>("player");
 
 	//HPを初期化
 	SetEnemyHp();
@@ -35,6 +42,8 @@ bool EnemyHpUi::Start()
 
 void EnemyHpUi::Update()
 {
+	//表示距離計算処理
+	DisplayDis();
 	//位置更新処理
 	PositionUpdate();
 	//減算計算処理
@@ -47,9 +56,31 @@ void EnemyHpUi::Update()
 	m_hpUI_C.Update();
 }
 
+void EnemyHpUi::DisplayDis()
+{
+	//プレイヤーの一を取得
+	Vector3 DisplayCenterPos = m_player->GetPosition();
+	//自身の配列番号から一致するエネミーの位置を取得
+	Vector3 DisplayTargetPos = m_game->GetEnemyListPos(m_Vectornum);
+
+	//取得したプレイヤーの位置から取得したエネミーの位置まで伸びるベクトルを計算
+	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
+
+	if (diff.LengthSq() >= LimitedRange * LimitedRange)
+	{
+		//表示しないようにする。
+		m_isImage = false;
+	}
+	else
+	{
+		//表示する
+		m_isImage = true;
+	}
+}
+
 void EnemyHpUi::PositionUpdate()
 {
-	Vector3 position = m_game->m_EnemyList[m_Vectornum]->m_position;
+	Vector3 position = m_game->GetEnemyListPos(m_Vectornum);
 	//オブジェクトの上の方に画像を表示したいので。
 	//y座標を少し大きくする。
 	position.y += 100.0f;
@@ -92,7 +123,7 @@ void EnemyHpUi::AdjustmentTransparent()
 	if (m_decrease_TRAN == en_Standby_TRAN)
 		return;
 
-	//
+	//透過UI減少計算中または透過減少中であれば
 	if (m_decrease_TRAN == en_TransparentDecreaseCalc_TRAN 
 		|| m_decrease_TRAN == en_TransparentDecreaseON_TRAN)
 	{
@@ -166,10 +197,13 @@ void EnemyHpUi::AdjustmentTransparent()
 
 void EnemyHpUi::Render(RenderContext& rc)
 {
-	//HPUIの描画処理を先に
-	m_hpUI_A.Draw(rc);
-	//バーの描画処理を後に
-	m_hpUI_B.Draw(rc);
-	//透過バーの描画処理を一番後に
-	m_hpUI_C.Draw(rc);
+	if (m_isImage)
+	{
+		//HPUIの描画処理を先に
+		m_hpUI_A.Draw(rc);
+		//バーの描画処理を後に
+		m_hpUI_B.Draw(rc);
+		//透過バーの描画処理を一番後に
+		m_hpUI_C.Draw(rc);
+	}
 }

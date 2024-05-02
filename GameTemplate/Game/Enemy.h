@@ -1,6 +1,7 @@
 #pragma once
 class Game;
 class Player;
+class EnemyHpUi;
 class Enemy : public IGameObject
 {
 public:

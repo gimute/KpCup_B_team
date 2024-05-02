@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include "Game.h"
 #include "Player.h"
+#include "EnemyHpUi.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -56,6 +57,11 @@ bool Enemy::Start()
 	m_Vectornum = m_game->m_EnemyQua;
 	m_game->m_EnemyQua++;
 	m_game->m_EnemyList.push_back(this);
+
+	//HPUIを作成
+	EnemyHpUi* m_enemyHpUi = NewGO<EnemyHpUi>(0, "Ui");
+	m_enemyHpUi->m_Vectornum = m_Vectornum;
+	m_game->m_EnemyHpUiList.push_back(m_enemyHpUi);
 
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
@@ -297,6 +303,7 @@ void Enemy::Collision()
 			
 				//HPを1減らす。
 				m_hp -= 1;
+				m_game->m_EnemyHpUiList[m_Vectornum]->DecreaseHP(1);
 				//m_mutekitimer = mutekitime;
 				//HPが0になったら。
 				if (m_hp == 0) {

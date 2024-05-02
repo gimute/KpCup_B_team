@@ -3,6 +3,7 @@
 #include "Enemy.h"
 class Game;
 class Enemy;
+class Player;
 class EnemyHpUi : public IGameObject
 {
 	/// <summary>
@@ -44,6 +45,10 @@ public:
 	/// </summary>
 	void Update();
 	/// <summary>
+	/// 距離表示計算
+	/// </summary>
+	void DisplayDis();
+	/// <summary>
 	/// 位置更新
 	/// </summary>
 	void PositionUpdate();
@@ -81,6 +86,10 @@ public:
 	/// ゲーム
 	/// </summary>
 	Game* m_game = nullptr;
+	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	Player* m_player = nullptr;
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// 最大HP
@@ -126,6 +135,10 @@ public:
 	/// 配列のナンバー
 	/// </summary>
 	int m_Vectornum = 0;					
+	/// <summary>
+	/// 描画状態かそうでないか
+	/// </summary>
+	bool m_isImage = false;
 	/////////////////////////////////////////初期設定系統
 	/// <summary>
 	/// HP減少処理

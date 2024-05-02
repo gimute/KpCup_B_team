@@ -40,5 +40,11 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
+	/// <summary>
+	/// エネミーの配列から配列番号を入れてその位置を取得
+	/// </summary>
+	/// <param name="num"></param>
+	/// <returns></returns>
+	Vector3 GetEnemyListPos(int num);
 };
 
