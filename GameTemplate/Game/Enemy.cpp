@@ -70,6 +70,7 @@ void Enemy::Update()
 	//ステート遷移処理
 	ManageState();
 	
+	//ステートごとの専用の処理
 	switch (m_enemystate)
 	{
 	case enEnemyState_Idle:
@@ -139,41 +140,52 @@ void Enemy::ManageState()
 
 void Enemy::ProcessChaseStateTransition()
 {
-	if (m_enemeAttackPoint != nullptr)
+	// アタックポイントを確保できている場合、
+	if (HaveAttackPoint() == true)
 	{
 		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+		// アタックポイントとの距離が一定以下なら
 		if (diff.Length() <= 10.0f)
 		{
+			// 直接アタックステートにする。
 			m_enemystate = enEnemyState_Attack;
-			//ProcessCommonStateTransition();
 			return;
 		}
+		// アタックポイントとの距離が一定以上なら
 		else
 		{
+			// ステートを変更せずに返す。
 			return;
 		}
 	}
-
-	// プレイヤーが攻撃範囲内に入ったら
-	if (SearchAttackDistance() == true)
-	{
-		// 他のステートに遷移する。
-		ProcessCommonStateTransition();
-		return;
-	}
-	// プレイヤーがまだ近くにいるなら
-	else if (SearchChaseDistance())
-	{
-		// ステートを変更せず返す。
-		return;
-	}
-	// プレイヤーが近くにいないなら
+	// アタックポイントを確保できていない場合、
 	else
 	{
-		// 他のステートに遷移する
-		ProcessCommonStateTransition();
+		// プレイヤーがまだ近くにいる時、
+		if (SearchChaseDistance())
+		{
+			// プレイヤーが攻撃範囲内に居たら、
+			if (SearchAttackDistance() == true)
+			{
+				// ステートを遷移する。
+				ProcessCommonStateTransition();
+				return;
+			}
+			// 攻撃範囲内で無ければ
+			else
+			{
+				// 追跡ステートのまま返す。
+				return;
+			}	
+		}
+		// プレイヤーが近くに居ない場合
+		else
+		{
+			// ステートを遷移する
+			ProcessCommonStateTransition();
+			return;
+		}
 	}
-	
 }
 
 void Enemy::ProcessAttackStateTransition()
@@ -197,32 +209,19 @@ void Enemy::Chase()
 		return;
 	}
 
-	//エネミーアタックポイントが取得で来てなかったら
-	if (m_enemeAttackPoint == nullptr)
+	//アタックポイントを確保できてないなら
+	if (HaveAttackPoint() == false)
 	{
-		//空いているポイントのアドレスを受け取る
+		//空いているアタックポイントを確保しにいく
 		m_enemeAttackPoint = m_game->GetEnemyAttackPoint();
-
-		//受け取れずnullptrのままだったら
-		if (m_enemeAttackPoint == nullptr)
-		{
-			Vector3 diff = m_player->GetPosition() - m_position;
-
-			diff.Normalize();
-
-			m_movespeed = diff * enemyspeed;
-
-			m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
-
-			m_modelRender.SetPosition(m_position);
-		}
 	}
 
-	//エネミーアタックポイントに向かわせる
-	if (m_enemeAttackPoint != nullptr)
+	//アックポイントが確保できてないままなら
+	if (HaveAttackPoint() == false)
 	{
-		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+		//プレイヤーに直接向かう
 
+		Vector3 diff = m_player->GetPosition() - m_position;
 		diff.Normalize();
 
 		m_movespeed = diff * enemyspeed;
@@ -231,16 +230,20 @@ void Enemy::Chase()
 
 		m_modelRender.SetPosition(m_position);
 	}
-	//プレイヤーに向かうベクトル求める
-	/*Vector3 diff = m_player->GetPosition() - m_position;
-	
-	diff.Normalize();
+	//アタックポイントを確保できているなら
+	else
+	{
+		//アタックポイントに向かわせる
 
-	m_movespeed = diff * enemyspeed;
+		Vector3 diff = m_enemeAttackPoint->m_position - m_position;
+		diff.Normalize();
 
-	m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+		m_movespeed = diff * enemyspeed;
 
-	m_modelRender.SetPosition(m_position);*/
+		m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+
+		m_modelRender.SetPosition(m_position);
+	}
 }
 
 void Enemy::Rotation()
@@ -304,7 +307,6 @@ void Enemy::Attack()
 	}
 
 	//攻撃処理
-	//弾飛ばしたりとか書く
 }
 
 void Enemy::Collision()
@@ -430,7 +432,7 @@ void Enemy::ProcessCommonStateTransition()
 			//ステートをアタックにする。
 			m_enemystate = enEnemyState_Attack;
 		}
-		//視界内だが攻撃範囲内ではないなら
+		//攻撃範囲内ではないなら
 		else
 		{
 			//ステートを追跡にする。
@@ -443,6 +445,20 @@ void Enemy::ProcessCommonStateTransition()
 		//ステートを待機にする
 		m_enemystate = enEnemyState_Idle;
 	}
+}
+
+const bool Enemy::HaveAttackPoint() const
+{
+	//アタックポイントを確保できていなかったら
+	if (m_enemeAttackPoint == nullptr)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
 }
 
 void Enemy::Render(RenderContext& rc)

@@ -18,10 +18,10 @@ class Game : public IGameObject
 {
 public:
 	//エネミーの攻撃可能ポイント
-	//このポイントにいるエネミーのみ攻撃可能にする
+	//このポイントを確保できているエネミーのみ攻撃可能にする
 	struct EnemyAttackPoint
 	{
-		Vector3 m_position; //アタックポイントの座標
+		Vector3 m_position;			//アタックポイントの座標
 		bool m_use = false;			//使用中か
 	};
 

@@ -46,6 +46,10 @@ public:
 	//プレイヤーが攻撃範囲内に居るか確かめる関数
 	const bool SearchAttackDistance() const;
 
+	//アタックポイントを確保できているか確認する関数
+	//確保で来ていたらtrue、できていなかったらfalse;
+	const bool HaveAttackPoint() const;
+
 	void Render(RenderContext& rc);
 
 	void Collision();										//本体の当たり判定
