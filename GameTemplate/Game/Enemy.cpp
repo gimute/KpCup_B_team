@@ -16,7 +16,6 @@ namespace
 
 Enemy::~Enemy()
 {
-	m_game->Delete_EnemyVec(m_Vectornum);
 	DeleteGO(m_collisionObject);
 }
 
@@ -29,6 +28,8 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
 
 	//モデル読み込み
@@ -309,6 +310,8 @@ void Enemy::Collision()
 				if (m_hp == 0) {
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
+					m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
+					m_game->Delete_EnemyVec(m_Vectornum);
 					DeleteGO(this);
 				}
 				else {

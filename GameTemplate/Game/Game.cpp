@@ -79,7 +79,7 @@ Game::Game()
 	m_enemy6->m_position = { -900.0f,0.0f,1300.0f };
 
 	Enemy* m_enemy7 = NewGO<Enemy>(0, "enemy");
-	m_enemy7->m_position = { -800.0f,0.0f,600.0f };
+	m_enemy7->m_position = { -800.0f,0.0f,700.0f };
 
 	Enemy* m_enemy8 = NewGO<Enemy>(0, "enemy");
 	m_enemy8->m_position = { -800.0f,0.0f,600.0f };
