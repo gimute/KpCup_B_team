@@ -45,6 +45,10 @@ public:
 	/// </summary>
 	void Update();
 	/// <summary>
+	/// UIÁ‹ˆ—
+	/// </summary>
+	void DeleteUi();
+	/// <summary>
 	/// ‹——£•\¦ŒvZ
 	/// </summary>
 	void DisplayDis();

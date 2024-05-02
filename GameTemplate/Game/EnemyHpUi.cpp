@@ -6,7 +6,7 @@
 
 namespace {
 	/// <summary>
-	/// //delaytimerの初期設定時間
+	/// delaytimerの初期設定時間
 	/// </summary>
 	float m_delaytime = 0.7f;
 	/// <summary>
@@ -22,9 +22,9 @@ namespace {
 bool EnemyHpUi::Start()
 {
 	//画像設定
-	m_hpUI_A.Init("Assets/modelData/ui_hp/Enemy_UI_A.DDS", 200.0f, 35.0f);
-	m_hpUI_B.Init("Assets/modelData/ui_hp/Enemy_UI_B.DDS", 200.0f, 30.0f);
-	m_hpUI_C.Init("Assets/modelData/ui_hp/Enemy_UI_C.DDS", 200.0f, 30.0f);
+	m_hpUI_A.Init("Assets/modelData/ui_hp/Enemy_UI_A.DDS", 100.0f, 15.0f);
+	m_hpUI_B.Init("Assets/modelData/ui_hp/Enemy_UI_B.DDS", 100.0f, 10.0f);
+	m_hpUI_C.Init("Assets/modelData/ui_hp/Enemy_UI_C.DDS", 100.0f, 10.0f);
 	//基点設定
 	m_hpUI_B.SetPivot(n_pivot_BC);
 	m_hpUI_C.SetPivot(n_pivot_BC);
@@ -56,6 +56,11 @@ void EnemyHpUi::Update()
 	m_hpUI_C.Update();
 }
 
+void EnemyHpUi::DeleteUi()
+{
+	DeleteGO(this);
+}
+
 void EnemyHpUi::DisplayDis()
 {
 	//プレイヤーの一を取得
@@ -83,14 +88,14 @@ void EnemyHpUi::PositionUpdate()
 	Vector3 position = m_game->GetEnemyListPos(m_Vectornum);
 	//オブジェクトの上の方に画像を表示したいので。
 	//y座標を少し大きくする。
-	position.y += 100.0f;
+	position.y += 80.0f;
 	//ワールド座標からスクリーン座標を計算。
 	//計算結果がm_positionAに代入される。
 	g_camera3D->CalcScreenPositionFromWorldPosition(m_positionA, position);
 	m_hpUI_A.SetPosition(Vector3(m_positionA.x, m_positionA.y, 0.0f));
 	//BとCにも位置設定
-	m_hpUI_B.SetPosition(Vector3(m_positionA.x - 100.0f, m_positionA.y, 0.0f));
-	m_hpUI_C.SetPosition(Vector3(m_positionA.x - 100.0f, m_positionA.y, 0.0f));
+	m_hpUI_B.SetPosition(Vector3(m_positionA.x - 50.0f, m_positionA.y, 0.0f));
+	m_hpUI_C.SetPosition(Vector3(m_positionA.x - 50.0f, m_positionA.y, 0.0f));
 }
 
 void EnemyHpUi::Adjustment()
