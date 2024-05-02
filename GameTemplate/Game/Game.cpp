@@ -59,13 +59,34 @@ Game::Game()
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
-	m_enemy1->m_position = { 10.0f,0.0f,500.0f };
+	m_enemy1->m_position = { -1250.0f,0.0f,300.0f };
 
 	Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
-	m_enemy2->m_position = { 300.0f,0.0f,500.0f };
+	m_enemy2->m_position = { -800.0f,0.0f,800.0f };
 
 	Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
-	m_enemy3->m_position = { -300.0f,0.0f,500.0f };
+	m_enemy3->m_position = { -1200.0f,0.0f,1000.0f };
+
+	Enemy* m_enemy4 = NewGO<Enemy>(0, "enemy");
+	m_enemy4->m_position = { -1000.0f,0.0f,500.0f };
+
+	Enemy* m_enemy5 = NewGO<Enemy>(0, "enemy");
+	m_enemy5->m_position = { -900.0f,0.0f,200.0f };
+
+	Enemy* m_enemy6 = NewGO<Enemy>(0, "enemy");
+	m_enemy6->m_position = { -900.0f,0.0f,1300.0f };
+
+	Enemy* m_enemy7 = NewGO<Enemy>(0, "enemy");
+	m_enemy7->m_position = { -800.0f,0.0f,600.0f };
+
+	Enemy* m_enemy8 = NewGO<Enemy>(0, "enemy");
+	m_enemy8->m_position = { -800.0f,0.0f,600.0f };
+
+	Enemy* m_enemy9 = NewGO<Enemy>(0, "enemy");
+	m_enemy9->m_position = { -1100.0f,0.0f,600.0f };
+
+	Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
+	m_enemy10->m_position = { -850.0f,0.0f,300.0f };
 
 }
 
