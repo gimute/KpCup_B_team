@@ -1,7 +1,7 @@
 #pragma once
 
 //エネミーアタックポイントの数
-#define ENEMY_ATTACK_POINT_NUM 10
+#define ENEMY_ATTACK_POINT_NUM 20
 
 ///////////////////////////////
 class Player;
@@ -22,6 +22,7 @@ public:
 	struct EnemyAttackPoint
 	{
 		Vector3 m_position;			//アタックポイントの座標
+		int m_number;				//アタックポイントの要素番号
 		bool m_use = false;			//使用中か
 	};
 
@@ -42,14 +43,36 @@ public:
 
 	//エネミーアタックポイントの座標更新
 	void EnemyAttackPointUpdate();
+
 	//引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
-	//使用可能なアタックポイントが無ければnullptrを返す
-	EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
-	//使用中アタックポイントの数のカウントを1減らすだけの関数
-	void useAttackPointNumDecrement()
+	//アタックポインタが一定数以上使用中ならnullptrを返す
+	EnemyAttackPoint* GetNearEnemyAttackPoint(Vector3 pos);
+
+	//指定された要素番号のアタックポイントを使用中にする
+	void EnemyAttackPointSetUse(int number)
 	{
-		m_useAttackPointNum--;
+		if (m_enemyAttackPointList[number].m_use != true)
+		{
+			m_enemyAttackPointList[number].m_use = true;
+		}	
 	}
+	//指定された要素番号のアタックポイントを未使用にする
+	void EnemyAttackPointSetUnUse(int number)
+	{
+		if (m_enemyAttackPointList[number].m_use != false)
+		{
+			m_enemyAttackPointList[number].m_use = false;
+		}
+	}
+
+	////引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
+	////使用可能なアタックポイントが無ければnullptrを返す
+	//EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
+	////使用中アタックポイントの数のカウントを1減らすだけの関数
+	//void useAttackPointNumDecrement()
+	//{
+	//	m_useAttackPointNum--;
+	//}
 
 
 //メンバ変数
@@ -66,6 +89,5 @@ public:
 	int m_EnemyQua = 0;
 
 	EnemyAttackPoint m_enemyAttackPointList[ENEMY_ATTACK_POINT_NUM];
-	int m_useAttackPointNum = 0;	//使用中アタックポイントの数
 };
 

@@ -12,6 +12,7 @@ public:
 		enEnemyState_Idle,			//待機
 		enEnemyState_Chase,			//追跡
 		enEnemyState_Attack,		//攻撃
+		enEnemyState_Stand			//構え
 	};
 	//アニメーション類/////////////////////////////
 //アニメーションステート
@@ -29,7 +30,9 @@ public:
 	void ProcessIdleStateTransition();			//待機遷移
 	void ProcessChaseStateTransition();			//追跡遷移
 	void ProcessAttackStateTransition();		//攻撃遷移
+	void ProcessStandStateTransition();			//構え遷移
 	/////////////////////////////////////////////////////////////
+
 	Enemy() {};
 	~Enemy();
 	bool Start();						//アップデート
@@ -49,14 +52,19 @@ public:
 	//プレイヤーが攻撃範囲内に居るか確かめる関数
 	const bool SearchAttackDistance() const;
 
-	//アタックポイントを確保できているか確認する関数
-	//確保で来ていたらtrue、できていなかったらfalse;
-	const bool HaveAttackPoint() const;
+	//現在自分が所持しているアタックポイントを使用中にする
+	void SetAttackPointIsUse()
+	{
+		m_enemyAttackPoint->m_use = true;
+		m_useAttacPoint = true;
+	}
+	//現在自分が所持しているアタックポイントを未使用にする
+	void SetAttackPointIsUnUse()
+	{
+		m_enemyAttackPoint->m_use = false;
+		m_useAttacPoint = false;
+	}
 
-	void GetAttackPoint();
-
-	//確保しているアタックポイントをリリースする関数
-	void ReleaseAttackPoint();
 
 	//モデルの描画処理
 	void Render(RenderContext& rc);
@@ -69,7 +77,7 @@ public:
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
-	Game::EnemyAttackPoint* m_enemeAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
+	Game::EnemyAttackPoint* m_enemyAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
@@ -96,5 +104,7 @@ public:
 	float looptime = 1.16;									//ループ時間
 	float m_mutekitimer = 0.0f;								//無敵タイマー
 	float mutekitime = 0.1f;								//無敵時間
+
+	bool m_useAttacPoint = false;							//アタックを保持しているか
 };
 
