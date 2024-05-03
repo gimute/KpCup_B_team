@@ -24,23 +24,6 @@ Game::Game()
 	m_player = NewGO<Player>(0, "player");
 	m_player->m_position = { 0.0f,0.0f,0.0f };
 
-	//車のオブジェクトを作る。
-	//m_car1 = NewGO<Car>(0, "car");
-	//m_car1->m_position = { 30.0f,0.0f,3000.0f };
-
-	//m_car2 = NewGO<Car>(0, "car");
-	//m_car2->m_position = { 1000.0f,0.0f,0.0f };
-
-	//m_car3 = NewGO<Car>(0, "car");
-	//m_car3->m_position = { -500.0f,0.0f,-2000.0f };
-
-	//m_car4 = NewGO<Car>(0, "car");
-	//m_car4->m_position = { 400.0f,0.0f,-500.0f };
-
-	//m_car5 = NewGO<Car>(0, "car");
-	//m_car5->m_position = { -1200.0f,0.0f,3000.0f };
-
-
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
@@ -53,11 +36,6 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(3, "UI");
-
-	//矢印を作る
-	//m_pointyazi = NewGO<PointYazirushi>(0);
-	//m_pointyazi->SetPosition(m_player->m_position);
-	//m_pointyazi->SetTarget(m_car5->m_position);
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
@@ -100,6 +78,8 @@ Game::~Game()
 
 void Game::Update()
 {
+	EnemyAttackPointUpdate();
+
 	if (g_pad[0]->IsTrigger(enButtonY))
 	{
 		m_EnemyHpUiList[0]->DecreaseHP(20);
@@ -121,6 +101,80 @@ Vector3 Game::GetEnemyListPos(int num)
 {
 	return m_EnemyList[num]->m_position;
 }
+
+//エネミーアタックポイント関連///////////////////////////////////////////////////
+void Game::EnemyAttackPointUpdate()
+{
+	Vector3 pos = m_player->GetPosition();
+
+	//エネミーアタックポイントをプレイヤーのポジションの周囲に等間隔で並べる
+	for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
+	{
+		//プレイヤーのポジションからポイントまでの距離
+		float lenge = 200.0f;
+
+		//ポイントを設置する方向
+		Vector3 direction = g_vec3Front;
+
+		//ポイントを設置する方向を回転させるクオータニオン
+		Quaternion directionRot = g_quatIdentity;
+
+		//360度をエネミーアタックポイント配列の要素数で割って等間隔で置くための角度を設定する
+		directionRot.SetRotationDegY(360.0f / ENEMY_ATTACK_POINT_NUM);
+
+		//ポイントの座標を設定する
+		for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
+		{
+			m_enemyAttackPointList[i].m_position = pos + direction * lenge;
+
+			//設置する方向を回転
+			directionRot.Apply(direction);
+		}
+	}
+}
+
+Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
+{
+	//距離比較用のベクトル
+	Vector3 diff = g_vec3One * 1000.0f;	//最初は極端に大きいベクトルにしておく
+
+	//この変数tmpには一番近いアタックポイントの要素番号を保存する。
+	int tmp = ENEMY_ATTACK_POINT_NUM;	//最初はアタックポイントの数を入れておく(最大の要素番号+1の値になる)
+
+	for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
+	{
+		//アタックポイントが使用中なら処理を飛ばす
+		if (m_enemyAttackPointList[i].m_use == true)
+		{
+			continue;
+		}
+
+
+		//より距離が近いアタックポイントが見つかったら、
+		if (diff.Length() > (m_enemyAttackPointList[i].m_position - pos).Length())
+		{
+			//ベクトルdiffを近い方のアタックポイントに向かうベクトルに変更し
+			diff = m_enemyAttackPointList[i].m_position - pos;
+			//そのアタックポイントの要素番号を保存する
+			tmp = i;
+		}
+	}
+
+	//tmpの値が変わっていなかったら(実質空いているアタックポイントが無かったらになるはず)
+	if (tmp == ENEMY_ATTACK_POINT_NUM)
+	{
+		return nullptr;
+	}
+	//tmpの値が変わっていたら
+	else
+	{
+		//一番近いアタックポイントを使用中にして
+		m_enemyAttackPointList[tmp].m_use = true;
+		//そのアタックポイントのアドレスを返す
+		return &m_enemyAttackPointList[tmp];
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////
 
 void Game::Render(RenderContext& rc)
 {

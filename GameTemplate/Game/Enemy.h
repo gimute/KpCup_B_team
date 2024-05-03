@@ -1,7 +1,9 @@
 #pragma once
+#include "Game.h"
 class Game;
 class Player;
 class EnemyHpUi;
+
 class Enemy : public IGameObject
 {
 public:
@@ -34,6 +36,7 @@ public:
 	void Update();                                         //アップデート
 	//モデルの回転をする関数
 	void Rotation();                                       //回転
+	void Collision();										//本体の当たり判定
 	void Chase();										   //追跡
 	void Attack();										   //攻撃
 
@@ -46,9 +49,19 @@ public:
 	//プレイヤーが攻撃範囲内に居るか確かめる関数
 	const bool SearchAttackDistance() const;
 
+	//アタックポイントを確保できているか確認する関数
+	//確保で来ていたらtrue、できていなかったらfalse;
+	const bool HaveAttackPoint() const;
+
+	void GetAttackPoint();
+
+	//確保しているアタックポイントをリリースする関数
+	void ReleaseAttackPoint();
+
+	//モデルの描画処理
 	void Render(RenderContext& rc);
 
-	void Collision();										//本体の当たり判定
+	
 
 	///////////////////////////////////////////////////////////
 	//初期設定系統
@@ -56,6 +69,8 @@ public:
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
+	Game::EnemyAttackPoint* m_enemeAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
+
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
 	Vector3	m_forward = Vector3::AxisZ;						//エネミーの正面ベクトル。
