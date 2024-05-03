@@ -193,8 +193,8 @@ void Enemy::ProcessChaseStateTransition()
 			// プレイヤーが攻撃範囲内に居たら、
 			if (SearchAttackDistance() == true)
 			{
-				// ステートを遷移する。
-				ProcessCommonStateTransition();
+				// ステートを攻撃にする。
+				m_enemystate = enEnemyState_Attack;
 				m_chaseTimer = 3.0f;
 				return;
 			}
@@ -224,9 +224,12 @@ void Enemy::ProcessChaseStateTransition()
 
 void Enemy::ProcessAttackStateTransition()
 {
-	// 今のところはいつでも他のステートに遷移可能
-	// 後でモーションが終了するまで等の条件を追加
-	ProcessCommonStateTransition();
+	//プレイヤーが一定以上離れたら
+	if ((m_player->m_position - m_position).Length() >= 400.0f)
+	{
+		// ステートを遷移する
+		ProcessCommonStateTransition();
+	}
 }
 
 void Enemy::ProcessIdleStateTransition()
@@ -474,18 +477,20 @@ void Enemy::ProcessCommonStateTransition()
 	//プレイヤーが視界内に居るか、
 	if (SearchPlayer())
 	{
-		//攻撃できる距離なら
-		if (SearchAttackDistance())
-		{
-			//ステートをアタックにする。
-			m_enemystate = enEnemyState_Attack;
-		}
-		//攻撃範囲内ではないなら
-		else
-		{
-			//ステートを追跡にする。
-			m_enemystate = enEnemyState_Chase;
-		}
+		m_enemystate = enEnemyState_Chase;
+
+		////攻撃できる距離なら
+		//if (SearchAttackDistance())
+		//{
+		//	//ステートをアタックにする。
+		//	m_enemystate = enEnemyState_Attack;
+		//}
+		////攻撃範囲内ではないなら
+		//else
+		//{
+		//	//ステートを追跡にする。
+		//	m_enemystate = enEnemyState_Chase;
+		//}
 	}
 	//プレイヤーが視界内に居ないなら
 	else
