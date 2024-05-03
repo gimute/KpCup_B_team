@@ -102,6 +102,10 @@ void Enemy::Update()
 	case enEnemyState_Stand:
 
 		break;
+
+	case enEnemyState_ReceiveDamage:
+
+		break;
 	}
 
 	//回転処理
@@ -135,6 +139,9 @@ void Enemy::PlayAnimation()
 	case enEnemyState_Stand:
 		m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
 		break;
+	case enEnemyState_ReceiveDamage:
+		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
+		break;
 	}
 }
 
@@ -153,6 +160,9 @@ void Enemy::ManageState()
 		break;
 	case enEnemyState_Stand:
 		ProcessStandStateTransition();
+		break;
+	case enEnemyState_ReceiveDamage:
+		ProcessReceiveDamageStateTransition();
 		break;
 	}
 }
@@ -204,72 +214,6 @@ void Enemy::ProcessChaseStateTransition()
 			m_enemystate = enEnemyState_Attack;
 		}
 	}
-
-	//// アタックポイントを確保できている場合、
-	//if (HaveAttackPoint() == true)
-	//{
-	//	// アタックポイントとの距離が一定以下、もしくはプレイヤーとの距離が一定以下なら
-	//	if ((m_enemeAttackPoint->m_position - m_position).Length() <= 10.0f || (m_player->m_position - m_position).Length() <= 200.0f)
-	//	{
-	//		// 直接アタックステートにする。
-	//		m_enemystate = enEnemyState_Attack;
-	//		m_chaseTimer = 3.0f;
-	//		return;
-	//	}
-	//	else
-	//	{
-	//		if (SearchChaseDistance())
-	//		{
-	//			m_chaseTimer = 3.0f;
-	//		}
-	//		else
-	//		{
-	//			m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
-	//		}
-
-	//		if (m_chaseTimer <= 0)
-	//		{
-	//			ProcessCommonStateTransition();
-	//		}
-	//		return;
-	//	}
-	//}
-	//// アタックポイントを確保できていない場合、
-	//else
-	//{
-	//	// プレイヤーがまだ近くにいる時、
-	//	if (SearchChaseDistance())
-	//	{
-	//		// プレイヤーが攻撃範囲内に居たら、
-	//		if (SearchAttackDistance() == true)
-	//		{
-	//			// ステートを遷移する。
-	//			ProcessCommonStateTransition();
-	//			m_chaseTimer = 3.0f;
-	//			return;
-	//		}
-	//		// 攻撃範囲内で無ければ
-	//		else
-	//		{
-	//			// 追跡ステートのまま返す。
-	//			m_chaseTimer = 3.0f;
-	//			return;
-	//		}	
-	//	}
-	//	// プレイヤーが近くに居ない場合
-	//	else
-	//	{
-	//		//チェイスタイマーを進める(値を減らす)
-	//		m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
-	//		//タイマーが0以下なら
-	//		if (m_chaseTimer <= 0)
-	//		{
-	//			// ステートを遷移する
-	//			ProcessCommonStateTransition();
-	//		}
-	//		return;
-	//	}
-	//}
 }
 
 void Enemy::ProcessAttackStateTransition()
@@ -284,10 +228,6 @@ void Enemy::ProcessAttackStateTransition()
 		//追跡ステートにする
 		m_enemystate = enEnemyState_Chase;
 	}
-
-	// 今のところはいつでも他のステートに遷移可能
-	// 後でモーションが終了するまで等の条件を追加
-	//ProcessCommonStateTransition();
 }
 
 void Enemy::ProcessIdleStateTransition()
@@ -298,6 +238,13 @@ void Enemy::ProcessIdleStateTransition()
 
 void Enemy::ProcessStandStateTransition()
 {
+	m_enemyAttackPoint = m_game->GetNearEnemyAttackPoint(m_position);
+
+	if (m_enemyAttackPoint != nullptr)
+	{
+		m_enemystate = enEnemyState_Chase;
+	}
+
 	Vector3 diff = m_player->m_position - m_position;
 	//プレイヤーとの距離が一定以上離れたら
 	if (diff.Length() >= 400.0f)
@@ -344,49 +291,19 @@ void Enemy::Chase()
 		m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
 		m_modelRender.SetPosition(m_position);
 	}
+}
 
-	////アタックポイントを確保
-	//GetAttackPoint();
-
-	////アックポイントが確保できなければ
-	//if (HaveAttackPoint() == false)
-	//{
-	//	//プレイヤーに直接向かう
-
-	//	Vector3 diff = m_player->GetPosition() - m_position;
-	//	diff.Normalize();
-
-	//	m_movespeed = diff * enemyspeed;
-
-	//	m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
-
-	//	m_modelRender.SetPosition(m_position);
-	//}
-	////アタックポイントを確保できているなら
-	//else
-	//{
-	//	//アタックポイントに向かわせる
-
-	//	//アタックポイントに向かうベクトルを求める
-	//	Vector3 diff = m_enemeAttackPoint->m_position - m_position;
-
-	//	//アタックポイントとの距離が一定以上離れていたら、
-	//	if (diff.Length() < 300.0f)
-	//	{
-	//		//一度アタックポイントをリリースし、
-	//		ReleaseAttackPoint();
-	//		//近くにあるポイントを確保しなおす。
-	//		GetAttackPoint();
-	//	}
-
-	//	diff.Normalize();
-
-	//	m_movespeed = diff * enemyspeed;
-
-	//	m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
-
-	//	m_modelRender.SetPosition(m_position);
-	//}
+void Enemy::ProcessReceiveDamageStateTransition()
+{
+	//被弾モーションが決まったら、そのモーションが終わったらに処理を変える
+	if (m_receiveDamageTimer > 0.0f)
+	{
+		m_receiveDamageTimer -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		m_enemystate = m_enemyOldState;
+	}
 }
 
 void Enemy::Rotation()
@@ -463,6 +380,12 @@ void Enemy::Collision()
 	Vector3 tmp = m_position;
 	tmp.y += 30.0f;
 	m_collisionObject->SetPosition(tmp);
+
+	//被ダメージステートの時は当たり判定処理をしない
+	if (m_enemystate == enEnemyState_ReceiveDamage)
+	{
+		return;
+	}
 	//被ダメージ、あるいはダウンステートの時は。
 //当たり判定処理はしない。
 	/*if (m_enemystate == enEnemyState_ReceiveDamage ||
@@ -509,8 +432,12 @@ void Enemy::Collision()
 					DeleteGO(this);
 				}
 				else {
+					//被ダメージ前のステートを記憶
+					m_enemyOldState = m_enemystate;
+
+					m_receiveDamageTimer = 0.5f;
 					//被ダメージステートに遷移する。
-					m_enemystate = enEnemyState_Idle; //被ダメージステートが無いので、仮として待機ステート置いている
+					m_enemystate = enEnemyState_ReceiveDamage; //被ダメージステートが無いので、仮として待機ステート置いている
 				}
 			
 		}

@@ -12,7 +12,9 @@ public:
 		enEnemyState_Idle,			//待機
 		enEnemyState_Chase,			//追跡
 		enEnemyState_Attack,		//攻撃
-		enEnemyState_Stand			//構え
+		enEnemyState_Stand,			//構え
+		enEnemyState_ReceiveDamage,	//被ダメージ
+		enEnemyState_Down			//ダウン
 	};
 	//アニメーション類/////////////////////////////
 //アニメーションステート
@@ -31,6 +33,7 @@ public:
 	void ProcessChaseStateTransition();			//追跡遷移
 	void ProcessAttackStateTransition();		//攻撃遷移
 	void ProcessStandStateTransition();			//構え遷移
+	void ProcessReceiveDamageStateTransition();	//被ダメージ遷移
 	/////////////////////////////////////////////////////////////
 
 	Enemy() {};
@@ -89,22 +92,20 @@ public:
 	ModelRender m_modelRender;	//モデルレンダー
 	CharacterController m_charaCon;        //キャラコン
 	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
-	int m_hp = 50;                           //HP
+	int m_hp = 5;                           //HP
 	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。
 	float m_chaseTimer = 0.0f;								//追跡時間タイマー。
-	float m_attackTimer = 5.0f;								//攻撃時間タイマー。
-	float attacktime = 5.0f;
-	float m_attackGotimer = 0.0;							//攻撃時間タイマー
-	float attackGotime = 2.0;								//攻撃時間
-	float m_attackcooltimer = 0.0f;
-	float attackcooltime = 3.0f;
 	float m_looptimer = 0.0f;								//ループタイマー
 	float looptime = 1.16;									//ループ時間
 	float m_mutekitimer = 0.0f;								//無敵タイマー
 	float mutekitime = 0.1f;								//無敵時間
 
-	bool m_useAttacPoint = false;							//アタックを保持しているか
+	bool m_useAttacPoint = false;							//アタックポイントを保持しているか
+
+
+	float m_receiveDamageTimer = 0.0f;	//被ダメージモーションを用意し忘れたので一時的にタイマーで管理
+	EnEnemyState m_enemyOldState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 };
 

@@ -79,9 +79,6 @@ public:
 	Player* m_player;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
-	MiniTimer* m_minitimer = nullptr;
-	MainTimer* m_maintimer = nullptr;
-	SpeedMeter* m_speedmeter = nullptr;
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
 	std::vector<Enemy*> m_EnemyList;
