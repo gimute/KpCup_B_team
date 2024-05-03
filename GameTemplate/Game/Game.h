@@ -33,11 +33,24 @@ public:
 	void Render(RenderContext& rc);
 	void Delete_EnemyVec(const int num);
 
+	/// <summary>
+	/// エネミーの配列から配列番号を入れてその位置を取得
+	/// </summary>
+	/// <param name="num"></param>
+	/// <returns></returns>
+	Vector3 GetEnemyListPos(int num);
+
 	//エネミーアタックポイントの座標更新
 	void EnemyAttackPointUpdate();
 	//引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
 	//使用可能なアタックポイントが無ければnullptrを返す
 	EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
+	//使用中アタックポイントの数のカウントを1減らすだけの関数
+	void useAttackPointNumDecrement()
+	{
+		m_useAttackPointNum--;
+	}
+
 
 //メンバ変数
 	Player* m_player;
@@ -51,13 +64,8 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
-	/// <summary>
-	/// エネミーの配列から配列番号を入れてその位置を取得
-	/// </summary>
-	/// <param name="num"></param>
-	/// <returns></returns>
-	Vector3 GetEnemyListPos(int num);
 
 	EnemyAttackPoint m_enemyAttackPointList[ENEMY_ATTACK_POINT_NUM];
+	int m_useAttackPointNum = 0;	//使用中アタックポイントの数
 };
 

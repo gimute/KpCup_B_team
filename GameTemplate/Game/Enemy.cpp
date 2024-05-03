@@ -121,7 +121,15 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Chase, 0.1f);
 		break;
 	case enEnemyState_Attack:
-		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
+		if (HaveAttackPoint())
+		{
+			m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
+		}
+		else
+		{
+			m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
+		}
+		
 		break;
 	}
 }
@@ -387,6 +395,10 @@ void Enemy::Collision()
 				if (m_hp == 0) {
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
+
+					//アタックポイントを解放する
+					ReleaseAttackPoint();
+
 					m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
 					m_game->Delete_EnemyVec(m_Vectornum);
 					DeleteGO(this);
@@ -519,6 +531,8 @@ void Enemy::ReleaseAttackPoint()
 
 	//確保しているアタックポイントを未使用中にし、
 	m_enemeAttackPoint->m_use = false;
+	//使用中アタックポイントのカウントを減らし
+	m_game->useAttackPointNumDecrement();
 	//アタックポイントを開放する
 	m_enemeAttackPoint = nullptr;
 }

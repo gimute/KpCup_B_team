@@ -135,6 +135,13 @@ void Game::EnemyAttackPointUpdate()
 
 Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
 {
+	//すでに5個以上アタックポイントが使われていたら
+	if (m_useAttackPointNum >= 5)
+	{
+		//nullptrを返す
+		return nullptr;
+	}
+
 	//距離比較用のベクトル
 	Vector3 diff = g_vec3One * 1000.0f;	//最初は極端に大きいベクトルにしておく
 
@@ -160,9 +167,10 @@ Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
 		}
 	}
 
-	//tmpの値が変わっていなかったら(実質空いているアタックポイントが無かったらになるはず)
+	//tmpの値が変わっていなかったら
 	if (tmp == ENEMY_ATTACK_POINT_NUM)
 	{
+		//空いているアタックポイントが無いのでnullptrを返す
 		return nullptr;
 	}
 	//tmpの値が変わっていたら
@@ -170,7 +178,9 @@ Game::EnemyAttackPoint* Game::GetEnemyAttackPoint(Vector3 pos)
 	{
 		//一番近いアタックポイントを使用中にして
 		m_enemyAttackPointList[tmp].m_use = true;
-		//そのアタックポイントのアドレスを返す
+		//使用中アタックポイントのカウントを増やす
+		m_useAttackPointNum++;
+		//アタックポイントのアドレスを返す
 		return &m_enemyAttackPointList[tmp];
 	}
 }
