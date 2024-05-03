@@ -277,7 +277,7 @@ void Enemy::ProcessAttackStateTransition()
 	Vector3 diff = m_enemyAttackPoint->m_position - m_position;
 
 	//自分が使っているアタックポイントとの距離が一定以上なら
-	if (diff.Length() >= 100.0f)
+	if (diff.Length() >= 50.0f)
 	{
 		//アタックポイントを未使用にしてから
 		SetAttackPointIsUnUse();
@@ -422,6 +422,17 @@ void Enemy::Rotation()
 
 		
 	case Enemy::enEnemyState_Attack:
+		//プレイヤーのいる方向に向かせる
+		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。
+		m_rotation.SetRotation(Vector3::AxisZ, diff);
+		//作成したクオータニオンをモデルのローテーションに適応。
+		m_modelRender.SetRotation(m_rotation);
+
+		//エネミーの正面方向ベクトルを求める
+		m_forward = Vector3::AxisZ;
+		m_rotation.Apply(m_forward);
+		break;
+
 	case Enemy::enEnemyState_Stand:
 		//プレイヤーのいる方向に向かせる
 		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。

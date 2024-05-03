@@ -1,7 +1,7 @@
 #pragma once
 
 //エネミーアタックポイントの数
-#define ENEMY_ATTACK_POINT_NUM 20
+#define ENEMY_ATTACK_POINT_NUM 15
 
 ///////////////////////////////
 class Player;
