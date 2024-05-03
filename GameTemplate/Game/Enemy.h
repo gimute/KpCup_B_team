@@ -2,6 +2,7 @@
 #include "Game.h"
 class Game;
 class Player;
+class EnemyHpUi;
 
 class Enemy : public IGameObject
 {
@@ -18,6 +19,7 @@ public:
 		enAnimationClip_Idle,			//棒立ち
 		enAnimationClip_Chase,			//追跡
 		enAnimationClip_Attack,			//攻撃
+		enAnimationClip_ShotStandby,    //攻撃待機
 		enAnimationClip_Num,			//アニメーション数
 	};
 	void PlayAnimation();

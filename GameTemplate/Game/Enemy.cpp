@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include "Game.h"
 #include "Player.h"
+#include "EnemyHpUi.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -15,7 +16,6 @@ namespace
 
 Enemy::~Enemy()
 {
-	m_game->Delete_EnemyVec(m_Vectornum);
 	DeleteGO(m_collisionObject);
 }
 
@@ -28,6 +28,8 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
 
 	//モデル読み込み
@@ -56,6 +58,11 @@ bool Enemy::Start()
 	m_Vectornum = m_game->m_EnemyQua;
 	m_game->m_EnemyQua++;
 	m_game->m_EnemyList.push_back(this);
+
+	//HPUIを作成
+	EnemyHpUi* m_enemyHpUi = NewGO<EnemyHpUi>(0, "Ui");
+	m_enemyHpUi->m_Vectornum = m_Vectornum;
+	m_game->m_EnemyHpUiList.push_back(m_enemyHpUi);
 
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
@@ -374,11 +381,14 @@ void Enemy::Collision()
 			
 				//HPを1減らす。
 				m_hp -= 1;
+				m_game->m_EnemyHpUiList[m_Vectornum]->DecreaseHP(1);
 				//m_mutekitimer = mutekitime;
 				//HPが0になったら。
 				if (m_hp == 0) {
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
+					m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
+					m_game->Delete_EnemyVec(m_Vectornum);
 					DeleteGO(this);
 				}
 				else {
