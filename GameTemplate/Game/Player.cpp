@@ -27,6 +27,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
 	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");
+	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -256,7 +258,7 @@ void Player::PlayAnimation()
 		break;
 	case Player::enPlayerState_PostureWalk:
 		m_modelRender.SetAnimationSpeed(1.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_PostureWalk, 0.1f);
 		break;
 	}
 }
