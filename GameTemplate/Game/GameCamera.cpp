@@ -15,7 +15,8 @@ GameCamera::~GameCamera()
 bool GameCamera::Start()
 {
 	//注視点から視点までのベクトルを設定。
-	m_toCameraPos.Set(0.0f, 300.0f, -300.0f);
+	m_toCameraPos.Set(0.0f, 150.0f, -300.0f);
+	m_toCameraPos *= 0.5;
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
 	
@@ -56,7 +57,7 @@ void GameCamera::Update()
 	//注視点を計算
 	Vector3 target = m_player->m_position;
 	//注視点 プレイヤーの座標に設定
-	target.y += 150.0f;
+	target.y += 70.0f;
 	//視点を計算する。
 	Vector3 toCameraPosOld = m_toCameraPos;
 

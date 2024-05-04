@@ -234,7 +234,7 @@ void Enemy::ProcessAttackStateTransition()
 	Vector3 diff = m_enemyAttackPoint->m_position - m_position;
 
 	//自分が使っているアタックポイントとの距離が一定以上なら
-	if (diff.Length() >= 50.0f)
+	if (diff.Length() >= 80.0f)
 	{
 		//アタックポイントを未使用にしてから
 		SetAttackPointIsUnUse();
@@ -308,20 +308,12 @@ void Enemy::Chase()
 
 void Enemy::ProcessReceiveDamageStateTransition()
 {
+	//被ダメージモーションが終わったら
 	if(m_modelRender.IsPlayingAnimation() == false)
 	{
+		//元のステートに戻す
 		m_enemystate = m_enemyOldState;
 	}
-
-	//被弾モーションが決まったら、そのモーションが終わったらに処理を変える
-	/*if (m_receiveDamageTimer > 0.0f)
-	{
-		m_receiveDamageTimer -= g_gameTime->GetFrameDeltaTime();
-	}
-	else
-	{
-		m_enemystate = m_enemyOldState;
-	}*/
 }
 
 void Enemy::Rotation()
@@ -532,31 +524,6 @@ void Enemy::ProcessCommonStateTransition()
 		//居なければ待機ステートに。
 		m_enemystate = enEnemyState_Idle;
 	}
-
-	////プレイヤーが視界内に居るか、
-	//if (SearchPlayer())
-	//{
-	//	//攻撃できる距離なら
-	//	if (SearchAttackDistance())
-	//	{
-	//		//ステートをアタックにする。
-	//		m_enemystate = enEnemyState_Attack;
-	//	}
-	//	//攻撃範囲内ではないなら
-	//	else
-	//	{
-	//		//ステートを追跡にする。
-	//		m_enemystate = enEnemyState_Chase;
-	//	}
-	//}
-	////プレイヤーが視界内に居ないなら
-	//else
-	//{
-	//	//アタックポイントを解放して
-	//	ReleaseAttackPoint();
-	//	//ステートを待機にする
-	//	m_enemystate = enEnemyState_Idle;
-	//}
 }
 
 void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)

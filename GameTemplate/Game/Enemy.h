@@ -97,7 +97,7 @@ public:
 	ModelRender m_modelRender;	//モデルレンダー
 	CharacterController m_charaCon;        //キャラコン
 	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
-	int m_hp = 5;                           //HP
+	int m_hp = 4;                           //HP
 	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。
