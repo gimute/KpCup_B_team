@@ -18,6 +18,7 @@ public:
 	enum EnPlayerState {
 		enPlayerState_Idle,				//待機。
 		enPlayerState_Walk,				//歩き。
+		enPlayerState_PostureWalk,		//構え歩き。
 		enPlayerState_Attack,			//攻撃
 	};
 
