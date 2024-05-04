@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Player.h"
 #include "EnemyHpUi.h"
+#include "Bullet.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -41,6 +42,11 @@ bool Enemy::Start()
 
 	//モデル読み込み
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+
+	//アニメーションイベント用の関数を設定する。
+	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnAnimationEvent(clipName, eventName);
+		});
 
 	//回転
 	m_modelRender.SetRotation(m_rotation);
@@ -520,6 +526,22 @@ void Enemy::ProcessCommonStateTransition()
 	}
 }
 
+void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	if (wcscmp(eventName, L"shot_point") == 0)
+	{
+		Vector3 m_shotPos = m_player->GetPosition() - m_position;
+		m_shotPos.Normalize();
+
+		m_bullet = NewGO<Bullet>(0, "bullet");
+		Quaternion rot;
+		rot.SetRotation(Vector3::AxisZ,m_shotPos);
+		m_bullet->SetMoveDirection(m_forward);
+		m_bullet->Setrotation(rot);
+		m_bullet->SetPosition(m_position);
+		m_bullet->SetShotType(Bullet::en_Player);
+	}
+}
 
 void Enemy::Render(RenderContext& rc)
 {

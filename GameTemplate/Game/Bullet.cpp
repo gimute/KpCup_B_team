@@ -28,6 +28,7 @@ bool Bullet::Start()
 	m_velocity *= 1200.0f;
 	m_position += corre;
 
+	
 	//コリジョンオブジェクトを作成する。
 	m_collisionObject = NewGO<CollisionObject>(0);
 	//球状のコリジョンを作成する。

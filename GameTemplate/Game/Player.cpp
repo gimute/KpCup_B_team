@@ -25,10 +25,15 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
 	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
 	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆç”¨ã®é–¢æ•°ã‚’è¨­å®šã™ã‚‹ã€‚
+	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnAnimationEvent(clipName, eventName);
+		});
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
 	
@@ -41,16 +46,16 @@ bool Player::Start()
 
 void Player::Update()
 {
-	//ˆÚ“®ˆ—B
+	//ç§»å‹•å‡¦ç†ã€‚
 	Move();
-	//‰ñ“]ˆ—B
+	//å›è»¢å‡¦ç†ã€‚
 	Rotation();
-	//ƒAƒjƒ[ƒVƒ‡ƒ“ˆ—
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†
 	PlayAnimation();
-	//ƒXƒe[ƒg‚Ì‘JˆÚˆ—
+	//ã‚¹ãƒ†ãƒ¼ãƒˆã®é·ç§»å‡¦ç†
 	ManageState();
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
-	//ƒ‚ƒfƒ‹‚ÌXVB
+	//ãƒ¢ãƒ‡ãƒ«ã®æ›´æ–°ã€‚
 	m_modelRender.Update();
 
 }
@@ -60,39 +65,39 @@ void Player::Move()
 	if (m_playerstate == enPlayerState_Attack)
 		return;
 
-	//xz‚ÌˆÚ“®‘¬“x‚ğ0.0f‚É‚·‚éB
+	//xzã®ç§»å‹•é€Ÿåº¦ã‚’0.0fã«ã™ã‚‹ã€‚
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
-	//¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚ğæ“¾B
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã‚’å–å¾—ã€‚
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
 	stickL.y = g_pad[0]->GetLStickYF();
 
-	//ƒJƒƒ‰‚Ì‘O•ûŒü‚Æ‰E•ûŒü‚ÌƒxƒNƒgƒ‹‚ğ‚Á‚Ä‚­‚éB
+	//ã‚«ãƒ¡ãƒ©ã®å‰æ–¹å‘ã¨å³æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æŒã£ã¦ãã‚‹ã€‚
 	Vector3 forward = g_camera3D->GetForward();
 	Vector3 right = g_camera3D->GetRight();
-	//y•ûŒü‚É‚ÍˆÚ“®‚³‚¹‚È‚¢B
+	//yæ–¹å‘ã«ã¯ç§»å‹•ã•ã›ãªã„ã€‚
 	forward.y = 0.0f;
 	right.y = 0.0f;
 
 	forward.Normalize();
 	right.Normalize();
-	//¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚Æ120.0f‚ğæZB
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã¨120.0fã‚’ä¹—ç®—ã€‚
 	right *= stickL.x * 200.0f;
 	forward *= stickL.y * 200.0f;
 
-	//ˆÚ“®‘¬“x‚ÉƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚ğ‰ÁZ‚·‚éB
+	//ç§»å‹•é€Ÿåº¦ã«ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã‚’åŠ ç®—ã™ã‚‹ã€‚
 	m_moveSpeed += right + forward;
 
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 	Vector3 modelPosition = m_position;
-	//‚¿‚å‚Á‚Æ‚¾‚¯ƒ‚ƒfƒ‹‚ÌÀ•W‚ğ‹“‚°‚éB
+	//ã¡ã‚‡ã£ã¨ã ã‘ãƒ¢ãƒ‡ãƒ«ã®åº§æ¨™ã‚’æŒ™ã’ã‚‹ã€‚
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
-	//ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[‚ğg‚Á‚ÄÀ•W‚ğˆÚ“®‚³‚¹‚éB
+	//ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’ä½¿ã£ã¦åº§æ¨™ã‚’ç§»å‹•ã•ã›ã‚‹ã€‚
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
-	//À•W‚ğİ’èB
+	//åº§æ¨™ã‚’è¨­å®šã€‚
 	m_modelRender.SetPosition(m_position);
 
 }
@@ -102,12 +107,12 @@ void Player::Rotation()
 	if (m_playerstate == enPlayerState_Attack)
 		return;
 
-	//x‚©z‚ÌˆÚ“®‘¬“x‚ª‚ ‚Á‚½‚ç(ƒXƒeƒBƒbƒN‚Ì“ü—Í‚ª‚ ‚Á‚½‚ç)B
+	//xã‹zã®ç§»å‹•é€Ÿåº¦ãŒã‚ã£ãŸã‚‰(ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›ãŒã‚ã£ãŸã‚‰)ã€‚
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
 	{
-		//ƒLƒƒƒ‰ƒNƒ^[‚Ì•ûŒü‚ğ•Ï‚¦‚éB
+		//ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®æ–¹å‘ã‚’å¤‰ãˆã‚‹ã€‚
 		m_rotation.SetRotationYFromDirectionXZ(m_moveSpeed);
-		//ŠG•`‚«‚³‚ñ‚É‰ñ“]‚ğ‹³‚¦‚éB
+		//çµµæãã•ã‚“ã«å›è»¢ã‚’æ•™ãˆã‚‹ã€‚
 		m_modelRender.SetRotation(m_rotation);
 	}
 
@@ -132,6 +137,7 @@ void Player::AttackRotation()
 		}
 	}
 
+
 	if (shot == false)
 	{
 		m_bullet = NewGO<Bullet>(0, "bullet");
@@ -140,11 +146,9 @@ void Player::AttackRotation()
 		m_bullet->SetMoveDirection(m_forward);
 		m_bullet->Setrotation(rot);
 		m_bullet->SetPosition(m_position);
-
+    m_bullet->SetShotType(Bullet::en_Player);
 		shot = true;
-	}
-
-	
+	}	
 }
 
 struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
@@ -153,14 +157,14 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 
 	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
 	{
-		//•Ç‚Æ‚Ô‚Â‚©‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç
+		//å£ã¨ã¶ã¤ã‹ã£ã¦ã„ãªã‹ã£ãŸã‚‰
 		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
 		{
-			//Õ“Ë‚µ‚½‚Ì‚Í•Ç‚Å‚Í‚È‚¢
+			//è¡çªã—ãŸã®ã¯å£ã§ã¯ãªã„
 			return 0.0f;
 		}
 
-		//•Ç‚Æ‚Ô‚Â‚©‚Á‚½‚çƒtƒ‰ƒO‚ğtrue‚É‚·‚é
+		//å£ã¨ã¶ã¤ã‹ã£ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚’trueã«ã™ã‚‹
 		isHit = true;
 		return 0.0f;
 	}
@@ -183,15 +187,15 @@ bool Player::AngleCheck(const Vector3& position)
 	btTransform start, end;
 	start.setIdentity();
 	end.setIdentity();
-	//n“_‚ÍƒvƒŒƒCƒ„[‚ÌÀ•W
+	//å§‹ç‚¹ã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™
 	start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
-	//I“_‚ÍƒGƒlƒ~[‚ÌÀ•W
+	//çµ‚ç‚¹ã¯ã‚¨ãƒãƒŸãƒ¼ã®åº§æ¨™
 	end.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
 
 	SweepResultWall callback;
-	//§ì‚µ‚½ƒRƒ‰ƒCƒ_[‚ğn“_‚©‚çI“_‚Ü‚Å“®‚©‚µ‚Ä•Ç‚ÉÚG‚µ‚½‚©”»’è
+	//åˆ¶ä½œã—ãŸã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å§‹ç‚¹ã‹ã‚‰çµ‚ç‚¹ã¾ã§å‹•ã‹ã—ã¦å£ã«æ¥è§¦ã—ãŸã‹åˆ¤å®š
 	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
-	//•Ç‚ÆÕ“Ë‚µ‚½
+	//å£ã¨è¡çªã—ãŸæ™‚
 	if (callback.isHit == true)
 	{
 		return false;
@@ -222,15 +226,15 @@ void Player::PlayAnimation()
 	switch (m_playerstate)
 	{
 	case Player::enPlayerState_Idle:
-		//‘Ò‹@ƒAƒjƒ[ƒVƒ‡ƒ“
+		//å¾…æ©Ÿã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	case Player::enPlayerState_Walk:
-		//•à‚«
+		//æ­©ã
 		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
 	case Player::enPlayerState_Attack:
-		//UŒ‚
+		//æ”»æ’ƒ
 		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
 		break;
 	}
@@ -243,15 +247,15 @@ void Player::ProcessCommonStateTransition()
 		m_playerstate = enPlayerState_Attack;
 		return;
 	}
-	//x‚©z‚ÌˆÚ“®‘¬“x‚ª‚ ‚Á‚½‚ç(ƒXƒeƒBƒbƒN‚Ì“ü—Í‚ª‚ ‚Á‚½‚ç)B
+	//xã‹zã®ç§»å‹•é€Ÿåº¦ãŒã‚ã£ãŸã‚‰(ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›ãŒã‚ã£ãŸã‚‰)ã€‚
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
-		//•à‚«ƒXƒe[ƒg‚É‚·‚é
+		//æ­©ãã‚¹ãƒ†ãƒ¼ãƒˆã«ã™ã‚‹
 		m_playerstate = enPlayerState_Walk;
 		return;
 	}
-	//x‚Æz‚ÌˆÚ“®‘¬“x‚ª–³‚©‚Á‚½‚ç(ƒXƒeƒBƒbƒN‚Ì“ü—Í‚ª–³‚©‚Á‚½‚ç)B
+	//xã¨zã®ç§»å‹•é€Ÿåº¦ãŒç„¡ã‹ã£ãŸã‚‰(ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›ãŒç„¡ã‹ã£ãŸã‚‰)ã€‚
 	else {
-		//‘Ò‹@ƒXƒe[ƒg‚É‚·‚éB
+		//å¾…æ©Ÿã‚¹ãƒ†ãƒ¼ãƒˆã«ã™ã‚‹ã€‚
 		m_playerstate = enPlayerState_Idle;
 		return;
 	}
@@ -269,17 +273,23 @@ void Player::ProcessWalkStateTransition()
 
 void Player::ProcessAttackStateTransition()
 {
-	AttackRotation();
 	if (m_modelRender.IsPlayingAnimation() == false )
 	{
 		ProcessCommonStateTransition();
 		shot = false;
 	}
-	
+}
+
+void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	if (wcscmp(eventName, L"shot_point") == 0)
+	{
+		AttackRotation();
+	}
 }
 
 void Player::Render(RenderContext& rc)
 {
-	//ƒ‚ƒfƒ‹‚Ì•`‰æB
+	//ãƒ¢ãƒ‡ãƒ«ã®æç”»ã€‚
 	m_modelRender.Draw(rc);
 }
