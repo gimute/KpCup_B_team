@@ -3,6 +3,7 @@
 class Game;
 class Player;
 class EnemyHpUi;
+class Bullet;
 
 class Enemy : public IGameObject
 {
@@ -69,6 +70,8 @@ public:
 		m_useAttacPoint = false;
 	}
 
+	//アニメーションイベント
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 
 	//モデルの描画処理
 	void Render(RenderContext& rc);
@@ -81,6 +84,7 @@ public:
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
+	Bullet* m_bullet = nullptr;
 	Game::EnemyAttackPoint* m_enemyAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
@@ -93,7 +97,7 @@ public:
 	ModelRender m_modelRender;	//モデルレンダー
 	CharacterController m_charaCon;        //キャラコン
 	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
-	int m_hp = 5;                           //HP
+	int m_hp = 4;                           //HP
 	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。

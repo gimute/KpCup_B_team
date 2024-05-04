@@ -33,6 +33,8 @@ public:
 	bool AngleCheck(const Vector3& position);
 	void Move();
 	void ManageState();					//ステート遷移処理
+	//アニメーションイベント
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//void PlayAnimation();
 	void ProcessCommonStateTransition();	//共通処理
 	void ProcessIdleStateTransition();		//待機遷移
@@ -59,5 +61,7 @@ public:
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
 	SphereCollider m_sphereCollider;						//コリダー
+
+	bool shot= false;
 };
 
