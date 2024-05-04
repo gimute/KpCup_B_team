@@ -13,30 +13,34 @@ BackGround::~BackGround()
 
 bool BackGround::Start()
 {
-	//ƒ‚ƒfƒ‹‚ğ“Ç‚İ‚ŞB
-	m_modelRender.Init("Assets/modelData/background/proto_map/proto_map.tkm");
-	//À•W‚ğİ’è‚·‚éB
+	//ãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚€ã€‚
+	m_modelRender.Init("Assets/modelData/Map/Map3.tkm");
+	//åº§æ¨™ã‚’è¨­å®šã™ã‚‹ã€‚
 	m_modelRender.SetPosition(m_position);
-	//‘å‚«‚³‚ğİ’è‚·‚éB
+	//å¤§ãã•ã‚’è¨­å®šã™ã‚‹ã€‚
 	m_modelRender.SetScale(m_scale);
 
-	//ƒ‚ƒfƒ‹‚ğXV‚·‚éB
+	//ãƒ¢ãƒ‡ãƒ«ã‚’æ›´æ–°ã™ã‚‹ã€‚
 	m_modelRender.Update();
-	//Ã“I•¨—ƒIƒuƒWƒFƒNƒg‚ğì¬
+	//é™çš„ç‰©ç†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
 	physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
+	// å½“ãŸã‚Šåˆ¤å®šã‚’å¯è¦–åŒ–ã™ã‚‹ã€‚
+	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
+	physicsStaticObject.GetbtCollisionObject()->setUserIndex(enCollisionAttr_Wall);
 
 	return true;
 }
 
 void BackGround::Update()
 {
-	//ƒ‚ƒfƒ‹‚ğXV‚·‚éB
+	//ãƒ¢ãƒ‡ãƒ«ã‚’æ›´æ–°ã™ã‚‹ã€‚
 	m_modelRender.Update();
 }
 
 void BackGround::Render(RenderContext& rc)
 {
-	//ƒ‚ƒfƒ‹‚ğ•`‰æ‚·‚éB
+	//ãƒ¢ãƒ‡ãƒ«ã‚’æç”»ã™ã‚‹ã€‚
 	m_modelRender.Draw(rc);
 }

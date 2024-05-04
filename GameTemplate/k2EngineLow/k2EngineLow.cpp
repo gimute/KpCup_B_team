@@ -6,12 +6,23 @@ namespace nsK2EngineLow {
 	K2EngineLow* g_engine = nullptr;
 	GameTime* g_gameTime = nullptr;
 
+	//追加したコード
+	SceneLight* g_sceneLight = nullptr;
+	RenderingEngine* g_renderingEngine = nullptr;
+	CollisionObjectManager* g_collisionObjectManager = nullptr;
+	//
+
 	K2EngineLow::~K2EngineLow()
 	{
 		// グローバルなアクセスポイントにnullptrを代入。
 		g_graphicsEngine = nullptr;
 		g_gameTime = nullptr;
-		
+		//追加コード
+		g_sceneLight = nullptr;
+		g_renderingEngine = nullptr;
+		g_collisionObjectManager = nullptr;
+		//
+
 		delete m_graphicsEngine;
 		
 		//ゲームオブジェクトマネージャーを削除。

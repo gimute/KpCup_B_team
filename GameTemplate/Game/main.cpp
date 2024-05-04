@@ -23,14 +23,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 
+	
+	//追加コード
+	RenderingEngine m_renderingEngine;
+	g_renderingEngine = &m_renderingEngine;
+
+	SceneLight m_sceneLight;
+	m_sceneLight.Init();
+	g_sceneLight = &m_sceneLight;
+
+	CollisionObjectManager m_collisionObjectManager;
+	g_collisionObjectManager = &m_collisionObjectManager;
+	//
+
+
 	//ModelTest* modelTest = NewGO<ModelTest>(0);
 	//ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);
 	//SpriteTest* spriteTest = NewGO<SpriteTest>(0);
-	Game* game = NewGO<Game>(0);
+	Game* game = NewGO<Game>(0,"game");
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		//追加したコード
+		auto& renderContext = g_graphicsEngine->GetRenderContext();
+		// 
+
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
@@ -39,6 +57,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
+
+		//追加コード
+		//ライトの更新処理
+		m_sceneLight.Update();
+
+		//レンダリングエンジンの描画処理
+		m_renderingEngine.Execute(renderContext);
+		//
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();

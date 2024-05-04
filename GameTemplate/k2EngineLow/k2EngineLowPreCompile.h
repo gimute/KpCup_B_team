@@ -76,9 +76,14 @@ using namespace Microsoft::WRL;
 #include "HID/GamePad.h"
 
 //í«â¡ÇµÇΩìz
+#include "IRenderer.h"
 #include "ModelRender.h"
 #include "SpriteRender.h"
 #include "FontRender.h"
+#include "SceneLight.h"
+#include "RenderingEngine.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 //
 
 #include "graphics/GaussianBlur.h"
@@ -105,6 +110,10 @@ static const int MAX_BONE = 512;	// É{Å[ÉìÇÃç≈ëÂêîÅB
 
 #include "gameObject/GameObjectManager.h"
 #include "gameObject/IGameObject.h"
+
+//í«â¡ÇµÇΩìz
+#include "CollisionObject.h"
+//
 
 #include <windows.h>
 #include <xaudio2.h>
