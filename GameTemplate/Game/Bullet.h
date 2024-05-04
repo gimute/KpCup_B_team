@@ -2,6 +2,15 @@
 class Bullet : public IGameObject
 {
 public:
+	//誰が撃ったかの判定
+	enum ShotType{
+	//撃ったのはプレイヤー
+	en_Player,
+	//撃ったのはエネミー
+	en_Enemy,
+	//無し
+	en_None,
+	};
 	/////////////////////////////////////////関数
 	Bullet() {};
 	~Bullet() {};
@@ -43,6 +52,8 @@ public:
 	//消去ディレイ
 	float m_deleteTimer = 0.0f;
 	bool m_isDelete = false;
+	//誰が撃ったかの判定
+	ShotType m_shotType = en_None;
 	/////////////////////////////////////////初期設定系統
 	//進行方向設定(プレイヤーの正面ベクトルなど)
 	void SetMoveDirection(const Vector3 direction)
@@ -60,6 +71,12 @@ public:
 	void Setrotation(const Quaternion& rotation)//回転値初期設定
 	{
 		m_rotation = rotation;
+	}
+	//誰が撃ったかの設定
+	void SetShotType(const ShotType enshottype)
+	{
+		m_shotType = enshottype;
+		return;
 	}
 };
 

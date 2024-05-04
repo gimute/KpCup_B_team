@@ -25,10 +25,15 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
 	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
 	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+
+	//アニメーションイベント用の関数を設定する。
+	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnAnimationEvent(clipName, eventName);
+		});
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
 	
@@ -193,6 +198,7 @@ void Player::AttackRotation()
 	m_bullet->SetMoveDirection(m_forward);
 	m_bullet->Setrotation(rot);
 	m_bullet->SetPosition(m_position);
+	m_bullet->SetShotType(Bullet::en_Player);
 }
 
 struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
@@ -317,9 +323,18 @@ void Player::ProcessWalkStateTransition()
 
 void Player::ProcessAttackStateTransition()
 {
-	AttackRotation();
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		ProcessCommonStateTransition();
+	}
+}
 
-	ProcessCommonStateTransition();
+void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	if (wcscmp(eventName, L"shot_point") == 0)
+	{
+		AttackRotation();
+	}
 }
 
 void Player::Render(RenderContext& rc)

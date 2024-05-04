@@ -32,6 +32,8 @@ public:
 	bool AngleCheck(const Vector3& position);
 	void Move();
 	void ManageState();					//ステート遷移処理
+	//アニメーションイベント
+	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//void PlayAnimation();
 	void ProcessCommonStateTransition();	//共通処理
 	void ProcessIdleStateTransition();		//待機遷移
