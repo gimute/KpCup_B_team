@@ -539,7 +539,7 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_bullet->SetMoveDirection(m_forward);
 		m_bullet->Setrotation(rot);
 		m_bullet->SetPosition(m_position);
-		m_bullet->SetShotType(Bullet::en_Player);
+		m_bullet->SetShotType(Bullet::en_Enemy);
 	}
 }
 

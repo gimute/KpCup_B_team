@@ -33,7 +33,14 @@ bool Bullet::Start()
 	m_collisionObject = NewGO<CollisionObject>(0);
 	//球状のコリジョンを作成する。
 	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 20.0f * m_scale.z);
-	m_collisionObject->SetName("player_attack");
+	if (m_shotType == en_Player)
+	{
+		m_collisionObject->SetName("player_attack");
+	}
+	else
+	{
+		m_collisionObject->SetName("enemy_attack");
+	}
 	//コリジョンオブジェクトが自動で削除されないようにする。
 	m_collisionObject->SetIsEnableAutoDelete(false);
 
