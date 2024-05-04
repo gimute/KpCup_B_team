@@ -13,6 +13,7 @@ public:
 		enAnimationClip_Punch,			//パンチモーション
 		enAnimationClip_Gunshot,		//射撃モーション
 		enAnimationClip_PostureWalk,	//構え歩き
+		enAnimationClip_PostureIdle,	//構え立ち
 		enAnimationClip_Num				//アニメーション数
 	};
 	//プレイヤーステート
