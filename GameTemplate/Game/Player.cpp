@@ -83,9 +83,18 @@ void Player::Move()
 
 	forward.Normalize();
 	right.Normalize();
-	//左スティックの入力量と120.0fを乗算。
-	right *= stickL.x * 200.0f;
-	forward *= stickL.y * 200.0f;
+
+	if (m_playerstate == enPlayerState_Walk||m_playerstate == enPlayerState_Idle)
+	{
+		//���X�e�B�b�N�̓��͗ʂ�120.0f����Z�B
+		right *= stickL.x * 200.0f;
+		forward *= stickL.y * 200.0f;
+	}
+	else if(m_playerstate == enPlayerState_PostureWalk)
+	{
+		right *= stickL.x * 100.0f;
+		forward *= stickL.y * 100.0f;
+	}
 
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
@@ -104,8 +113,10 @@ void Player::Move()
 
 void Player::Rotation()
 {
-	if (m_playerstate == enPlayerState_Attack)
+	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk)
+	{
 		return;
+	}
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
@@ -218,6 +229,9 @@ void Player::ManageState()
 	case Player::enPlayerState_Attack:
 		ProcessAttackStateTransition();
 		break;
+	case Player::enPlayerState_PostureWalk:
+		ProcessCommonStateTransition();
+		break;
 	}
 }
 
@@ -227,24 +241,43 @@ void Player::PlayAnimation()
 	{
 	case Player::enPlayerState_Idle:
 		//待機アニメーション
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	case Player::enPlayerState_Walk:
 		//歩き
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
 	case Player::enPlayerState_Attack:
 		//攻撃
+		m_modelRender.SetAnimationSpeed(2.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
+		break;
+	case Player::enPlayerState_PostureWalk:
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	}
 }
 
 void Player::ProcessCommonStateTransition()
 {
-	if (g_pad[0]->IsTrigger(enButtonB))
+	if (g_pad[0]->IsPress(enButtonRB1))
 	{
+		//m_playerstate = enPlayerState_Idle;
+		if (g_pad[0]->IsTrigger(enButtonB))
+		{
 		m_playerstate = enPlayerState_Attack;
+		return;
+		}
+		////x��z�̈ړ����x����������(�X�e�B�b�N�̓��͂���������)�B
+		//if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
+		//	//�����X�e�[�g�ɂ���
+		//	m_playerstate = enPlayerState_PostureWalk;
+		//	return;
+		//}
+		m_playerstate = enPlayerState_PostureWalk;
 		return;
 	}
 	//xかzの移動速度があったら(スティックの入力があったら)。
