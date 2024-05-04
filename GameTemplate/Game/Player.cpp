@@ -241,17 +241,21 @@ void Player::PlayAnimation()
 	{
 	case Player::enPlayerState_Idle:
 		//待機アニメーション
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	case Player::enPlayerState_Walk:
 		//歩き
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
 	case Player::enPlayerState_Attack:
 		//攻撃
+		m_modelRender.SetAnimationSpeed(2.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
 		break;
 	case Player::enPlayerState_PostureWalk:
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	}
