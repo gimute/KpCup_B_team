@@ -251,6 +251,9 @@ void Player::PlayAnimation()
 		//攻撃
 		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
 		break;
+	case Player::enPlayerState_PostureWalk:
+		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
+		break;
 	}
 }
 
