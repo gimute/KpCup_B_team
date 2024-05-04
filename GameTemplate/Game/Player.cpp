@@ -3,6 +3,7 @@
 #include "Bullet.h"
 #include "Game.h"
 #include "Enemy.h"
+#include "HpUi.h"
 
 Player::Player()
 {
@@ -16,6 +17,7 @@ Player::~Player()
 
 bool Player::Start()
 {
+	
 
 	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
@@ -31,7 +33,7 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
-
+	 
 	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
 		OnAnimationEvent(clipName, eventName);
@@ -42,6 +44,9 @@ bool Player::Start()
 	m_sphereCollider.Create(1.0f);
 
 	m_game = FindGO<Game>("game");
+
+
+	m_game->m_hpui->DecreaseHP(10);
 
 	return true;
 }

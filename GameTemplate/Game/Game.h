@@ -65,6 +65,7 @@ public:
 		}
 	}
 
+
 	////引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
 	////使用可能なアタックポイントが無ければnullptrを返す
 	//EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
