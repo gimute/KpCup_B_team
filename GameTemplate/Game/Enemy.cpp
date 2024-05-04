@@ -36,6 +36,8 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
+	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
 	//モデル読み込み
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
@@ -128,19 +130,24 @@ void Enemy::PlayAnimation()
 	{
 		//待機
 	case enEnemyState_Idle:
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
 	case enEnemyState_Chase:
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Chase, 0.1f);
 		break;
 	case enEnemyState_Attack:
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
 	case enEnemyState_Stand:
+		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
 		break;
 	case enEnemyState_ReceiveDamage:
-		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
+		m_modelRender.SetAnimationSpeed(2.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
 	}
 }
@@ -295,15 +302,20 @@ void Enemy::Chase()
 
 void Enemy::ProcessReceiveDamageStateTransition()
 {
+	if(m_modelRender.IsPlayingAnimation() == false)
+	{
+		m_enemystate = m_enemyOldState;
+	}
+
 	//被弾モーションが決まったら、そのモーションが終わったらに処理を変える
-	if (m_receiveDamageTimer > 0.0f)
+	/*if (m_receiveDamageTimer > 0.0f)
 	{
 		m_receiveDamageTimer -= g_gameTime->GetFrameDeltaTime();
 	}
 	else
 	{
 		m_enemystate = m_enemyOldState;
-	}
+	}*/
 }
 
 void Enemy::Rotation()
