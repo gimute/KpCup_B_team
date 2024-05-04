@@ -23,6 +23,7 @@ public:
 		enAnimationClip_Chase,			//追跡
 		enAnimationClip_Attack,			//攻撃
 		enAnimationClip_ShotStandby,    //攻撃待機
+		enAnimationClip_Damage,			//被ダメージモーション
 		enAnimationClip_Num,			//アニメーション数
 	};
 	void PlayAnimation();
