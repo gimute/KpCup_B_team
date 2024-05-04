@@ -58,5 +58,7 @@ public:
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
 	SphereCollider m_sphereCollider;						//コリダー
+
+	bool shot= false;
 };
 

@@ -85,55 +85,6 @@ void Player::Move()
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
 
-	////地面に付いていたら。
-	//if (m_charaCon.IsOnGround())
-	//{
-	//	//重力を無くす。
-	//	m_moveSpeed.y = 0.0f;
-	//	//LBボタンが押されたら。
-	//	if (g_pad[0]->IsTrigger(enButtonLB1))
-	//	{
-	//		//ジャンプさせる。
-	//		m_moveSpeed.y = 300.0f;
-	//	}
-	//}
-	////地面に付いていなかったら。
-	//else
-	//{
-	//	//重力を発生させる。
-	//	m_moveSpeed.y -= 15.5f;
-	//}
-	//
-	////Aボタン押されたら。
-	//if (g_pad[0]->IsPress(enButtonA)) {
-	//	//スピード上がっていく。
-	//	if (m_speed < 600.0f) {
-	//		m_speed += 3;
-	//	}
-	//	m_moveforward.Normalize();
-	//	m_moveforward *= m_speed;
-	//	//アクセル中にブレーキをかける。
-	//	if (g_pad[0]->IsPress(enButtonB)) {	
-	//		m_speed *= 0.95;
-	//		m_moveforward.Normalize();
-	//		m_moveforward *= m_speed;
-	//	}
-	//}
-	////アクセル押さないでブレーキをかける。
-	//else if (g_pad[0]->IsPress(enButtonB)) {
-	//	m_speed *= 0.95;
-	//	m_moveforward.Normalize();
-	//	m_moveforward *= m_speed;
-	//}
-	////Aボタン押されなかったら。
-	//else {
-	//	//スピード落ちていく。
-	//	if (m_speed >= 1) {
-	//		m_speed -= 1;
-	//		m_moveforward.Normalize();
-	//		m_moveforward *= m_speed;
-	//	}
-	//}
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 	Vector3 modelPosition = m_position;
 	//ちょっとだけモデルの座標を挙げる。
@@ -160,12 +111,6 @@ void Player::Rotation()
 		m_modelRender.SetRotation(m_rotation);
 	}
 
-	//昔の処理
-	//float Stick_y = g_pad[0]->GetLStickXF();
-	//m_rotation.AddRotationY(Stick_y /= 100);
-	//m_modelRender.SetRotation(m_rotation);
-	//m_moveforward = Vector3::AxisZ;
-	//m_rotation.Apply(m_moveforward);
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 
@@ -187,12 +132,19 @@ void Player::AttackRotation()
 		}
 	}
 
-	m_bullet = NewGO<Bullet>(0, "bullet");
-	Quaternion rot;
-	rot.SetRotation(Vector3::AxisZ, MinVec);
-	m_bullet->SetMoveDirection(m_forward);
-	m_bullet->Setrotation(rot);
-	m_bullet->SetPosition(m_position);
+	if (shot == false)
+	{
+		m_bullet = NewGO<Bullet>(0, "bullet");
+		Quaternion rot;
+		rot.SetRotation(Vector3::AxisZ, MinVec);
+		m_bullet->SetMoveDirection(m_forward);
+		m_bullet->Setrotation(rot);
+		m_bullet->SetPosition(m_position);
+
+		shot = true;
+	}
+
+	
 }
 
 struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
@@ -318,8 +270,12 @@ void Player::ProcessWalkStateTransition()
 void Player::ProcessAttackStateTransition()
 {
 	AttackRotation();
-
-	ProcessCommonStateTransition();
+	if (m_modelRender.IsPlayingAnimation() == false )
+	{
+		ProcessCommonStateTransition();
+		shot = false;
+	}
+	
 }
 
 void Player::Render(RenderContext& rc)
