@@ -76,11 +76,6 @@ Game::~Game()
 void Game::Update()
 {
 	EnemyAttackPointUpdate();
-
-	if (g_pad[0]->IsTrigger(enButtonY))
-	{
-		m_EnemyHpUiList[0]->DecreaseHP(20);
-	}
 }
 
 void Game::Delete_EnemyVec(const int num)
