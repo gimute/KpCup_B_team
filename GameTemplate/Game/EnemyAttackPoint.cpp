@@ -30,7 +30,7 @@ void EnemyAttackPoint::Update(Vector3 position)
 	Quaternion directionRot = g_quatIdentity;
 
 	//360度をエネミーアタックポイント配列の要素数で割って等間隔で置くための角度を設定する
-	directionRot.SetRotationDegY(360.0f / ENEMY_ATTACK_POINT_NUM);
+	directionRot.SetRotationDegY(360.0f / ATTACK_POINT_NUM);
 
 	//ポイントの配列を回して座標を設定する
 	for (AttackPoint& attackPoint : m_AttackPointList)
@@ -46,7 +46,7 @@ void EnemyAttackPoint::Update(Vector3 position)
 EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 position)
 {
 	//アタックポイントが使用可能でなければnullptrを返す
-	if (IsUsableAttackPoint())
+	if (IsUsableAttackPoint() == false)
 	{
 		return nullptr;
 	}
@@ -56,9 +56,6 @@ EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 posi
 
 	//一番近いアタックポイントのアドレスを入れておくポインタ
 	AttackPoint* tmp = nullptr;
-
-	//使用中のアタックポイントの数をカウントする変数
-	int useCount = 0;
 
 
 	for (AttackPoint& attackPoint : m_AttackPointList)
@@ -86,7 +83,7 @@ EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 posi
 
 bool EnemyAttackPoint::IsUsableAttackPoint()
 {
-	if (m_useAttackPointNum <= 5)
+	if (m_useAttackPointNum < 5)
 	{
 		return true;
 	}
@@ -96,7 +93,7 @@ bool EnemyAttackPoint::IsUsableAttackPoint()
 	}
 }
 
-void EnemyAttackPoint::GetAttackPoint(int number, Enemy* enemy)
+void EnemyAttackPoint::UseAttackPoint(int number, Enemy* enemy)
 {
 	//ポイントが使用中なら何もせず返す
 	if (m_AttackPointList[number].m_use == true)

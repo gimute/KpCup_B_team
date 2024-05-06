@@ -1,5 +1,7 @@
 #pragma once
-#include "Game.h"
+//#include "Game.h"
+#include "EnemyAttackPoint.h"
+
 class Game;
 class Player;
 class EnemyHpUi;
@@ -57,26 +59,15 @@ public:
 	//プレイヤーが攻撃範囲内に居るか確かめる関数
 	const bool SearchAttackDistance() const;
 
-	//現在自分が所持しているアタックポイントを使用中にする
-	void SetAttackPointIsUse()
-	{
-		m_enemyAttackPoint->m_use = true;
-		m_useAttacPoint = true;
-	}
-	//現在自分が所持しているアタックポイントを未使用にする
-	void SetAttackPointIsUnUse()
-	{
-		m_enemyAttackPoint->m_use = false;
-		m_useAttacPoint = false;
-	}
-
 	//アニメーションイベント
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 
 	//モデルの描画処理
 	void Render(RenderContext& rc);
 
-	
+	//所持しているアタックポイントを解放する
+	void ReleaseAttackPoint();
+
 
 	///////////////////////////////////////////////////////////
 	//初期設定系統
@@ -85,7 +76,7 @@ public:
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
 	Bullet* m_bullet = nullptr;
-	Game::EnemyAttackPoint* m_enemyAttackPoint= nullptr;		//エネミーアタックポイント構造体のポインタ
+	EnemyAttackPoint::AttackPoint* m_AttackPoint= nullptr;		//アタックポイント構造体のポインタ
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート

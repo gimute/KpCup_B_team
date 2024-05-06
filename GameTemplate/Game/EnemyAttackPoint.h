@@ -2,6 +2,8 @@
 
 #define ATTACK_POINT_NUM 15		//アタックポイントの数
 
+class Enemy;
+
 //エネミーの攻撃ポイント
 //このポイントを確保できているエネミーのみ攻撃可能
 class EnemyAttackPoint
@@ -28,16 +30,15 @@ public:
 	//近くにある使用可能なアタックポイントのアドレスを取得する関数
 	AttackPoint* GetNearAttackPoint(Vector3 position);
 
-	//アタックポイントを確保する関数
+	//アタックポイントを使用中する関数
 	//確保するアタックポイントのナンバーと
 	//登録用に、ポイントを確保するエネミーのアドレスを受け取る
-	void GetAttackPoint(int number, Enemy* enemy);
+	void UseAttackPoint(int number, Enemy* enemy);
 
 	//アタックポイントを解放する関数
 	//解放するアックポイントのナンバーと
 	//確認用に、ポイントを確保しているエネミーのアドレスを受け取る
 	void ReleaseAttackPoint(int number, Enemy* enemy);
-	
 
 	//アタックポイントが利用可能かどうか
 	//現状、アタックポイントを使っているエネミーが一定数居る場合利用を制限するようにしている
