@@ -1,6 +1,10 @@
 #pragma once
 
-#define ATTACK_POINT_NUM 15		//アタックポイントの数
+namespace
+{
+	const int ATTACK_POINT_NUM = 15;		//アタックポイントの数
+	const int ATTACK_POINT_USE_LIMIT = 5;	//アタックポイントの同時使用数上限
+}
 
 class Enemy;
 

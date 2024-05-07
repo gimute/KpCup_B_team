@@ -1,5 +1,5 @@
 #pragma once
-//#include "Game.h"
+
 #include "EnemyAttackPoint.h"
 
 class Game;
@@ -76,7 +76,7 @@ public:
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
 	Bullet* m_bullet = nullptr;
-	EnemyAttackPoint::AttackPoint* m_AttackPoint= nullptr;		//アタックポイント構造体のポインタ
+	
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
@@ -89,19 +89,12 @@ public:
 	CharacterController m_charaCon;        //キャラコン
 	CollisionObject* m_collisionObject;		//コリジョンオブジェクト。
 	int m_hp = 4;                           //HP
-	//int m_sh = 0;							//シールド
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。
 	float m_chaseTimer = 0.0f;								//追跡時間タイマー。
-	float m_looptimer = 0.0f;								//ループタイマー
-	float looptime = 1.16;									//ループ時間
-	float m_mutekitimer = 0.0f;								//無敵タイマー
-	float mutekitime = 0.1f;								//無敵時間
 
-	bool m_useAttacPoint = false;							//アタックポイントを保持しているか
-
-
-	float m_receiveDamageTimer = 0.0f;	//被ダメージモーションを用意し忘れたので一時的にタイマーで管理
-	EnEnemyState m_enemyOldState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
+private:
+	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
+	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ
 };
 

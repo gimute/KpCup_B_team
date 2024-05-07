@@ -2,6 +2,12 @@
 #include "Enemy.h"
 #include "EnemyAttackPoint.h"
 
+
+namespace
+{
+	const float TO_ATTACK_POINT_DISTANSE = 200.0f;	//基準となる座標からアタックポイントまでの距離
+}
+
 EnemyAttackPoint::EnemyAttackPoint()
 {
 	//アタックポイントのナンバーを初期化する
@@ -20,9 +26,6 @@ void EnemyAttackPoint::Update(Vector3 position)
 {
 	//アタックポイントを指定された座標の周囲に円状に配置する
 
-	//基準の座標からポイントまでの距離
-	float lenge = 200.0f;
-
 	//ポイントを設置する方向
 	Vector3 direction = g_vec3Front;
 
@@ -36,7 +39,7 @@ void EnemyAttackPoint::Update(Vector3 position)
 	for (AttackPoint& attackPoint : m_AttackPointList)
 	{
 		//ポイントの座標を設定する
-		attackPoint.m_position = position + direction * lenge;
+		attackPoint.m_position = position + direction * TO_ATTACK_POINT_DISTANSE;
 
 		//設置する方向を回転
 		directionRot.Apply(direction);
@@ -57,21 +60,23 @@ EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 posi
 	//一番近いアタックポイントのアドレスを入れておくポインタ
 	AttackPoint* tmp = nullptr;
 
-
+	//アタックポイントの配列を回す
 	for (AttackPoint& attackPoint : m_AttackPointList)
 	{
+		//アタックポイントが使用中なら処理を飛ばす
 		if (attackPoint.m_use == true)
 		{
 			continue;
 		}
 
-		float distance2 = (attackPoint.m_position - position).Length();
+		//アタックポイントとの距離を求める
+		float compareDistance = (attackPoint.m_position - position).Length();
 
-		//diffの値よりアタックポイントとの距離の方が小さければ
-		if (distance > distance2)
+		//保持しているアタックポイントとの距離より、今回出したアタックポイントとの距離の方が小さければ
+		if (distance > compareDistance)
 		{
-			//diffの値を近い方のアタックポイントとの距離に変更し
-			distance = distance2;
+			//保持しているアタックポイントとの距離を、今回出したアタックポイントとの距離に変更し
+			distance = compareDistance;
 			//そのアタックポイントのアドレスを保存する
 			tmp = &attackPoint;
 		}
@@ -83,27 +88,32 @@ EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 posi
 
 bool EnemyAttackPoint::IsUsableAttackPoint()
 {
-	if (m_useAttackPointNum < 5)
+	//アックポイント使用数が一定数より少なければ
+	if (m_useAttackPointNum < ATTACK_POINT_USE_LIMIT)
 	{
+		//使用可能
 		return true;
 	}
 	else
 	{
+		//使用不可
 		return false;
 	}
 }
 
 void EnemyAttackPoint::UseAttackPoint(int number, Enemy* enemy)
 {
-	//ポイントが使用中なら何もせず返す
+	//ポイントが使用中なら何もせず返す。
 	if (m_AttackPointList[number].m_use == true)
 	{
 		return;
 	}
 
+	//アタックポイントを使用中にする。
 	m_AttackPointList[number].m_use = true;
+	//アタックポイントを保持しているエネミーを登録する
 	m_AttackPointList[number].m_useEnemy = enemy;
-
+	//使用中のアタックポイントカウントを増やす
 	m_useAttackPointNum++;
 }
 
@@ -115,56 +125,11 @@ void EnemyAttackPoint::ReleaseAttackPoint(int number, Enemy* enemy)
 		return;
 	}
 	
+	//アタックポイントを未使用にする。
 	m_AttackPointList[number].m_use = false;
+	//アタックポイントを保持しているエネミーの登録を解除する
 	m_AttackPointList[number].m_useEnemy = nullptr;
-
+	//使用中のアタックポイントカウントを減らす
 	m_useAttackPointNum--;
 }
-
-//Vector3 EnemyAttackPoint::GetNearAttackPointPosition()
-//{
-//	//距離比較用の変数
-//	float distance = 10000.0f;	//	最初は極端に大きい値にしておく
-//
-//	//一番近いアタックポイントのアドレスを入れておくポインタ
-//	EnemyAttackPoint* tmp = nullptr;
-//
-//	//使用中のアタックポイントの数をカウントする変数
-//	int useCount = 0;
-//
-//	//一番近い未使用のアタックポイントを探す
-//	for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
-//	{
-//		//アタックポイントが使用中なら
-//		if (m_enemyAttackPointList[i].m_use == true)
-//		{
-//			//使用中アタックポイントのカウントを増やす
-//			useCount++;
-//			//使用中のポイントが一定数を超えていることがわかったら
-//			if (useCount >= 5)
-//			{
-//				//nullptrを返す
-//				return nullptr;
-//			}
-//			//超えてなければ
-//			else
-//			{
-//				continue;
-//			}
-//
-//		}
-//
-//		//diffの値よりアタックポイントとの距離の方が小さければ
-//		if (diff > (m_enemyAttackPointList[i].m_position - pos).Length())
-//		{
-//			//diffの値を近い方のアタックポイントとの距離に変更し
-//			diff = (m_enemyAttackPointList[i].m_position - pos).Length();
-//			//そのアタックポイントのアドレスを保存する
-//			tmp = &m_enemyAttackPointList[i];
-//		}
-//	}
-//
-//	//一番近いアタックポイントのアドレスを返す
-//	return tmp;
-//}
 

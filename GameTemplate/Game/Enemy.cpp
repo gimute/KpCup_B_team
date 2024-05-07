@@ -291,14 +291,6 @@ void Enemy::ProcessStandStateTransition()
 
 void Enemy::Chase()
 {
-	//念のためステート確認
-	if (m_enemystate != enEnemyState_Chase)
-	{
-		return;
-	}
-
-
-
 	//利用可能なアタックポイントを探す
 	EnemyAttackPoint::AttackPoint* attackPoint;
 	attackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
@@ -336,8 +328,18 @@ void Enemy::ProcessReceiveDamageStateTransition()
 	//被ダメージモーションが終わったら
 	if(m_modelRender.IsPlayingAnimation() == false)
 	{
-		//元のステートに戻す
-		m_enemystate = m_enemyOldState;
+		//元のステートが待機なら
+		if (m_oldEnemyState == enEnemyState_Idle)
+		{
+			//追跡ステートにする
+			m_enemystate = enEnemyState_Chase;
+		}
+		//待機ステート以外なら
+		else
+		{
+			//元のステートに戻す
+			m_enemystate = m_oldEnemyState;
+		}
 	}
 }
 
@@ -401,12 +403,6 @@ void Enemy::Rotation()
 
 void Enemy::Attack()
 {
-	//念のためステート確認
-	if (m_enemystate != enEnemyState_Attack)
-	{
-		return;
-	}
-
 	//攻撃処理
 }
 
@@ -468,9 +464,8 @@ void Enemy::Collision()
 				}
 				else {
 					//被ダメージ前のステートを記憶
-					m_enemyOldState = m_enemystate;
+					m_oldEnemyState = m_enemystate;
 
-					m_receiveDamageTimer = 0.5f;
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;
 				}
