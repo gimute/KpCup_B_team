@@ -149,7 +149,7 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
 		break;
 	case enEnemyState_ReceiveDamage:
-		m_modelRender.SetAnimationSpeed(2.0f);
+		m_modelRender.SetAnimationSpeed(4.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
 	}
