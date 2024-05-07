@@ -27,7 +27,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyHpUi.cpp" />
-
+    <ClCompile Include="EnemyAttackPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -50,6 +50,6 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyHpUi.h" />
-
+    <ClInclude Include="EnemyAttackPoint.h" />
   </ItemGroup>
 </Project>
