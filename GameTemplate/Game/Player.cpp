@@ -78,6 +78,7 @@ void Player::Move()
 		return;
 	}
 
+
 	//xzの移動速度を0.0fにする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -103,10 +104,10 @@ void Player::Move()
 		right *= stickL.x * 200.0f;
 		forward *= stickL.y * 200.0f;
 	}
-	else if(m_playerstate == enPlayerState_PostureWalk)
+	else if(m_playerstate == enPlayerState_PostureWalk || m_playerstate == enPlayerState_Attack)
 	{
-		right *= stickL.x * 100.0f;
-		forward *= stickL.y * 100.0f;
+		right *= stickL.x * 70.0f;
+		forward *= stickL.y * 70.0f;
 	}
 
 	//移動速度にスティックの入力量を加算する。
@@ -229,7 +230,7 @@ bool Player::AngleCheck(const Vector3& position)
 
 	diff.Normalize();
 	float angle = acosf(diff.Dot(m_forward));
-	if (Math::PI * 0.35f <= fabsf(angle))
+	if (Math::PI * 0.05f <= fabsf(angle))
 	{
 		return false;
 	}
@@ -294,7 +295,7 @@ void Player::PlayAnimation()
 		break;
 	case Player::enPlayerState_Attack:
 		//攻撃
-		m_modelRender.SetAnimationSpeed(2.0f);
+		m_modelRender.SetAnimationSpeed(5.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
 		break;
 	case Player::enPlayerState_PostureWalk:

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "EnemyHpUi.h"
 #include "Bullet.h"
+#include "EnemyAttackPoint.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -18,11 +19,7 @@ namespace
 Enemy::~Enemy()
 {
 	DeleteGO(m_collisionObject);
-
-	if (m_useAttacPoint == true)
-	{
-		SetAttackPointIsUnUse();
-	}
+	ReleaseAttackPoint();
 }
 
 bool Enemy::Start()
@@ -152,7 +149,7 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
 		break;
 	case enEnemyState_ReceiveDamage:
-		m_modelRender.SetAnimationSpeed(2.0f);
+		m_modelRender.SetAnimationSpeed(4.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
 	}
@@ -199,45 +196,70 @@ void Enemy::ProcessChaseStateTransition()
 		{
 			//状況に応じてステートを遷移
 			ProcessCommonStateTransition();
+			return;
 		}
 	}
 
 	//利用可能なアタックポイントを探す
-	m_enemyAttackPoint = m_game->GetNearEnemyAttackPoint(m_position);
+	EnemyAttackPoint::AttackPoint* attackPoint;
+
+	attackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
 
 	//アタックポイントが確保できなかった場合
-	if (m_enemyAttackPoint == nullptr)
+	if (attackPoint == nullptr)
 	{
 		//プレイヤーとの距離が一定以下なら
 		if ((m_player->GetPosition() - m_position).Length() <= 300.0f)
 		{
 			//ステートを構えに変更
 			m_enemystate = enEnemyState_Stand;
+			return;
 		}
 	}
 	//確保できた場合
 	else
 	{
 		//アタックポイントとの距離が一定以下なら
-		if ((m_enemyAttackPoint->m_position - m_position).Length() <= 50.0f)
+		if ((attackPoint->m_position - m_position).Length() <= 50.0f)
 		{
-			//そのアタックポイントを使用中にし、
-			SetAttackPointIsUse();
 			//ステートを攻撃に変更
 			m_enemystate = enEnemyState_Attack;
+			return;
 		}
 	}
 }
 
 void Enemy::ProcessAttackStateTransition()
 {
-	Vector3 diff = m_enemyAttackPoint->m_position - m_position;
+	//アタックポイントを確保していなかったら
+	if (m_AttackPoint == nullptr)
+	{
+		//利用可能なアタックポイント取得
+		m_AttackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
 
-	//自分が使っているアタックポイントとの距離が一定以上なら
+		//アタックポイントを取得できなかったら
+		if (m_AttackPoint == nullptr)
+		{
+			//追跡ステートにする
+			m_enemystate = enEnemyState_Chase;
+			return;
+		}
+		//取得できていたら
+		else
+		{
+			//アタックポイントを使用中にする
+			m_game->GetEnemyAttackPointInstance()->UseAttackPoint(m_AttackPoint->m_number, this);
+		}
+	}
+
+	//エネミーからアタックポイントに向かうベクトルを求める
+	Vector3 diff = m_AttackPoint->m_position - m_position;
+
+	//アタックポイントとの距離が一定以上なら
 	if (diff.Length() >= 80.0f)
 	{
-		//アタックポイントを未使用にしてから
-		SetAttackPointIsUnUse();
+		//アタックポイント解放し
+		ReleaseAttackPoint();
 		//追跡ステートにする
 		m_enemystate = enEnemyState_Chase;
 	}
@@ -251,10 +273,10 @@ void Enemy::ProcessIdleStateTransition()
 
 void Enemy::ProcessStandStateTransition()
 {
-	m_enemyAttackPoint = m_game->GetNearEnemyAttackPoint(m_position);
-
-	if (m_enemyAttackPoint != nullptr)
+	//アタックポイントが空いていたら
+	if (m_game->GetEnemyAttackPointInstance()->IsUsableAttackPoint() == true)
 	{
+		//追跡ステートにしてアタックポイントを取りに行く
 		m_enemystate = enEnemyState_Chase;
 	}
 
@@ -269,17 +291,12 @@ void Enemy::ProcessStandStateTransition()
 
 void Enemy::Chase()
 {
-	//念のためステート確認
-	if (m_enemystate != enEnemyState_Chase)
-	{
-		return;
-	}
-
-	//近くのアタックポイントを探す
-	m_enemyAttackPoint = m_game->GetNearEnemyAttackPoint(m_position);
+	//利用可能なアタックポイントを探す
+	EnemyAttackPoint::AttackPoint* attackPoint;
+	attackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
 
 	//アタックポイントが確保できない場合
-	if (m_enemyAttackPoint == nullptr)
+	if (attackPoint == nullptr)
 	{
 		//プレイヤーに向かわせる
 
@@ -296,7 +313,7 @@ void Enemy::Chase()
 	{
 		//アタックポイントに向かわせる
 
-		Vector3 diff = m_enemyAttackPoint->m_position - m_position;
+		Vector3 diff = attackPoint->m_position - m_position;
 		diff.Normalize();
 
 		m_movespeed = diff * enemyspeed;
@@ -311,8 +328,18 @@ void Enemy::ProcessReceiveDamageStateTransition()
 	//被ダメージモーションが終わったら
 	if(m_modelRender.IsPlayingAnimation() == false)
 	{
-		//元のステートに戻す
-		m_enemystate = m_enemyOldState;
+		//元のステートが待機なら
+		if (m_oldEnemyState == enEnemyState_Idle)
+		{
+			//追跡ステートにする
+			m_enemystate = enEnemyState_Chase;
+		}
+		//待機ステート以外なら
+		else
+		{
+			//元のステートに戻す
+			m_enemystate = m_oldEnemyState;
+		}
 	}
 }
 
@@ -376,12 +403,6 @@ void Enemy::Rotation()
 
 void Enemy::Attack()
 {
-	//念のためステート確認
-	if (m_enemystate != enEnemyState_Attack)
-	{
-		return;
-	}
-
 	//攻撃処理
 }
 
@@ -443,11 +464,10 @@ void Enemy::Collision()
 				}
 				else {
 					//被ダメージ前のステートを記憶
-					m_enemyOldState = m_enemystate;
+					m_oldEnemyState = m_enemystate;
 
-					m_receiveDamageTimer = 0.5f;
 					//被ダメージステートに遷移する。
-					m_enemystate = enEnemyState_ReceiveDamage; //被ダメージステートが無いので、仮として待機ステート置いている
+					m_enemystate = enEnemyState_ReceiveDamage;
 				}
 			
 		}
@@ -541,6 +561,20 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Enemy);
 	}
+}
+
+void Enemy::ReleaseAttackPoint()
+{
+	//アタックポイントを持っていなければ何もせず返す
+	if (m_AttackPoint == nullptr)
+	{
+		return;
+	}
+
+	//アタックポイントを解放
+	m_game->GetEnemyAttackPointInstance()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
+	//アタックポイントへのポインタも解放
+	m_AttackPoint = nullptr;
 }
 
 void Enemy::Render(RenderContext& rc)
