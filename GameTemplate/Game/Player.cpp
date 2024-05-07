@@ -31,6 +31,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_PostureIdle].Load("Assets/modelData/player/proto_player/shotstandby.tka");
 	m_animationclips[enAnimationClip_PostureIdle].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/proto_player/rolling.tka");
+	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -58,6 +60,8 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+	//タイマー変数加減処理
+	TimeAdjustment();
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
@@ -66,8 +70,14 @@ void Player::Update()
 
 void Player::Move()
 {
-	/*if (m_playerstate == enPlayerState_Attack)
-		return;*/
+	//ステートが回避の場合
+	if (m_playerstate == enPlayerState_Rolling)
+	{
+		//回避処理に移行する
+		Rolling();
+		return;
+	}
+
 
 	//xzの移動速度を0.0fにする。
 	m_moveSpeed.x = 0.0f;
@@ -112,12 +122,39 @@ void Player::Move()
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
+}
 
+void Player::Rolling()
+{
+	if (m_playerstate != enPlayerState_Rolling)
+	{
+		return;
+	}
+
+	m_rollingVec.Normalize();
+
+	m_rollingVec *= 300.0f;
+	
+	m_rollingSpeed = m_rollingVec;
+
+	m_rollingSpeed.y = 0.0f;
+
+	m_position = m_charaCon.Execute(m_rollingSpeed, g_gameTime->GetFrameDeltaTime());
+
+	Vector3 modelPosition = m_position;
+	//ちょっとだけモデルの座標を挙げる。
+	modelPosition.y += 2.5f;
+	m_modelRender.SetPosition(modelPosition);
+	//キャラクターコントローラーを使って座標を移動させる。
+	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
+	//座標を設定。
+	m_modelRender.SetPosition(m_position);
 }
 
 void Player::Rotation()
 {
-	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk)
+	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk
+		||m_playerstate == enPlayerState_Rolling)
 	{
 		return;
 	}
@@ -236,6 +273,9 @@ void Player::ManageState()
 	case Player::enPlayerState_PostureWalk:
 		ProcessCommonStateTransition();
 		break;
+	case Player::enPlayerState_Rolling:
+		ProcessRollingStateTransition();
+		break;
 	}
 }
 
@@ -269,30 +309,36 @@ void Player::PlayAnimation()
 			m_modelRender.PlayAnimation(enAnimationClip_PostureIdle, 0.1f);
 		}
 		break;
+	case Player::enPlayerState_Rolling:
+		m_modelRender.SetAnimationSpeed(2.0);
+		m_modelRender.PlayAnimation(enAnimationClip_Rolling, 0.1f);
+		break;
 	}
 }
 
 void Player::ProcessCommonStateTransition()
 {
-	if (g_pad[0]->IsPress(enButtonRB1) || g_pad[0]->IsPress(enButtonLB1))
+	if (g_pad[0]->IsPress(enButtonRB1))
 	{
 		//m_playerstate = enPlayerState_Idle;
 		if (g_pad[0]->IsTrigger(enButtonB))
 		{
-		m_playerstate = enPlayerState_Attack;
-		return;
+			m_playerstate = enPlayerState_Attack;
+			return;
 		}
-		////x��z�̈ړ����x����������(�X�e�B�b�N�̓��͂���������)�B
-		//if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
-		//	//�����X�e�[�g�ɂ���
-		//	m_playerstate = enPlayerState_PostureWalk;
-		//	return;
-		//}
 		m_playerstate = enPlayerState_PostureWalk;
 		return;
 	}
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
+		//もしAボタンが押されたら
+		if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+		{
+			m_rollingVec = m_forward;
+			//プレイヤーステートを回避にする
+			m_playerstate = enPlayerState_Rolling;
+			return;
+		}
 		//歩きステートにする
 		m_playerstate = enPlayerState_Walk;
 		return;
@@ -324,11 +370,29 @@ void Player::ProcessAttackStateTransition()
 	}
 }
 
+void Player::ProcessRollingStateTransition()
+{
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
+		m_rollingVec = Vector3::Zero;
+		m_rollingCoolDown = rollingCoolDownTime;
+		ProcessCommonStateTransition();
+	}
+}
+
 void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
 	if (wcscmp(eventName, L"shot_point") == 0)
 	{
 		AttackRotation();
+	}
+}
+
+void Player::TimeAdjustment()
+{
+	if (m_rollingCoolDown > 0.0f)
+	{
+		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
 	}
 }
 
