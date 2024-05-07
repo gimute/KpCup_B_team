@@ -54,8 +54,6 @@ void Player::Update()
 {
 	//移動処理。
 	Move();
-	//回避処理に移行する
-	Rolling();
 	//回転処理。
 	Rotation();
 	//アニメーション処理
@@ -70,8 +68,11 @@ void Player::Update()
 
 void Player::Move()
 {
-	if (m_playerstate == enPlayerState_Attack||m_playerstate == enPlayerState_Rolling)
+	//ステートが回避の場合
+	if (m_playerstate == enPlayerState_Rolling)
 	{
+		//回避処理に移行する
+		Rolling();
 		return;
 	}
 
