@@ -60,6 +60,8 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+	//時間系変数加減処理
+	TimeAdjustment();
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
@@ -315,11 +317,6 @@ void Player::PlayAnimation()
 
 void Player::ProcessCommonStateTransition()
 {
-	if (m_rollingCoolDown > 0.0f)
-	{
-		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
-	}
-
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{
 		//m_playerstate = enPlayerState_Idle;
@@ -387,6 +384,14 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	if (wcscmp(eventName, L"shot_point") == 0)
 	{
 		AttackRotation();
+	}
+}
+
+void Player::TimeAdjustment()
+{
+	if (m_rollingCoolDown > 0.0f)
+	{
+		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
 	}
 }
 

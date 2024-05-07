@@ -38,6 +38,7 @@ public:
 	void Move();
 	void Rolling();						//回避処理
 	void ManageState();					//ステート遷移処理
+	void TimeAdjustment();				//時間計変数加減処理
 	//アニメーションイベント
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//void PlayAnimation();
