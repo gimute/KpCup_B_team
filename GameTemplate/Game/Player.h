@@ -14,6 +14,7 @@ public:
 		enAnimationClip_Gunshot,		//射撃モーション
 		enAnimationClip_PostureWalk,	//構え歩き
 		enAnimationClip_PostureIdle,	//構え立ち
+		enAnimationClip_Rolling,		//ローリング
 		enAnimationClip_Num				//アニメーション数
 	};
 	//プレイヤーステート
@@ -22,6 +23,7 @@ public:
 		enPlayerState_Walk,				//歩き。
 		enPlayerState_PostureWalk,		//構え歩き。
 		enPlayerState_Attack,			//攻撃
+		enPlayerState_Rolling,
 	};
 
 	Player();
@@ -34,6 +36,7 @@ public:
 	void AttackRotation();
 	bool AngleCheck(const Vector3& position);
 	void Move();
+	void Rolling();						//回避処理
 	void ManageState();					//ステート遷移処理
 	//アニメーションイベント
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
@@ -42,6 +45,7 @@ public:
 	void ProcessIdleStateTransition();		//待機遷移
 	void ProcessWalkStateTransition();		//歩き遷移
 	void ProcessAttackStateTransition();    //攻撃遷移
+	void ProcessRollingStateTransition();	//回避遷移
 	//座標取得
 	const Vector3& GetPosition() const
 	{
@@ -63,7 +67,10 @@ public:
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
 	SphereCollider m_sphereCollider;						//コリダー
-
 	bool shot= false;
+	Vector3 m_rollingVec = Vector3::Zero;					//回避方向
+	Vector3 m_rollingSpeed = Vector3::Zero;					//回避スピード
+	float m_rollingCoolDown = 0.0f;							//回避クールダウン
+	float rollingCoolDownTime = 0.5;						//回避クールダウン時間
 };
 
