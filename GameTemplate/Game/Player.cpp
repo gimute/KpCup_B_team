@@ -60,7 +60,7 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
-	//時間系変数加減処理
+	//タイマー変数加減処理
 	TimeAdjustment();
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
