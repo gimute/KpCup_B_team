@@ -54,6 +54,8 @@ void Player::Update()
 {
 	//移動処理。
 	Move();
+	//回避処理に移行する
+	Rolling();
 	//回転処理。
 	Rotation();
 	//アニメーション処理
@@ -68,21 +70,9 @@ void Player::Update()
 
 void Player::Move()
 {
-	if (m_playerstate == enPlayerState_Attack)
+	if (m_playerstate == enPlayerState_Attack||m_playerstate == enPlayerState_Rolling)
 	{
 		return;
-	}
-
-	//もし現在ステートが回避なら
-	if (m_playerstate == enPlayerState_Rolling)
-	{
-		//回避処理に移行する
-		Rolling();
-		return;
-	}
-	else if(m_rollingCoolDown > 0.0f)
-	{
-		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
 	}
 
 	//xzの移動速度を0.0fにする。
@@ -132,6 +122,11 @@ void Player::Move()
 
 void Player::Rolling()
 {
+	if (m_playerstate != enPlayerState_Rolling)
+	{
+		return;
+	}
+
 	m_rollingVec.Normalize();
 
 	m_rollingVec *= 300.0f;
@@ -319,6 +314,10 @@ void Player::PlayAnimation()
 
 void Player::ProcessCommonStateTransition()
 {
+	if (m_rollingCoolDown > 0.0f)
+	{
+		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
+	}
 
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{
