@@ -66,7 +66,7 @@ void GameCamera::Update()
 	//float y = g_pad[0]->GetRStickYF();
 	//YŽ²Žü‚è‚Ì‰ñ“]
 	Quaternion qRot;
-	qRot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
+	qRot.SetRotationDeg(Vector3::AxisY, 1.7f * x);
 	qRot.Apply(m_toCameraPos);
 	//XŽ²Žü‚è‚Ì‰ñ“]
 	/*Vector3 axisX;
