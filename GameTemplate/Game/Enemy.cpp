@@ -33,7 +33,7 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
-	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Attack].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
@@ -121,7 +121,11 @@ void Enemy::Update()
 	//アニメーション
 	PlayAnimation();
 	
-	
+	if (m_attackTimer > 0.0f)
+	{
+		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
+	}
+
 	//描画更新
 	m_modelRender.Update();
 }
@@ -141,8 +145,20 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Chase, 0.1f);
 		break;
 	case enEnemyState_Attack:
-		m_modelRender.SetAnimationSpeed(1.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
+		if (m_attackTimer <= 0.0f)
+		{
+			m_modelRender.SetAnimationSpeed(1.0f);
+			m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
+			if (m_modelRender.IsPlayingAnimation() == false)
+			{
+				m_attackTimer = SetEnemyAttackTime();
+			}
+		}
+		else
+		{
+			m_modelRender.SetAnimationSpeed(1.0f);
+			m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
+		}
 		break;
 	case enEnemyState_Stand:
 		m_modelRender.SetAnimationSpeed(1.0f);
@@ -231,6 +247,7 @@ void Enemy::ProcessChaseStateTransition()
 
 void Enemy::ProcessAttackStateTransition()
 {
+
 	//アタックポイントを確保していなかったら
 	if (m_AttackPoint == nullptr)
 	{
