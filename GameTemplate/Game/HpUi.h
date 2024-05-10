@@ -39,6 +39,15 @@ public:
 	void AdjustmentTransparent();
 	//レンダー
 	void Render(RenderContext& rc);
+	//HP減少処理
+	void DecreaseHP(int decrease)
+	{
+		//HPを減少値減らす
+		m_nowhp -= decrease;
+		return;
+	}
+
+private:
 	/////////////////////////////////////////メンバ変数
 	//HPUI
 	SpriteRender m_hpUI_A;
@@ -66,12 +75,6 @@ public:
 	//現在透過減少値
 	Vector3 m_nowScale = m_hpUI_C.GetScale();
 	/////////////////////////////////////////初期設定系統
-	//HP減少処理
-	void DecreaseHP(int decrease)
-	{
-		//HPを減少値減らす
-		m_nowhp -= decrease;
-		return;
-	}
+	
 };
 
