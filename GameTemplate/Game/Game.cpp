@@ -77,6 +77,9 @@ Game::~Game()
 void Game::Update()
 {
 	m_enemyAttackPoint.Update(m_player->GetPosition());
+
+	m_hpui->Update();
+  
 	m_enemyCamPos.EnemyCamPosConfirmation();
 }
 
@@ -101,6 +104,7 @@ Vector3 Game::GetEnemyListPos(int num)
 	}
 	return m_EnemyList[num]->m_position;
 }
+
 
 //エネミーアタックポイント関連///////////////////////////////////////////////////
 //void Game::EnemyAttackPointUpdate()
