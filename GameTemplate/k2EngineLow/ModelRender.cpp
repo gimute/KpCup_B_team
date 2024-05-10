@@ -18,13 +18,23 @@ namespace nsK2EngineLow {
 		const char* tkmfilePath,
 		AnimationClip* animationClips,
 		int numAnimationClips,
-		EnModelUpAxis enModelUpAxis
+		EnModelUpAxis enModelUpAxis,
+		bool dithering
 	)
 	{
 		ModelInitData initData;
 
 		initData.m_tkmFilePath = tkmfilePath;
-		initData.m_fxFilePath = "Assets/shader/model.fx";
+
+		if (dithering == false)
+		{
+			initData.m_fxFilePath = "Assets/shader/model.fx";
+		}
+		else
+		{
+			initData.m_fxFilePath = "Assets/shader/ditheringModel.fx";
+		}
+		
 
 		initData.m_expandConstantBuffer = g_sceneLight;
 		initData.m_expandConstantBufferSize = sizeof(Light);

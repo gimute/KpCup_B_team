@@ -228,6 +228,7 @@
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttackPoint.cpp" />
+    <ClCompile Include="EnemyCamPos.cpp" />
     <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Car.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttackPoint.h" />
+    <ClInclude Include="EnemyCamPos.h" />
     <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />

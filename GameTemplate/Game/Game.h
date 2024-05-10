@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnemyAttackPoint.h"
+#include "EnemyCamPos.h"
 
 //エネミーアタックポイントの数
 //#define ENEMY_ATTACK_POINT_NUM 15
@@ -81,7 +82,7 @@ public:
 		return &m_enemyAttackPoint;
 	}
 
-//メンバ変数
+	//メンバ変数
 	Player* m_player;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
@@ -90,9 +91,14 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
+	
 
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
+	EnemyCamPos m_enemyCamPos;
+	/// <summary>
+	/// 現在enemy配列を消去中かどうか
+	/// </summary>
 	//EnemyAttackPoint m_enemyAttackPointList[ENEMY_ATTACK_POINT_NUM];
 };
 

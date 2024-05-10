@@ -19,6 +19,11 @@ public:
 		enEnemyState_ReceiveDamage,	//被ダメージ
 		enEnemyState_Down			//ダウン
 	};
+	//攻撃頻度のステート
+	enum EnEnemyAttack {
+		en_FrequencyHigh,
+		en_FrequencyFew,
+	};
 	//アニメーション類/////////////////////////////
 //アニメーションステート
 	enum EnAnimationClip {
@@ -80,6 +85,7 @@ public:
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
 	EnEnemyState m_enemystate = enEnemyState_Idle;          //エネミーステート
+	EnEnemyAttack m_enemyAttack = en_FrequencyFew;			//エネミーの攻撃頻度の分類
 	Vector3	m_forward = Vector3::AxisZ;						//エネミーの正面ベクトル。
 	Vector3 m_movespeed;									//移動速度
 	Vector3 m_position;										//座標
@@ -92,9 +98,33 @@ public:
 	int m_Vectornum = 0;					//配列のナンバー
 	float m_idleTimer= 0.0f;								//待機時間タイマー。
 	float m_chaseTimer = 0.0f;								//追跡時間タイマー。
-
+	float m_attackTimer = 0.0f;
+	float attackTime = 3.0f;
+	bool m_shotBool = false;
+	/// <summary>
+	/// 攻撃遅延ステートセット
+	/// </summary>
+	/// <param name="statenum"></param>
+	void SetEnemyAttackState(const EnEnemyAttack& enemystate)
+	{
+		m_enemyAttack = enemystate;
+		return;
+	}
+	float SetEnemyAttackTime()
+	{
+		switch (m_enemyAttack)
+		{
+		case Enemy::en_FrequencyHigh:
+			return 1.0f;
+			break;
+		case Enemy::en_FrequencyFew:
+			return 10.0f;
+			break;
+		}
+	}
 private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ
+
 };
 

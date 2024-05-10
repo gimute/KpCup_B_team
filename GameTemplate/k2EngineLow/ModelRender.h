@@ -7,12 +7,20 @@ namespace nsK2EngineLow {
 		ModelRender();
 		~ModelRender();
 
-		// 初期化処理
+		/// <summary>
+		/// 初期化処理
+		/// </summary>
+		/// <param name="tkmfilePath">モデルのファイルパス</param>
+		/// <param name="animationClips">アニメーションクリップ</param>
+		/// <param name="numAnimationClips">アニメーションクリップの数</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
+		/// <param name="dithering">ディザリングフラグ、tureならディザリングを行う</param>
 		void Init(
 			const char* tkmfilePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool dithering = false
 		);
 
 		// スケルトンの初期化

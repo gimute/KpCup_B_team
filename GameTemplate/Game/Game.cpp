@@ -13,6 +13,7 @@
 #include "Enemy.h"
 #include "EnemyHpUi.h"
 #include "EnemyAttackPoint.h"
+#include "EnemyCamPos.h"
 ///////////////////////////////
 
 Game::Game()
@@ -78,6 +79,8 @@ void Game::Update()
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 
 	m_hpui->Update();
+  
+	m_enemyCamPos.EnemyCamPosConfirmation();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -93,6 +96,12 @@ void Game::Delete_EnemyVec(const int num)
 
 Vector3 Game::GetEnemyListPos(int num)
 {
+	if (num + 1 > m_EnemyList.size())
+	{
+		Vector3 dummy = { 0.0f,0.0f,1.0f };
+		dummy *= 1000.0f;
+		return dummy;
+	}
 	return m_EnemyList[num]->m_position;
 }
 
@@ -178,5 +187,5 @@ Vector3 Game::GetEnemyListPos(int num)
 
 void Game::Render(RenderContext& rc)
 {
-	
+
 }
