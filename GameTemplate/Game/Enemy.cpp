@@ -24,6 +24,9 @@ Enemy::~Enemy()
 
 bool Enemy::Start()
 {
+	//テスト
+	m_sphereCollider.Create(1.0f);
+	//
 
 	//アニメーション読み込み
 	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
@@ -491,8 +494,50 @@ void Enemy::Collision()
 	}
 }
 
+//WallCheckに使っている構造体、WallCheckの位置を動かすときは一緒に動かしてください
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
 
-const bool Enemy::SearchPlayer() const
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//壁とぶつかっていなかったら
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//衝突したのは壁ではない
+			return 0.0f;
+		}
+
+		//壁とぶつかったらフラグをtrueにする
+		isHit = true;
+		return 0.0f;
+	}
+};
+bool Enemy::WallCheck(const Vector3 position)
+{
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+	//始点はエネミーの座標
+	start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+	//終点は引数で受け取った座標の座標
+	end.setOrigin(btVector3(position.x, position.y + 70.0f, position.z));
+
+	SweepResultWall callback;
+	//制作したコライダーを始点から終点まで動かして壁に接触したか判定
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+	//壁と衝突した時
+	if (callback.isHit == true)
+	{
+		return false;
+	}
+
+
+	return true;
+}
+///////////////////////////////////////////////////////////////////////
+
+bool Enemy::SearchPlayer()
 {
 	Vector3 diff = m_player->GetPosition() - m_position;
 
@@ -513,8 +558,12 @@ const bool Enemy::SearchPlayer() const
 		//角度(θ)が90°(視野角)より小さければ。
 		if (angle <= (Math::PI / 180.0f) * 90.0f)
 		{
-			//プレイヤーを見つけた！
-			return true;
+			//プレイヤーとエネミーの間に壁があるか
+			if (WallCheck(m_player->GetPosition()))
+			{
+				//プレイヤーを見つけた！
+				return true;
+			}	
 		}
 	}
 	//プレイヤーを見つけられなかった。
