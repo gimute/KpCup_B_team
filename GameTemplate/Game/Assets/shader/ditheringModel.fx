@@ -115,9 +115,9 @@ sampler g_sampler : register(s0);
 static const int pattern[4][4] =
 {
     { 0, 32, 8, 40 },
-    { 48, 16, 56, 24 },
+    { 65, 16, 65, 24 },
     { 12, 44, 4, 36 },
-    { 60, 28, 52, 20 },
+    { 65, 28, 65, 20 },
 };
 
 ///////////////////////////////////////////
@@ -200,6 +200,7 @@ SPSIn VSSkinMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
+    //ディザリング処理
     int x = (int) fmod(psIn.pos.x, 4.0f);
     int y = (int) fmod(psIn.pos.y, 4.0f);
 
@@ -212,6 +213,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float clipRate = 1.0f - min(1.0f, eyeToClipRange / 100.0f);
     
     clip(dither - 64 * clipRate);
+    ////////////////////////////
     
     
     
