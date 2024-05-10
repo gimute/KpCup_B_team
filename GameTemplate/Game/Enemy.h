@@ -56,7 +56,7 @@ public:
 	void Attack();										   //攻撃
 
 	//プレイヤーが視界内に居るか確かめる関数
-	const bool SearchPlayer() const;
+	bool SearchPlayer();
 
 	//プレイヤーが一定範囲内に居るか確かめる関数
 	const bool SearchChaseDistance() const;
@@ -73,6 +73,9 @@ public:
 	//所持しているアタックポイントを解放する
 	void ReleaseAttackPoint();
 
+	//自分の座標から指定された座標までに壁がないか調べる関数
+	//あった場合false、なかった場合tureが返される
+	bool WallCheck(const Vector3 position);
 
 	///////////////////////////////////////////////////////////
 	//初期設定系統
@@ -126,5 +129,8 @@ private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ
 
+	///テスト
+	SphereCollider m_sphereCollider;		//プレイヤーと自分の間に壁があるか判定するのに使うコライダー
+	///
 };
 
