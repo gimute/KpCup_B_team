@@ -413,6 +413,13 @@ void Player::ProcessCommonStateTransition()
 	}
 	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else {
+		if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+		{
+			m_rollingVec = m_forward;
+			//プレイヤーステートを回避にする
+			m_playerstate = enPlayerState_Rolling;
+			return;
+		}
 		//待機ステートにする。
 		m_playerstate = enPlayerState_Idle;
 		return;
