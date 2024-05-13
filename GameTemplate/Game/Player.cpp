@@ -155,7 +155,7 @@ void Player::Rolling()
 
 	m_rollingVec.Normalize();
 
-	m_rollingVec *= 300.0f;
+	m_rollingVec *= 500.0f;
 	
 	m_rollingSpeed = m_rollingVec;
 
@@ -167,10 +167,6 @@ void Player::Rolling()
 	//ちょっとだけモデルの座標を挙げる。
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
-	//キャラクターコントローラーを使って座標を移動させる。
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
-	//座標を設定。
-	m_modelRender.SetPosition(m_position);
 }
 
 void Player::Rotation()
@@ -397,16 +393,18 @@ void Player::ProcessCommonStateTransition()
 		m_playerstate = enPlayerState_PostureWalk;
 		return;
 	}
+
+	//Aボタンが押されたら
+	if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+	{
+		m_rollingVec = m_forward;
+		//プレイヤーステートを回避にする
+		m_playerstate = enPlayerState_Rolling;
+		return;
+	}
+
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
-		//もしAボタンが押されたら
-		if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
-		{
-			m_rollingVec = m_forward;
-			//プレイヤーステートを回避にする
-			m_playerstate = enPlayerState_Rolling;
-			return;
-		}
 		//歩きステートにする
 		m_playerstate = enPlayerState_Walk;
 		return;
