@@ -3,29 +3,10 @@
 
 namespace nsK2EngineLow {
 
-	ModelRender::Light ModelRender::m_light;
 
 	ModelRender::ModelRender()
 	{
-		//ライトの初期化
-		//ディレクションライト
-		m_light.dirLigDirection.x = 1.0f;
-		m_light.dirLigDirection.y = -1.0f;
-		m_light.dirLigDirection.z = -1.0f;
 
-		m_light.dirLigDirection.Normalize();
-
-		m_light.dirColor.x = 1.0f;
-		m_light.dirColor.y = 1.0f;
-		m_light.dirColor.z = 1.0f;
-
-		//アンビエントライト
-		m_light.ambientLight.x = 0.3;
-		m_light.ambientLight.y = 0.3;
-		m_light.ambientLight.z = 0.3;
-
-		//視点の位置
-		m_light.eyePos = g_camera3D->GetPosition();
 	}
 
 	ModelRender::~ModelRender()
@@ -37,16 +18,26 @@ namespace nsK2EngineLow {
 		const char* tkmfilePath,
 		AnimationClip* animationClips,
 		int numAnimationClips,
-		EnModelUpAxis enModelUpAxis
+		EnModelUpAxis enModelUpAxis,
+		bool dithering
 	)
 	{
 		ModelInitData initData;
 
 		initData.m_tkmFilePath = tkmfilePath;
-		initData.m_fxFilePath = "Assets/shader/testModel.fx";
 
-		initData.m_expandConstantBuffer = &m_light;
-		initData.m_expandConstantBufferSize = sizeof(m_light);
+		if (dithering == false)
+		{
+			initData.m_fxFilePath = "Assets/shader/model.fx";
+		}
+		else
+		{
+			initData.m_fxFilePath = "Assets/shader/ditheringModel.fx";
+		}
+		
+
+		initData.m_expandConstantBuffer = g_sceneLight;
+		initData.m_expandConstantBufferSize = sizeof(Light);
 
 		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 		initData.m_vsEntryPointFunc = "VSMain";
@@ -105,6 +96,16 @@ namespace nsK2EngineLow {
 		}
 
 		//アニメーションを進める
-		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
+		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
+	}
+
+	void ModelRender::Draw(RenderContext& rc)
+	{
+		g_renderingEngine->AddRenderObject(this);
+	}
+
+	void ModelRender::OnRenderModel(RenderContext& rc)
+	{
+		m_model.Draw(rc);
 	}
 }

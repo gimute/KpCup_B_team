@@ -1,31 +1,26 @@
 #pragma once
 
 namespace nsK2EngineLow {
-	class ModelRender : public Noncopyable
+	class ModelRender : public IRenderer
 	{
 	public:
-		struct Light
-		{
-			Vector3 dirLigDirection;	// ディレクションライトの方向
-			float pad0;					// パディング
-			Vector3 dirColor;			// ディレクションライトのカラー
-			float pad1;
-
-			Vector3 ambientLight;		// アンビエントライト
-			float pad2;
-
-			Vector3 eyePos;				// 視点の位置
-		};
-
 		ModelRender();
 		~ModelRender();
 
-		// 初期化処理
+		/// <summary>
+		/// 初期化処理
+		/// </summary>
+		/// <param name="tkmfilePath">モデルのファイルパス</param>
+		/// <param name="animationClips">アニメーションクリップ</param>
+		/// <param name="numAnimationClips">アニメーションクリップの数</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
+		/// <param name="dithering">ディザリングフラグ、tureならディザリングを行う</param>
 		void Init(
 			const char* tkmfilePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool dithering = false
 		);
 
 		// スケルトンの初期化
@@ -41,6 +36,25 @@ namespace nsK2EngineLow {
 		void PlayAnimation(int animNo, float interpolateTime = 0.0f)
 		{
 			m_animation.Play(animNo, interpolateTime);
+		}
+
+		// アニメーション再生中?
+		bool IsPlayingAnimation() const
+		{
+			return m_animation.IsPlaying();
+		}
+
+		/// アニメーション再生の速度を設定
+		void SetAnimationSpeed(const float animationSpeed)
+		{
+			m_animationSpeed = animationSpeed;
+		}
+
+		//アニメーションイベント
+		//ただコピペしただけで、何やってるは調べ中
+		void AddAnimationEvent(AnimationEventListener eventListener)
+		{
+			m_animation.AddAnimationEventListener(eventListener);
 		}
 
 		// 更新処理
@@ -77,14 +91,13 @@ namespace nsK2EngineLow {
 			return m_model;
 		}
 
-		// モデルのDrawを呼び出してるだけ
-		void Draw(RenderContext& rc)
-		{
-			m_model.Draw(rc);
-		}
+		//描画処理
+		void Draw(RenderContext& rc);
+
+		//3Dモデルの描画処理
+		void OnRenderModel(RenderContext& rc) override;
 
 	private:
-		static Light m_light;
 		Model m_model;
 		Skeleton		m_skeleton;
 		AnimationClip* m_animationClips = nullptr;
@@ -94,6 +107,8 @@ namespace nsK2EngineLow {
 		Vector3 m_pos = Vector3::Zero;
 		Quaternion m_rot = Quaternion::Identity;
 		Vector3 m_scale = Vector3::One;
+
+		float m_animationSpeed = 1.0f;			//アニメーションの再生スピード
 	};
 
 }

@@ -23,6 +23,12 @@
     <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
+    <ClCompile Include="HpUi.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyHpUi.cpp" />
+    <ClCompile Include="EnemyAttackPoint.cpp" />
+    <ClCompile Include="EnemyCamPos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -41,5 +47,11 @@
     <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="PointYazirushi.h" />
+    <ClInclude Include="HpUi.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyHpUi.h" />
+    <ClInclude Include="EnemyAttackPoint.h" />
+    <ClInclude Include="EnemyCamPos.h" />
   </ItemGroup>
 </Project>
