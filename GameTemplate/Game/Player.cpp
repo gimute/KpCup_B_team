@@ -3,6 +3,7 @@
 #include "Bullet.h"
 #include "Game.h"
 #include "Enemy.h"
+#include "HpUi.h"
 
 Player::Player()
 {
@@ -33,6 +34,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_PostureIdle].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/proto_player/rolling.tka");
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
+	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -40,13 +43,25 @@ bool Player::Start()
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
 		OnAnimationEvent(clipName, eventName);
 		});
+	//スケール
+	m_modelRender.SetScale(m_scale);
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
 	
+	//コリジョンオブジェクトを作成する。
+	m_collisionObject = NewGO<CollisionObject>(0);
+	//球状のコリジョンを作成する。
+	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 30.0f * m_scale.z);
+	m_collisionObject->SetName("player_col");
+	m_collisionObject->SetPosition(m_position);
+	////コリジョンオブジェクトが自動で削除されないようにする。
+	m_collisionObject->SetIsEnableAutoDelete(false);
+
+
 	m_sphereCollider.Create(1.0f);
 
+	//m_enemy = FindGO<Enemy>("enemy");
 	m_game = FindGO<Game>("game");
-
 	return true;
 }
 
@@ -56,6 +71,8 @@ void Player::Update()
 	Move();
 	//回転処理。
 	Rotation();
+	//当たり判定処理
+	Collision();
 	//アニメーション処理
 	PlayAnimation();
 	//ステートの遷移処理
@@ -109,6 +126,11 @@ void Player::Move()
 		right *= stickL.x * 70.0f;
 		forward *= stickL.y * 70.0f;
 	}
+	else
+	{
+		right *= stickL.x * 0.0f;
+		forward *= stickL.y * 0.0f;
+	}
 
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
@@ -133,7 +155,7 @@ void Player::Rolling()
 
 	m_rollingVec.Normalize();
 
-	m_rollingVec *= 300.0f;
+	m_rollingVec *= 500.0f;
 	
 	m_rollingSpeed = m_rollingVec;
 
@@ -145,10 +167,6 @@ void Player::Rolling()
 	//ちょっとだけモデルの座標を挙げる。
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
-	//キャラクターコントローラーを使って座標を移動させる。
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
-	//座標を設定。
-	m_modelRender.SetPosition(m_position);
 }
 
 void Player::Rotation()
@@ -172,7 +190,45 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 
 }
+void Player::Collision()
+{
+	if (m_muteki_timer >= 0.0f)
+	{
+		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
+	}
 
+	Vector3 tmp = m_position;
+	tmp.y += 30.0f;
+	m_collisionObject->SetPosition(tmp);
+
+	//無敵時間が０秒の時
+	if (m_muteki_timer <= 0.0f)
+	{
+		
+
+		//被ダメージステートの時は当たり判定処理をしない
+		if (m_playerstate == enPlayerState_ReceiveDamage)
+		{
+			return;
+		}
+		//プレイヤーの攻撃用のコリジョンを取得する。
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_attack");
+		//コリジョンの配列をfor文で回す。
+		for (auto collision : collisions)
+		{
+			//コリジョンとキャラコンが衝突したら。
+			if (collision->IsHit(m_collisionObject))
+			{
+				//HPを１減らす
+				m_game->m_hpui->DecreaseHP(5);
+				//ダメージ受けたとき、無敵状態のタイマー。
+				m_muteki_timer = 3.0f;
+				//被ダメージステートに遷移する。
+				//m_playerstate = enPlayerState_ReceiveDamage;
+			}
+		}
+	}
+}
 void Player::AttackRotation()
 {
 	m_forward = Vector3::AxisZ;
@@ -276,6 +332,9 @@ void Player::ManageState()
 	case Player::enPlayerState_Rolling:
 		ProcessRollingStateTransition();
 		break;
+	case Player::enPlayerState_ReceiveDamage:
+		ProcessReceiveDamageStateTransition();
+		break;
 	}
 }
 
@@ -313,6 +372,11 @@ void Player::PlayAnimation()
 		m_modelRender.SetAnimationSpeed(2.0);
 		m_modelRender.PlayAnimation(enAnimationClip_Rolling, 0.1f);
 		break;
+	case Player::enPlayerState_ReceiveDamage:
+		//被ダメージ
+		m_modelRender.SetAnimationSpeed(3.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
+		break;
 	}
 }
 
@@ -329,16 +393,18 @@ void Player::ProcessCommonStateTransition()
 		m_playerstate = enPlayerState_PostureWalk;
 		return;
 	}
+
+	//Aボタンが押されたら
+	if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+	{
+		m_rollingVec = m_forward;
+		//プレイヤーステートを回避にする
+		m_playerstate = enPlayerState_Rolling;
+		return;
+	}
+
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
-		//もしAボタンが押されたら
-		if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
-		{
-			m_rollingVec = m_forward;
-			//プレイヤーステートを回避にする
-			m_playerstate = enPlayerState_Rolling;
-			return;
-		}
 		//歩きステートにする
 		m_playerstate = enPlayerState_Walk;
 		return;
@@ -376,6 +442,15 @@ void Player::ProcessRollingStateTransition()
 	{
 		m_rollingVec = Vector3::Zero;
 		m_rollingCoolDown = rollingCoolDownTime;
+		ProcessCommonStateTransition();
+	}
+}
+
+void Player::ProcessReceiveDamageStateTransition()
+{
+	//被ダメージモーションが終わったら
+	if (m_modelRender.IsPlayingAnimation() == false)
+	{
 		ProcessCommonStateTransition();
 	}
 }
