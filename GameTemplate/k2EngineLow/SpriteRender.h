@@ -10,6 +10,12 @@ namespace nsK2EngineLow {
 		// 初期化。
 		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 
+		//ユーザーが用意したSpriteInitDataを使った初期化
+		void Init(SpriteInitData initData)
+		{
+			m_sprite.Init(initData);
+		}
+
 		//座標を設定。zは0.0fで。
 		void SetPosition(const Vector3& pos)
 		{
