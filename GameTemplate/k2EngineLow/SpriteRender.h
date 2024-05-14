@@ -4,11 +4,24 @@ namespace nsK2EngineLow {
 	class SpriteRender : public IRenderer
 	{
 	public:
+
+		enum FxChange
+		{
+			//危険信号UIモード
+			en_mode1,
+			//モード無し
+			en_modeNone
+		};
+
 		SpriteRender() {};
 		~SpriteRender() {};
 
 		// 初期化。
 		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
+
+		//追加関数シェーダー変更
+		void InitFxModeChange(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans
+			,const FxChange fxChange = en_modeNone);
 
 		//座標を設定。zは0.0fで。
 		void SetPosition(const Vector3& pos)
@@ -77,6 +90,7 @@ namespace nsK2EngineLow {
 		Vector3			m_scale = Vector3::One;
 
 		Vector2			m_pivot = Sprite::DEFAULT_PIVOT;
+		FxChange m_fxChange = en_mode1;
 	};
 
 }

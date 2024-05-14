@@ -2,6 +2,7 @@
 
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
+#include "Bullet.h"
 
 //エネミーアタックポイントの数
 //#define ENEMY_ATTACK_POINT_NUM 15
@@ -16,6 +17,7 @@ class MainTimer;
 class HpUi;
 class Enemy;
 class EnemyHpUi;
+class SignalRailUi;
 //
 class Game : public IGameObject
 {
@@ -82,12 +84,18 @@ public:
 		return &m_enemyAttackPoint;
 	}
 
+	EnemyCamPos* GetEnemyCamPosInstance()
+	{
+		return &m_enemyCamPos;
+	}
+
 	//メンバ変数
 	Player* m_player;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
+	SignalRailUi* m_signalRailUi = nullptr;
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;

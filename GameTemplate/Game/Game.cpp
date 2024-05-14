@@ -14,6 +14,8 @@
 #include "EnemyHpUi.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
+#include "SignalRailUi.h"
+#include "Bullet.h"
 ///////////////////////////////
 
 Game::Game()
@@ -30,6 +32,8 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(3, "UI");
+	//危険信号表示Ui
+	m_signalRailUi = NewGO<SignalRailUi>(3, "signalUi");
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
@@ -77,7 +81,6 @@ Game::~Game()
 void Game::Update()
 {
 	m_enemyAttackPoint.Update(m_player->GetPosition());
-	m_enemyCamPos.EnemyCamPosConfirmation();
 }
 
 void Game::Delete_EnemyVec(const int num)

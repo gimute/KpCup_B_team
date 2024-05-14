@@ -101,6 +101,7 @@ public:
 	float m_attackTimer = 0.0f;
 	float attackTime = 3.0f;
 	bool m_shotBool = false;
+	bool m_signalBool = false;
 	/// <summary>
 	/// 攻撃遅延ステートセット
 	/// </summary>
@@ -109,18 +110,6 @@ public:
 	{
 		m_enemyAttack = enemystate;
 		return;
-	}
-	float SetEnemyAttackTime()
-	{
-		switch (m_enemyAttack)
-		{
-		case Enemy::en_FrequencyHigh:
-			return 1.0f;
-			break;
-		case Enemy::en_FrequencyFew:
-			return 10.0f;
-			break;
-		}
 	}
 private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数

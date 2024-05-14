@@ -43,7 +43,7 @@ bool Bullet::Start()
 	}
 	//コリジョンオブジェクトが自動で削除されないようにする。
 	m_collisionObject->SetIsEnableAutoDelete(false);
-
+	
 	return true;
 }
 
@@ -121,7 +121,6 @@ void Bullet::deletebullet()
 			//↓タイマーがゼロになったら。(deletetimerより0の方が大きくなったら)
 		if (m_deleteTimer <= 0.0f)
 		{
-			//消去処理
 			DeleteGO(m_collisionObject);
 			DeleteGO(this);
 		}
