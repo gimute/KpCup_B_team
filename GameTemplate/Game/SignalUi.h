@@ -33,15 +33,23 @@ public:
 	/// </summary>
 	void DeleteSignal();
 	/// <summary>
+	/// アルファ値の計算
+	/// </summary>
+	void AlphaCalc();
+	/// <summary>
 	/// モデルレンダー
 	/// </summary>
 	/// <param name="rc"></param>
 	void Render(RenderContext& rc);
 	/////////////////////////////////////////メンバ変数
 	/// <summary>
-	/// シグナルスプライトレンダー
+	/// 注意シグナルスプライトレンダー
 	/// </summary>
-	SpriteRender m_SignalUi;
+	SpriteRender m_CautionSignalUi;
+	/// <summary>
+	/// 危険シグナルスプライトレンダー
+	/// </summary>
+	SpriteRender m_DangerSignalUi;
 	/// <summary>
 	/// ゲームカメラ
 	/// </summary>
@@ -58,6 +66,10 @@ public:
 	/// プレイヤー
 	/// </summary>
 	Player* m_player = nullptr;
+	/// <summary>
+	/// 改造テクスチャ
+	/// </summary>
+	Texture m_texture;
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// の配列番号を格納する変数
@@ -79,7 +91,19 @@ public:
 	/// 削除タイマー
 	/// </summary>
 	float m_deleteTimer = 0.0f;
+	/// <summary>
+	/// シェーダーに送るアルファ値
+	/// </summary>
+	float m_alpha = 0.1;
+	/// <summary>
+	/// アルファ値の計算に使用するBool
+	/// </summary>
+	bool m_alphaCalcBool = true;
 	/////////////////////////////////////////初期設定系統
+	/// <summary>
+	/// エネミーの要素番号を取得
+	/// </summary>
+	/// <param name="num"></param>
 	void SetEnemyVecNum(int num)
 	{
 		m_enemyConnectNum = num;

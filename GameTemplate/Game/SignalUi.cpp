@@ -22,11 +22,47 @@ SignalUi::~SignalUi()
 
 bool SignalUi::Start()
 {
-	m_SignalUi.Init("Assets/modelData/ui_signal/signal_UI_B.DDS",400.0f,400.0f);
+	SpriteInitData initDataCautionSigUi;
+
+	initDataCautionSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_Ui_C_1.DDS";
+
+	m_cautionSignalTexture.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
+	initDataCautionSigUi.m_expandShaderResoruceView[0] = &m_cautionSignalTexture;
+
+	initDataCautionSigUi.m_fxFilePath = "Assets/shader/spriteSignalUi.fx";
+
+	initDataCautionSigUi.m_expandConstantBuffer = &m_alpha;
+	initDataCautionSigUi.m_expandConstantBufferSize = sizeof(float);
+
+	initDataCautionSigUi.m_width = static_cast<UINT>(400.0f);
+	initDataCautionSigUi.m_height = static_cast<UINT>(400.0f);
+
+	initDataCautionSigUi.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+	m_CautionSignalUi.Init(initDataCautionSigUi);
+
+	SpriteInitData initDataDangerSigUi;
+
+	initDataDangerSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_Ui_B_1.DDS";
+
+	m_dangerSignalTexture.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
+	initDataDangerSigUi.m_expandShaderResoruceView[0] = &m_dangerSignalTexture;
+
+	initDataDangerSigUi.m_fxFilePath = "Assets/shader/spriteSignalUi.fx";
+
+	initDataDangerSigUi.m_expandConstantBuffer = &m_alpha;
+	initDataDangerSigUi.m_expandConstantBufferSize = sizeof(float);
+
+	initDataDangerSigUi.m_width = static_cast<UINT>(400.0f);
+	initDataDangerSigUi.m_height = static_cast<UINT>(400.0f);
+
+	initDataDangerSigUi.m_alphaBlendMode = AlphaBlendMode_Trans;
+	
+	m_DangerSignalUi.Init(initDataDangerSigUi);
 
 	Vector3 pos = { 0.0f,-130.0f,0.0f };
 
-	m_SignalUi.SetPosition(pos);
+	m_DangerSignalUi.SetPosition(pos);
 
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
@@ -51,10 +87,12 @@ void SignalUi::Update()
 	Rotation();
 	//削除処理
 	DeleteSignal();
+	//アルファ値の計算処理
+	AlphaCalc();
 	//削除タイマー処理
 	m_deleteTimer -= g_gameTime->GetFrameDeltaTime();
 	//描画処理
-	m_SignalUi.Update();
+	m_DangerSignalUi.Update();
 }
 
 void SignalUi::Rotation()
@@ -81,7 +119,7 @@ void SignalUi::Rotation()
 	Quaternion rot;
 	rot.SetRotation(m_up2D, m_diff2D);
 
-	m_SignalUi.SetRotation(rot);
+	m_DangerSignalUi.SetRotation(rot);
 }
 
 void SignalUi::DeleteSignal()
@@ -95,7 +133,28 @@ void SignalUi::DeleteSignal()
 	}
 }
 
+void SignalUi::AlphaCalc()
+{
+	if (m_alpha >= 1.0f)
+	{
+		m_alphaCalcBool = false;
+	}
+
+	if (m_alphaCalcBool)
+	{
+		m_alpha += 0.1f;
+		return;
+	}
+
+	m_alpha -= 0.1f;
+
+	if (m_alpha <= 0.1f)
+	{
+		m_alphaCalcBool = true;
+	}
+}
+
 void SignalUi::Render(RenderContext& rc)
 {
-	m_SignalUi.Draw(rc);
+	m_DangerSignalUi.Draw(rc);
 }

@@ -5,27 +5,27 @@ class Bullet;
 class Player : public IGameObject
 {
 public:
-	//ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—
 	enum EnAnimationClip {
-		enAnimationClip_Walk,			//•à‚«
-		enAnimationClip_Idle,			//–_—§‚¿
-		enAnimationClip_Crouching,      //‚µ‚á‚ª‚İ
-		enAnimationClip_Punch,			//ƒpƒ“ƒ`ƒ‚[ƒVƒ‡ƒ“
-		enAnimationClip_Gunshot,		//ËŒ‚ƒ‚[ƒVƒ‡ƒ“
-		enAnimationClip_PostureWalk,	//\‚¦•à‚«
-		enAnimationClip_PostureIdle,	//\‚¦—§‚¿
-		enAnimationClip_Rolling,		//ƒ[ƒŠƒ“ƒO
-		enAnimationClip_Damage,			//”íƒ_ƒ[ƒWƒ‚[ƒVƒ‡ƒ“
-		enAnimationClip_Num				//ƒAƒjƒ[ƒVƒ‡ƒ“”
+		enAnimationClip_Walk,			//æ­©ã
+		enAnimationClip_Idle,			//æ£’ç«‹ã¡
+		enAnimationClip_Crouching,      //ã—ã‚ƒãŒã¿
+		enAnimationClip_Punch,			//ãƒ‘ãƒ³ãƒãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+		enAnimationClip_Gunshot,		//å°„æ’ƒãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+		enAnimationClip_PostureWalk,	//æ§‹ãˆæ­©ã
+		enAnimationClip_PostureIdle,	//æ§‹ãˆç«‹ã¡
+		enAnimationClip_Rolling,		//ãƒ­ãƒ¼ãƒªãƒ³ã‚°
+		enAnimationClip_Damage,			//è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+		enAnimationClip_Num				//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ•°
 	};
-	//ƒvƒŒƒCƒ„[ƒXƒe[ƒg
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆ
 	enum EnPlayerState {
-		enPlayerState_Idle,				//‘Ò‹@B
-		enPlayerState_Walk,				//•à‚«B
-		enPlayerState_PostureWalk,		//\‚¦•à‚«B
-		enPlayerState_Attack,			//UŒ‚
+		enPlayerState_Idle,				//å¾…æ©Ÿã€‚
+		enPlayerState_Walk,				//æ­©ãã€‚
+		enPlayerState_PostureWalk,		//æ§‹ãˆæ­©ãã€‚
+		enPlayerState_Attack,			//æ”»æ’ƒ
 		enPlayerState_Rolling,
-		enPlayerState_ReceiveDamage		//”íƒ_ƒ[ƒW
+		enPlayerState_ReceiveDamage		//è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸
 	};
 
 	Player();
@@ -39,50 +39,50 @@ public:
 	void AttackRotation();
 	bool AngleCheck(const Vector3& position);
 	void Move();
-	void Rolling();						//‰ñ”ğˆ—
-	void ManageState();					//ƒXƒe[ƒg‘JˆÚˆ—
-	void TimeAdjustment();				//ŠÔŒv•Ï”‰ÁŒ¸ˆ—
-	//ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+	void Rolling();						//å›é¿å‡¦ç†
+	void ManageState();					//ã‚¹ãƒ†ãƒ¼ãƒˆé·ç§»å‡¦ç†
+	void TimeAdjustment();				//æ™‚é–“è¨ˆå¤‰æ•°åŠ æ¸›å‡¦ç†
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//void PlayAnimation();
-	void ProcessCommonStateTransition();		//‹¤’Êˆ—
-	void ProcessIdleStateTransition();			//‘Ò‹@‘JˆÚ
-	void ProcessWalkStateTransition();			//•à‚«‘JˆÚ
-	void ProcessAttackStateTransition();		//UŒ‚‘JˆÚ
-	void ProcessRollingStateTransition();		//‰ñ”ğ‘JˆÚ
-	void ProcessReceiveDamageStateTransition();	//”íƒ_ƒ[ƒW‘JˆÚ
-	//À•Wæ“¾
+	void ProcessCommonStateTransition();		//å…±é€šå‡¦ç†
+	void ProcessIdleStateTransition();			//å¾…æ©Ÿé·ç§»
+	void ProcessWalkStateTransition();			//æ­©ãé·ç§»
+	void ProcessAttackStateTransition();		//æ”»æ’ƒé·ç§»
+	void ProcessRollingStateTransition();		//å›é¿é·ç§»
+	void ProcessReceiveDamageStateTransition();	//è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸é·ç§»
+	//åº§æ¨™å–å¾—
 	const Vector3& GetPosition() const
 	{
 		return m_position;
 	}
 
-//ƒƒ“ƒo•Ï”
+//ãƒ¡ãƒ³ãƒå¤‰æ•°
 	ModelRender m_modelRender;
-	Vector3 m_position;										//À•W
-	CharacterController m_charaCon;							//ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[
-	CollisionObject* m_collisionObject;						//ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg
-	Vector3 m_moveSpeed;									//ˆÚ“®‘¬“xB
-	Quaternion m_rotation;									//ƒNƒH[ƒ^ƒjƒIƒ“B
-	Vector3 m_scale = Vector3::One;			//‘å‚«‚³
+	Vector3 m_position;										//åº§æ¨™
+	CharacterController m_charaCon;							//ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
+	CollisionObject* m_collisionObject;						//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	Vector3 m_moveSpeed;									//ç§»å‹•é€Ÿåº¦ã€‚
+	Quaternion m_rotation;									//ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã€‚
+	Vector3 m_scale = Vector3::One;			//å¤§ãã•
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
-	AnimationClip m_animationclips[enAnimationClip_Num];	//ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv
+	AnimationClip m_animationclips[enAnimationClip_Num];	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—
 	EnPlayerState m_playerstate = enPlayerState_Idle;
 	Bullet* m_bullet = nullptr;
-	Vector3 m_forward = Vector3::AxisZ;						//ƒvƒŒƒCƒ„[‚ÌˆÚ“®—p³–ÊƒxƒNƒgƒ‹B
+	Vector3 m_forward = Vector3::AxisZ;						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ç”¨æ­£é¢ãƒ™ã‚¯ãƒˆãƒ«ã€‚
 	Vector3 m_up = Vector3::AxisY;
-	//int m_hp = 1000;	//–³“GŠÔ‚ª‚È‚¢‚Ì‚Å‚Æ‚è‚ ‚¦‚¸‘å‚«‚¢’l‚É‚µ‚Ä‚¨‚­
+	//int m_hp = 1000;	//ç„¡æ•µæ™‚é–“ãŒãªã„ã®ã§ã¨ã‚Šã‚ãˆãšå¤§ãã„å€¤ã«ã—ã¦ãŠã
 	int m_speed = 0;
-	Game* m_game = nullptr;									//ƒQ[ƒ€
-	SphereCollider m_sphereCollider;						//ƒRƒŠƒ_[
+	Game* m_game = nullptr;									//ã‚²ãƒ¼ãƒ 
+	SphereCollider m_sphereCollider;						//ã‚³ãƒªãƒ€ãƒ¼
 	bool shot= false;
-	Vector3 m_rollingVec = Vector3::Zero;					//‰ñ”ğ•ûŒü
-	Vector3 m_rollingSpeed = Vector3::Zero;					//‰ñ”ğƒXƒs[ƒh
-	float m_rollingCoolDown = 0.0f;							//‰ñ”ğƒN[ƒ‹ƒ_ƒEƒ“
-	float rollingCoolDownTime = 0.5;						//‰ñ”ğƒN[ƒ‹ƒ_ƒEƒ“ŠÔ
-	float m_muteki_timer = 0.0f;							//–³“Gƒ^ƒCƒ}[
-	float m_reset_timer = 0.0f;								//ƒŠƒZƒbƒgƒ^ƒCƒ}[
+	Vector3 m_rollingVec = Vector3::Zero;					//å›é¿æ–¹å‘
+	Vector3 m_rollingSpeed = Vector3::Zero;					//å›é¿ã‚¹ãƒ”ãƒ¼ãƒ‰
+	float m_rollingCoolDown = 0.0f;							//å›é¿ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³
+	float rollingCoolDownTime = 0.5;						//å›é¿ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³æ™‚é–“
+	float m_muteki_timer = 0.0f;							//ç„¡æ•µã‚¿ã‚¤ãƒãƒ¼
+	float m_reset_timer = 0.0f;								//ãƒªã‚»ãƒƒãƒˆã‚¿ã‚¤ãƒãƒ¼
 
 private:
 
