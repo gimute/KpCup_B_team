@@ -46,6 +46,8 @@ public:
 	/// <returns></returns>
 	Vector3 GetEnemyListPos(int num);
 
+	bool EnemyListExistence(int num);
+
 	////エネミーアタックポイントの座標更新
 	//void EnemyAttackPointUpdate();
 

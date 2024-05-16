@@ -7,6 +7,7 @@ cbuffer cb : register(b0){
     float4 mulColor;	//乗算カラー
 };
 
+//追加したアルファ値のレジスタ
 cbuffer testCb : register(b1)
 {
     float alphaAdd;

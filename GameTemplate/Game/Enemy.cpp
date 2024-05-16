@@ -131,6 +131,11 @@ void Enemy::Update()
 		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
 	}
 
+	if (m_enemystate != enEnemyState_Attack)
+	{
+		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+	}
+
 	//描画更新
 	m_modelRender.Update();
 }
@@ -241,8 +246,8 @@ void Enemy::ProcessChaseStateTransition()
 		if ((attackPoint->m_position - m_position).Length() <= 50.0f)
 		{
 			//ステートを攻撃に変更
-			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 			m_enemystate = enEnemyState_Attack;
+			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 			return;
 		}
 	}
@@ -426,16 +431,10 @@ void Enemy::Attack()
 	if (m_attackTimer <= 0.0f)
 	{
 		m_shotBool = true;
-		//	if (m_modelRender.IsPlayingAnimation() == false)
-		//	{
-		//	}
-		//}
-		//else
-		//{
-		//	if (m_modelRender.IsPlayingAnimation() == false)
-		//	{
-		//	}
-		//}
+	}
+	else
+	{
+		m_enemyAttackStep = en_stanceStep;
 	}
 }
 
@@ -629,7 +628,7 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
 	if (wcscmp(eventName, L"B_signal_start") == 0)
 	{
-			m_signalBool = true;
+		m_enemyAttackStep = en_shotStep;
 	}
 	else if (wcscmp(eventName, L"A_shot_point") == 0)
 	{
@@ -647,7 +646,7 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	else if (wcscmp(eventName, L"C_shot_end") == 0)
 	{
 		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
-		m_signalBool = false;
+		m_enemyAttackStep = en_noneStep;
 		m_shotBool = false;
 	}
 }

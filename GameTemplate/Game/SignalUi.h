@@ -37,6 +37,11 @@ public:
 	/// </summary>
 	void AlphaCalc();
 	/// <summary>
+	/// エネミーのアタックステップによってtrueかfalseを返す関数
+	/// </summary>
+	/// <returns></returns>
+	bool EnemyAttackStep();
+	/// <summary>
 	/// モデルレンダー
 	/// </summary>
 	/// <param name="rc"></param>
@@ -67,9 +72,13 @@ public:
 	/// </summary>
 	Player* m_player = nullptr;
 	/// <summary>
-	/// 改造テクスチャ
+	/// 注意信号用テクスチャ
 	/// </summary>
-	Texture m_texture;
+	Texture m_cautionSignalTexture;
+	/// <summary>
+	/// 危険信号用テクスチャ
+	/// </summary>
+	Texture m_dangerSignalTexture;
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// の配列番号を格納する変数

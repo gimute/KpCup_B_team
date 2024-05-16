@@ -42,7 +42,7 @@ void SignalRailUi::AttackEnemySearch()
 		Vector3 enemypos = m_game->GetEnemyListPos(Listnum);
 
 		if (EnemyStateIsAttack(Listnum)&& !ListCheck(Listnum)
-			&& AngleCheck(enemypos))
+			/*&& AngleCheck(enemypos)*/)
 		{
 			SignalUi* m_signalUi = NewGO<SignalUi>(3, "Ui");
 			m_signalUi->SetEnemyVecNum(Listnum);
@@ -89,8 +89,8 @@ bool SignalRailUi::ListCheck(int Listnum)
 
 bool SignalRailUi::EnemyStateIsAttack(int ListNum)
 {
-	if (m_game->m_EnemyList[ListNum]->m_signalBool
-		== true && m_game->m_EnemyList[ListNum]->m_enemystate 
+	if (m_game->m_EnemyList[ListNum]->m_enemyAttackStep == Enemy::en_stanceStep
+		&& m_game->m_EnemyList[ListNum]->m_enemystate 
 		== Enemy::enEnemyState_Attack)
 	{
 		return true;

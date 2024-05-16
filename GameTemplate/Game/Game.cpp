@@ -106,6 +106,14 @@ Vector3 Game::GetEnemyListPos(int num)
 	return m_EnemyList[num]->m_position;
 }
 
+bool Game::EnemyListExistence(int num)
+{
+	if (num + 1 > m_EnemyList.size())
+	{
+		return true;
+	}
+	return false;
+}
 
 //エネミーアタックポイント関連///////////////////////////////////////////////////
 //void Game::EnemyAttackPointUpdate()

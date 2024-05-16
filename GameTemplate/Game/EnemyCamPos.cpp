@@ -28,7 +28,7 @@ float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
 	int Listnum = enemy->m_Vectornum;
 
 		//Žæ“¾‚µ‚½À•W‚ªƒJƒƒ‰³–Ê‚É‚ ‚é‚©‚Ç‚¤‚©‚ð’²‚×‚é
-	if (AngleCheck(enemypos) /*&& EnemyStateIsAttack(Listnum)*/)
+	if (AngleCheck(enemypos) && EnemyStateIsAttack(Listnum))
 	{
 		//Žæ“¾‚µ‚½À•W‚ªƒJƒƒ‰³–Ê‚É‚ ‚Á‚½‚çŽŸ‚Í
 		//m_camForwardList‚É–¢“o˜^‚Ì—v‘f‚ª‚ ‚é‚©‚Ç‚¤‚©‚ð’²‚×‚é
@@ -53,7 +53,7 @@ float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
 		CamOut(Listnum,enemypos);
 	}
 
-	if (enemy->m_enemyAttack == Enemy::en_FrequencyHigh)
+	if (enemy->m_enemyAttackSpeed == Enemy::en_FrequencyHigh)
 	{
 		return 3.0f;
 	}
