@@ -47,6 +47,11 @@ public:
 		return;
 	}
 
+	int GetNowHP()
+	{
+		return m_nowhp;
+	}
+
 private:
 	/////////////////////////////////////////ƒƒ“ƒo•Ï”
 	//HPUI

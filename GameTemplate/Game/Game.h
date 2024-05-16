@@ -53,6 +53,7 @@ public:
 	Player* m_player;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
+	SpriteRender* m_spriterender; //スプライトレンダー。
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
 	std::vector<Enemy*> m_EnemyList;

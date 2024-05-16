@@ -19,6 +19,8 @@ namespace
 Enemy::~Enemy()
 {
 	DeleteGO(m_collisionObject);
+	m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
+	m_game->Delete_EnemyVec(m_Vectornum);
 	ReleaseAttackPoint();
 }
 
@@ -478,8 +480,6 @@ void Enemy::Collision()
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
 
-					m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
-					m_game->Delete_EnemyVec(m_Vectornum);
 					DeleteGO(this);
 				}
 				else {

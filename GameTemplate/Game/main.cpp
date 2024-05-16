@@ -3,6 +3,7 @@
 #include "ModelTest.h"
 #include "ModelRenderTest.h"
 #include "SpriteTest.h"
+#include "Title.h"
 #include "Game.h"
 #include "Player.h"
 
@@ -40,7 +41,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ModelTest* modelTest = NewGO<ModelTest>(0);
 	//ModelRenderTest* modelRenderTest = NewGO<ModelRenderTest>(0);
 	//SpriteTest* spriteTest = NewGO<SpriteTest>(0);
-	Game* game = NewGO<Game>(0,"game");
+	Title* title = NewGO<Title>(0, "title");
+	//Game* game = NewGO<Game>(0,"game");
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -77,7 +79,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//DeleteGO(modelTest);
 	//DeleteGO(modelRenderTest);
 	//DeleteGO(spriteTest);
-	DeleteGO(game);
+	DeleteGO(title);
+	//DeleteGO(game);
 
 	delete g_k2EngineLow;
 

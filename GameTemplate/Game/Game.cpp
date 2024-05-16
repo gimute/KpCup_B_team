@@ -14,6 +14,7 @@
 #include "EnemyHpUi.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
+#include "GameOver.h"
 ///////////////////////////////
 
 Game::Game()
@@ -70,17 +71,39 @@ Game::Game()
 
 Game::~Game()
 {
+	DeleteGO(m_background);	
+	DeleteGO(m_gamecamera);
+	DeleteGO(m_hpui);
 
+	DeleteGO(m_player);
 }
 
 
 void Game::Update()
 {
+	if (m_hpui->GetNowHP() <= 0.0f)
+	{
+		//ゲームオーバーのオブジェクトを作る。
+		NewGO<GameOver>(0, "gameover");
+
+		//エネミーより先にゲームが消えてしまうとエラーを吐くので
+		//一時的にここにエネミーを消す処理を記述
+		//あとで修正
+		for (auto& enemy : m_EnemyList)
+		{
+			DeleteGO(enemy);
+		}
+
+		//自身を削除する。
+		DeleteGO(this);
+	}
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 
 	m_hpui->Update();
   
 	m_enemyCamPos.EnemyCamPosConfirmation();
+
+	//m_spriterender->Update();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -108,5 +131,5 @@ Vector3 Game::GetEnemyListPos(int num)
 
 void Game::Render(RenderContext& rc)
 {
-
+	//m_spriterender.Draw(rc);; //スプライトレンダー。
 }
