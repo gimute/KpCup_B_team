@@ -479,7 +479,7 @@ void Enemy::Collision()
 				if (m_hp == 0) {
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
-
+					//m_enemyCount--;
 					DeleteGO(this);
 				}
 				else {

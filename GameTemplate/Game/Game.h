@@ -16,6 +16,7 @@ class MainTimer;
 class HpUi;
 class Enemy;
 class EnemyHpUi;
+class GameClear;
 //
 class Game : public IGameObject
 {
@@ -51,9 +52,11 @@ public:
 
 	//メンバ変数
 	Player* m_player;
+	Enemy* m_enemy;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
-	SpriteRender* m_spriterender; //スプライトレンダー。
+	GameClear* m_gameclear;
+	SpriteRender m_spriterender; //スプライトレンダー。
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
 	std::vector<Enemy*> m_EnemyList;

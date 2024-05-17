@@ -31,6 +31,7 @@
     <ClCompile Include="EnemyCamPos.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -57,5 +58,6 @@
     <ClInclude Include="EnemyCamPos.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameClear.h" />
   </ItemGroup>
 </Project>

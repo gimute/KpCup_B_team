@@ -12,5 +12,6 @@ public:
 	void Update();
 	//スプライトレンダー。
 	SpriteRender m_spriteRender;
+	SpriteRender m_spriteRender2;
 };
 

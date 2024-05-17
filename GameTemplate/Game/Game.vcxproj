@@ -232,6 +232,7 @@
     <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="HpUi.cpp" />
     <ClCompile Include="main.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="HpUi.h" />
     <ClInclude Include="MainTimer.h" />

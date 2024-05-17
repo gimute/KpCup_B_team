@@ -15,6 +15,7 @@
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
 #include "GameOver.h"
+#include "GameClear.h"
 ///////////////////////////////
 
 Game::Game()
@@ -89,6 +90,13 @@ void Game::Update()
 		//エネミーより先にゲームが消えてしまうとエラーを吐くので
 		//一時的にここにエネミーを消す処理を記述
 		//あとで修正
+		DeleteGO(m_hpui);
+
+		for (auto& enemyhpui : m_EnemyHpUiList)
+		{
+			DeleteGO(enemyhpui);
+		}
+
 		for (auto& enemy : m_EnemyList)
 		{
 			DeleteGO(enemy);
@@ -99,11 +107,31 @@ void Game::Update()
 	}
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 
-	m_hpui->Update();
-  
 	m_enemyCamPos.EnemyCamPosConfirmation();
 
-	//m_spriterender->Update();
+	//エネミーをすべて倒したら
+	if (m_EnemyQua == 0)
+	{
+		//ゲームクリアのオブジェクトをつくる。
+		DeleteGO(m_hpui);
+
+		for (auto& enemyhpui : m_EnemyHpUiList)
+		{
+			DeleteGO(enemyhpui);
+		}
+
+		for (auto& enemy : m_EnemyList)
+		{
+			DeleteGO(enemy);
+		}
+
+		m_gameclear = NewGO<GameClear>(0, "gameclear");
+		//自身を削除する。
+		DeleteGO(this);
+
+	}
+
+	//m_spriterender.Update();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -119,6 +147,13 @@ void Game::Delete_EnemyVec(const int num)
 
 Vector3 Game::GetEnemyListPos(int num)
 {
+	if (m_EnemyList.empty())
+	{
+		Vector3 dummy = { 0.0f,0.0f,1.0f };
+		dummy *= 1000.0f;
+		return dummy;
+	}
+
 	if (num + 1 > m_EnemyList.size())
 	{
 		Vector3 dummy = { 0.0f,0.0f,1.0f };
@@ -131,5 +166,5 @@ Vector3 Game::GetEnemyListPos(int num)
 
 void Game::Render(RenderContext& rc)
 {
-	//m_spriterender.Draw(rc);; //スプライトレンダー。
+	
 }
