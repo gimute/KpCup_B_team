@@ -4,15 +4,56 @@
 
 Title::Title()
 {
-	//画像を読み込む。
-	m_spriteRender.Init("Assets/sprite/Game_Title5.DDS", 1920.0f, 1080.0f);
-	//画像を読み込む。
-	m_spriteRender2.Init("Assets/sprite/Press_Start_Button.DDS", 1920.0f, 1080.0f);
+	
 }
 
 Title::~Title()
 {
 
+}
+
+bool Title::Start()
+{
+	m_spriteRender.Init("Assets/sprite/Game_Title5.DDS", 1920.0f, 1080.0f);
+
+	SpriteInitData initData;
+	//DDSファイル（画像データ）のファイルパスを指定する。
+	initData.m_ddsFilePath[0] = "Assets/sprite/Press_Start_Button2.DDS";
+
+	//Sprite表示用のシェーダーのファイルパスを指定する。
+	initData.m_fxFilePath = "Assets/shader/sprite_Title.fx";
+
+	initData.m_expandConstantBuffer = &m_alpha;
+	initData.m_expandConstantBufferSize += sizeof(float);
+
+	//スプライトの幅と高さを指定する。
+	initData.m_width = static_cast<UINT>(453);
+	initData.m_height = static_cast<UINT>(36);
+	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
+	//m_spriteRender.Init(initData);
+	m_spriteRender2.Init(initData);
+	m_spriteRender2.SetPosition({0.0f, -300.0f, 0.0f});
+	m_spriteRender2.Update();
+	
+	return true;
+}
+
+void Title::AlphaCalc()
+{
+	if (m_alpha >= 1.0f)
+	{
+		m_alphaCalcBool = false;
+	}
+	if (m_alphaCalcBool)
+	{
+		m_alpha += 0.02f;
+		return;
+	}
+	m_alpha -= 0.02f;
+	if (m_alpha <= 0.1f)
+	{
+		m_alphaCalcBool = true;
+	}
 }
 
 void Title::Update()
@@ -23,9 +64,12 @@ void Title::Update()
 		NewGO<Game>(0,"game");
 		DeleteGO(this);
 	}
+
+	AlphaCalc();
 }
 
-void  Title::Render(RenderContext& rc)
+
+void Title::Render(RenderContext& rc)
 {
 	//画像を描画する。
 	m_spriteRender.Draw(rc);
