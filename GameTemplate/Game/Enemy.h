@@ -115,11 +115,11 @@ public:
 	/// 攻撃遅延ステートセット
 	/// </summary>
 	/// <param name="statenum"></param>
-	void SetEnemyAttackState(const EnEnemyAttackSpeed& enemystate)
-	{
-		m_enemyAttackSpeed = enemystate;
-		return;
-	}
+	//void SetEnemyAttackState(const EnEnemyAttackSpeed& enemystate)
+	//{
+	//	m_enemyAttackSpeed = enemystate;
+	//	return;
+	//}
 private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ

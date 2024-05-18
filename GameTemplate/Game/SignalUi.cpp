@@ -13,31 +13,12 @@ SignalUi::SignalUi()
 
 SignalUi::~SignalUi()
 {
-
+	m_signalRailUi->DeleteSignalList(m_VecNum);
 }
 
 bool SignalUi::Start()
 {
 	m_CautionSignalUi.Init("Assets/modelData/ui_signal/signal_Ui_C_1.DDS",400.0f,400.0f);
-
-	//SpriteInitData initDataCautionSigUi;
-
-	//initDataCautionSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_Ui_C_1.DDS";
-
-	//m_cautionSignalTexture.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
-	//initDataCautionSigUi.m_expandShaderResoruceView[0] = &m_cautionSignalTexture;
-
-	//initDataCautionSigUi.m_fxFilePath = "Assets/shader/spriteSignalUi.fx";
-
-	//initDataCautionSigUi.m_expandConstantBuffer = &m_alpha;
-	//initDataCautionSigUi.m_expandConstantBufferSize = sizeof(float);
-
-	//initDataCautionSigUi.m_width = static_cast<UINT>(400.0f);
-	//initDataCautionSigUi.m_height = static_cast<UINT>(400.0f);
-
-	//initDataCautionSigUi.m_alphaBlendMode = AlphaBlendMode_Trans;
-
-	//m_CautionSignalUi.Init(initDataCautionSigUi);
 
 	Vector3 pos = { 0.0f,-130.0f,0.0f };
 
@@ -47,13 +28,13 @@ bool SignalUi::Start()
 
 	initDataDangerSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_Ui_B_1.DDS";
 
-	m_dangerSignalTexture.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
-	initDataDangerSigUi.m_expandShaderResoruceView[0] = &m_dangerSignalTexture;
+	m_dangerSignalTexture1.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
+	initDataDangerSigUi.m_expandShaderResoruceView[0] = &m_dangerSignalTexture1;
 
 	initDataDangerSigUi.m_fxFilePath = "Assets/shader/spriteSignalUi.fx";
 
 	initDataDangerSigUi.m_expandConstantBuffer = &m_alpha;
-	initDataDangerSigUi.m_expandConstantBufferSize = sizeof(float);
+	initDataDangerSigUi.m_expandConstantBufferSize += sizeof(float);
 
 	initDataDangerSigUi.m_width = static_cast<UINT>(400.0f);
 	initDataDangerSigUi.m_height = static_cast<UINT>(400.0f);
@@ -87,8 +68,6 @@ void SignalUi::Update()
 	Rotation();
 	//アルファ値の計算処理
 	AlphaCalc();
-	//削除タイマー処理
-	m_deleteTimer -= g_gameTime->GetFrameDeltaTime();
 	//描画処理
 	m_DangerSignalUi.Update();
 	m_CautionSignalUi.Update();
@@ -125,11 +104,11 @@ void SignalUi::Rotation()
 
 void SignalUi::DeleteSignal()
 {
-	if (m_game->EnemyListExistence(m_enemyConnectNum)
+
+	if (!m_game->EnemyListExistence(m_enemyConnectNum)
 		|| m_game->m_EnemyList[m_enemyConnectNum]->m_enemyAttackStep == Enemy::en_noneStep
 		|| m_game->m_EnemyList[m_enemyConnectNum]->m_enemystate != Enemy::enEnemyState_Attack)
 	{
-		m_signalRailUi->DeleteSignalList(m_VecNum);
 		DeleteGO(this);
 	}
 }

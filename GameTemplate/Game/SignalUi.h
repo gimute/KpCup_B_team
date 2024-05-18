@@ -76,9 +76,13 @@ public:
 	/// </summary>
 	Texture m_cautionSignalTexture;
 	/// <summary>
-	/// 危険信号用テクスチャ
+	/// 危険信号用テクスチャその１
 	/// </summary>
-	Texture m_dangerSignalTexture;
+	Texture m_dangerSignalTexture1;
+	/// <summary>
+	/// 危険信号用テクスチャその２
+	/// </summary>
+	Texture m_dangerSignalTexture2;
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// の配列番号を格納する変数
@@ -108,6 +112,10 @@ public:
 	/// アルファ値の計算に使用するBool
 	/// </summary>
 	bool m_alphaCalcBool = true;
+	/// <summary>
+	/// カラー変更に使用するBool
+	/// </summary>
+	bool m_colorChangeBool = false;
 	/////////////////////////////////////////初期設定系統
 	/// <summary>
 	/// エネミーの要素番号を取得

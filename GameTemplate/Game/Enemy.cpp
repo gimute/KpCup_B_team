@@ -126,12 +126,12 @@ void Enemy::Update()
 	//アニメーション
 	PlayAnimation();
 	
-	if (m_attackTimer > 0.0f)
+	if (m_attackTimer > 0.0f && m_enemystate == enEnemyState_Attack)
 	{
 		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
 	}
 
-	if (m_enemystate != enEnemyState_Attack)
+	if (m_enemystate != enEnemyState_Attack )
 	{
 		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 	}
@@ -276,7 +276,7 @@ void Enemy::ProcessAttackStateTransition()
 			m_game->GetEnemyAttackPointInstance()->UseAttackPoint(m_AttackPoint->m_number, this);
 		}
 	}
-
+	
 	//エネミーからアタックポイントに向かうベクトルを求める
 	Vector3 diff = m_AttackPoint->m_position - m_position;
 

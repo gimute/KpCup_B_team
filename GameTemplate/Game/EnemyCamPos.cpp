@@ -104,7 +104,8 @@ bool EnemyCamPos::ListCheck(int ListNum)
 
 bool EnemyCamPos::EnemyStateIsAttack(int ListNum)
 {
-	if (m_game->m_EnemyList[ListNum]->m_enemystate
+	if (m_game->EnemyListExistence(ListNum) || 
+		m_game->m_EnemyList[ListNum]->m_enemystate
 		== Enemy::enEnemyState_Attack)
 	{
 		return true;
@@ -205,17 +206,22 @@ void EnemyCamPos::CompareNear(int ListNum,const Vector3& enemypos)
 	{
 		if (!ListCheck(ListNum))
 		{
+			//m_game->m_EnemyList[m_camForwardList[MaxListNum].m_registNum]
+			//	->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
 			m_camForwardList[MaxListNum].m_registNum = ListNum;
 
-			m_game->m_EnemyList[m_camForwardList[MaxListNum].m_registNum]
-				->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+			m_game->SetEnemyAttackState(m_camForwardList[MaxListNum].m_registNum
+				, Enemy::en_FrequencyHigh);
 			return;
 		}
 	}
 	else
 	{
-		m_game->m_EnemyList[ListNum]
-			->SetEnemyAttackState(Enemy::en_FrequencyFew);
+		//m_game->m_EnemyList[ListNum]
+		//	->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
+		m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyFew);
 	}
 
 	return;
@@ -234,7 +240,9 @@ void EnemyCamPos::CamOut(int ListNum,const Vector3 enemypos)
 	if (!AngleCheck(enemypos))
 	{
 		//UŒ‚•p“x‚ð"’á"‚É‚·‚éˆ—
-		m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyFew);
+		//m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
+		m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyFew);
 	}
 	return;
 }
@@ -248,5 +256,7 @@ void EnemyCamPos::Registration(int ListNum)
 
 	m_camForwardList[m_emptyPoint].m_registNum = ListNum;
 	m_camForwardList[m_emptyPoint].m_enemyRegist = true;
-	m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+	//m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+
+	m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyHigh);
 }

@@ -8,7 +8,7 @@ cbuffer cb : register(b0){
 };
 
 //追加したアルファ値のレジスタ
-cbuffer testCb : register(b1)
+cbuffer alphaCb : register(b1)
 {
     float alphaAdd;
 }
@@ -24,7 +24,7 @@ struct PSInput{
 };
 
 Texture2D<float4> colorTexture : register(t0); // カラーテクスチャ
-Texture2D<float4> signalAddTexture : register(t20);
+Texture2D<float4> signalAddTexture1 : register(t20);//危険信号用テクスチャ１
 
 sampler Sampler : register(s0);
 
@@ -42,12 +42,12 @@ float4 PSMain( PSInput In ) : SV_Target0
 {	
     float4 colorTex = colorTexture.Sample(Sampler, In.uv);
 	
-    float4 signalAddTex = signalAddTexture.Sample(Sampler, In.uv);
+    float4 signalAddTex1 = signalAddTexture1.Sample(Sampler, In.uv);
 			
     float4 finalColor = colorTex;
     finalColor.xyz *= mulColor;
 	
-	if(signalAddTex.r >= 0.5)
+	if(signalAddTex1.r >= 0.5)
     {
         finalColor.g += 1.0f;
         finalColor.a = alphaAdd;

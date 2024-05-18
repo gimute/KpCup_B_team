@@ -106,13 +106,38 @@ Vector3 Game::GetEnemyListPos(int num)
 	return m_EnemyList[num]->m_position;
 }
 
+bool Game::EnemyListExistence()
+{
+	if (m_EnemyList.empty())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 bool Game::EnemyListExistence(int num)
 {
 	if (num + 1 > m_EnemyList.size())
 	{
-		return true;
+		return false;
 	}
-	return false;
+
+	return true;
+}
+
+void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate)
+{
+	if (Listnum + 1 > m_EnemyList.size()
+		|| m_EnemyList.empty())
+	{
+		return;
+	}
+
+	m_EnemyList[Listnum]->m_enemyAttackSpeed = enemystate;
+	return;
 }
 
 //エネミーアタックポイント関連///////////////////////////////////////////////////

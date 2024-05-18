@@ -3,6 +3,7 @@
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 //エネミーアタックポイントの数
 //#define ENEMY_ATTACK_POINT_NUM 15
@@ -46,7 +47,13 @@ public:
 	/// <returns></returns>
 	Vector3 GetEnemyListPos(int num);
 
+	bool EnemyListExistence();
+
 	bool EnemyListExistence(int num);
+
+
+
+	void SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate);
 
 	////エネミーアタックポイントの座標更新
 	//void EnemyAttackPointUpdate();
@@ -89,6 +96,12 @@ public:
 	EnemyCamPos* GetEnemyCamPosInstance()
 	{
 		return &m_enemyCamPos;
+	}
+
+	Enemy* GetEnemyListInstance(int Listnum)
+	{
+
+		return m_EnemyList[Listnum];
 	}
 
 	//メンバ変数
