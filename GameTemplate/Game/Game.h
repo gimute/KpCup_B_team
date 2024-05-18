@@ -19,6 +19,7 @@ class HpUi;
 class Enemy;
 class EnemyHpUi;
 class SignalRailUi;
+class Door;
 //
 class Game : public IGameObject
 {
@@ -110,6 +111,7 @@ public:
 	GameCamera* m_gamecamera;
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
+	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
