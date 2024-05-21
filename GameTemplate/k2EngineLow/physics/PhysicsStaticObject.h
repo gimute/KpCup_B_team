@@ -40,6 +40,9 @@ namespace nsK2EngineLow {
 		{
 			return m_rigidBody.GetBody();
 		}
+		RigidBody* GetRigitBody() {
+			return &m_rigidBody;
+		}
 		/// <summary>
 		/// „‘Ì‚ğ”jŠüB
 		/// </summary>

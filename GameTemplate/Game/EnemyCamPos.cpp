@@ -105,7 +105,7 @@ bool EnemyCamPos::ListCheck(int ListNum)
 bool EnemyCamPos::EnemyStateIsAttack(int ListNum)
 {
 	if (m_game->EnemyListExistence(ListNum) || 
-		m_game->m_EnemyList[ListNum]->m_enemystate
+		m_game->GetEnemyListInstance(ListNum)->m_enemystate
 		== Enemy::enEnemyState_Attack)
 	{
 		return true;

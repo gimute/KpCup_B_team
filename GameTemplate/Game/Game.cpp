@@ -16,6 +16,7 @@
 #include "EnemyCamPos.h"
 #include "SignalRailUi.h"
 #include "Bullet.h"
+#include "Door.h"
 ///////////////////////////////
 
 Game::Game()
@@ -66,6 +67,9 @@ Game::Game()
 	Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
 	m_enemy10->m_position = { -850.0f,0.0f,300.0f };
 
+	door1 = NewGO<Door>(0, "door");
+	door1->m_DoorMainPos = { 0.0f,0.0f,380.0f };
+
 	/*for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
 	{
 		m_enemyAttackPointList[i].m_number = i;
@@ -82,6 +86,11 @@ void Game::Update()
 {
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
+
+	if (m_EnemyQua == 0)
+	{
+		door1->m_DoorOpen = true;
+	}
 }
 
 void Game::Delete_EnemyVec(const int num)
