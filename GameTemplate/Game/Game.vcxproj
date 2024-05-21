@@ -240,6 +240,8 @@
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
+    <ClCompile Include="SignalRailUi.cpp" />
+    <ClCompile Include="SignalUi.cpp" />
     <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="SpriteTest.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -266,6 +268,8 @@
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointYazirushi.h" />
+    <ClInclude Include="SignalRailUi.h" />
+    <ClInclude Include="SignalUi.h" />
     <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="stdafx.h" />

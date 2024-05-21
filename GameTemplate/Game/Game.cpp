@@ -14,6 +14,8 @@
 #include "EnemyHpUi.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
+#include "SignalRailUi.h"
+#include "Bullet.h"
 ///////////////////////////////
 
 Game::Game()
@@ -30,6 +32,8 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(3, "UI");
+	//危険信号表示Ui
+	m_signalRailUi = NewGO<SignalRailUi>(3, "signalUi");
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
@@ -77,10 +81,7 @@ Game::~Game()
 void Game::Update()
 {
 	m_enemyAttackPoint.Update(m_player->GetPosition());
-
 	m_hpui->Update();
-  
-	m_enemyCamPos.EnemyCamPosConfirmation();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -105,6 +106,39 @@ Vector3 Game::GetEnemyListPos(int num)
 	return m_EnemyList[num]->m_position;
 }
 
+bool Game::EnemyListExistence()
+{
+	if (m_EnemyList.empty())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool Game::EnemyListExistence(int num)
+{
+	if (num + 1 > m_EnemyList.size())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate)
+{
+	if (Listnum + 1 > m_EnemyList.size()
+		|| m_EnemyList.empty())
+	{
+		return;
+	}
+
+	m_EnemyList[Listnum]->m_enemyAttackSpeed = enemystate;
+	return;
+}
 
 void Game::Render(RenderContext& rc)
 {

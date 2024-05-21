@@ -17,44 +17,49 @@ EnemyCamPos::~EnemyCamPos()
 
 }
 
-void EnemyCamPos::EnemyCamPosConfirmation()
+float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
 {
 	m_game = FindGO<Game>("game");
 	m_camera = FindGO<GameCamera>("gamecamera");
 	m_player = FindGO<Player>("player");
 
-	//Enemy全体の配列を回す。
-	for (int Listnum = 0; Listnum < m_game->m_EnemyList.size(); Listnum++)
-	{
-
-		//Enemyの座標を取得
-		Vector3 enemypos = m_game->GetEnemyListPos(Listnum);
+	//Enemyの座標を取得
+	Vector3 enemypos = enemy->m_position;
+	int Listnum = enemy->m_Vectornum;
 
 		//取得した座標がカメラ正面にあるかどうかを調べる
-		if (AngleCheck(enemypos) && EnemyStateIsAttack(Listnum))
+	if (AngleCheck(enemypos) && EnemyStateIsAttack(Listnum))
+	{
+		//取得した座標がカメラ正面にあったら次は
+		//m_camForwardListに未登録の要素があるかどうかを調べる
+		if (ListCheck())
 		{
-			//取得した座標がカメラ正面にあったら次は
-			//m_camForwardListに未登録の要素があるかどうかを調べる
-			if (ListCheck())
-			{
-				//未登録の場所があればその要素に座標のEnemyを登録する
-				Registration(Listnum);
-			}
-			else
-			{
-				//未登録の場所がなかった場合は登録中のEnemyの中で一番
-				//カメラから遠いEnemyを調べてそのEnemyが現在探索中のEnemyよりも
-				//カメラから近い場所にあるならそのm_camForwardListの要素のEnemyを
-				//探索中のEnemyと入れ替える
-				CompareNear(Listnum, enemypos);
-			}
+			//未登録の場所があればその要素に座標のEnemyを登録する
+			Registration(Listnum);
 		}
 		else
 		{
-			//取得した座標がカメラ正面になかった場合は
-			//取得した座標のEnemyの攻撃頻度を"低"にする
-			CamOut(Listnum);
+			//未登録の場所がなかった場合は登録中のEnemyの中で一番
+			//カメラから遠いEnemyを調べてそのEnemyが現在探索中のEnemyよりも
+			//カメラから近い場所にあるならそのm_camForwardListの要素のEnemyを
+			//探索中のEnemyと入れ替える
+			CompareNear(Listnum, enemypos);
 		}
+	}
+	else
+	{
+		//取得した座標がカメラ正面になかった場合は
+		//取得した座標のEnemyの攻撃頻度を"低"にする
+		CamOut(Listnum,enemypos);
+	}
+
+	if (enemy->m_enemyAttackSpeed == Enemy::en_FrequencyHigh)
+	{
+		return 3.0f;
+	}
+	else
+	{
+		return 10.0f;
 	}
 }
 
@@ -99,7 +104,8 @@ bool EnemyCamPos::ListCheck(int ListNum)
 
 bool EnemyCamPos::EnemyStateIsAttack(int ListNum)
 {
-	if (m_game->m_EnemyList[ListNum]->m_enemystate
+	if (m_game->EnemyListExistence(ListNum) || 
+		m_game->m_EnemyList[ListNum]->m_enemystate
 		== Enemy::enEnemyState_Attack)
 	{
 		return true;
@@ -116,7 +122,7 @@ bool EnemyCamPos::AngleCheck(const Vector3& position)
 
 	diff.Normalize();
 	float angle = acosf(diff.Dot(m_camForward));
-	if (Math::PI * 0.25f <= fabsf(angle))
+	if (Math::PI * 0.15f <= fabsf(angle))
 	{
 		return false;
 	}
@@ -126,14 +132,29 @@ bool EnemyCamPos::AngleCheck(const Vector3& position)
 
 void EnemyCamPos::CompareNear(int ListNum,const Vector3& enemypos)
 {
+	//カメラの現在座標を取得
+	Vector3 CamPos = g_camera3D->GetPosition();
+	//水平なベクトルにしたいためy値を0に
+	CamPos.y = 0.0f;
+
+	//カメラの正面ベクトルを取得
+	Vector3 CamForward = g_camera3D->GetForward();
+	//水平なベクトル(以下略)
+	CamForward.y = 0.0f;
+	//*400してベクトルを伸ばす
+	CamForward *= 400;
+
+	//位置+正面*400でカメラの位置から正面*400の座標を出す
+	Vector3 CamForwardAdvanceVec = CamPos + CamForward;
+
 	//現在探索中のEnemyの座標を取得
 	Vector3 changeEnemyPos = enemypos;
 
-	//取得したEnemyの座標とプレイヤーの現在座標を計算して
+	//取得したEnemyの座標とカメラ正面*400の現在座標を計算して
 	//プレイヤーからEnemyの座標へ向かうベクトルを出す
-	Vector3 diffChange = changeEnemyPos - m_player->GetPosition();
+	Vector3 diffChange = changeEnemyPos - CamForwardAdvanceVec;
 
-	//m_camForwardListの中でどれが一番カメラから遠い
+	//m_camForwardListの中でどれが一番カメラ正面*400の現在座標から遠い
 	//位置のEnemyを格納しているかm_camForwardListの要素番号
 	//を取得する変数を作る
 	int MaxListNum = -1;
@@ -150,16 +171,16 @@ void EnemyCamPos::CompareNear(int ListNum,const Vector3& enemypos)
 		//m_camForwardListのiの要素から登録されているEnemyの座標を取得する
 		Vector3 compareEnemyA = m_game->GetEnemyListPos(m_camForwardList[i].m_registNum);
 
-		//取得したEnemyの座標とカメラの現在座標を計算して
-		//カメラからEnemyの座標へ向かうベクトルを出す
-		Vector3 diffA = compareEnemyA - m_player->GetPosition();
+		//取得したEnemyの座標とカメラ正面*400の現在座標を計算して
+		//カメラ正面*400の現在座標からEnemyの座標へ向かうベクトルを出す
+		Vector3 diffA = compareEnemyA - CamForwardAdvanceVec;
 
 		//m_camForwardListのi + 1の要素から登録されているEnemyの座標を取得する
 		Vector3 compareEnemyB = m_game->GetEnemyListPos(m_camForwardList[i + 1].m_registNum);
 
-		//取得したEnemyの座標とカメラの現在座標を計算して
-		//カメラからEnemyの座標へ向かうベクトルを出す
-		Vector3 diffB = compareEnemyB - m_player->GetPosition();
+		//取得したEnemyの座標とカメラ正面*400の現在座標を計算して
+		//カメラ正面*400の現在座標からEnemyの座標へ向かうベクトルを出す
+		Vector3 diffB = compareEnemyB - CamForwardAdvanceVec;
 
 		//出された2つのベクトルを比べて長いベクトルの方をdiffCとも比べて
 		//それよりも大きければその要素番号を格納する
@@ -185,23 +206,28 @@ void EnemyCamPos::CompareNear(int ListNum,const Vector3& enemypos)
 	{
 		if (!ListCheck(ListNum))
 		{
+			//m_game->m_EnemyList[m_camForwardList[MaxListNum].m_registNum]
+			//	->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
 			m_camForwardList[MaxListNum].m_registNum = ListNum;
 
-			m_game->m_EnemyList[m_camForwardList[MaxListNum].m_registNum]
-				->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+			m_game->SetEnemyAttackState(m_camForwardList[MaxListNum].m_registNum
+				, Enemy::en_FrequencyHigh);
 			return;
 		}
 	}
 	else
 	{
-		m_game->m_EnemyList[ListNum]
-			->SetEnemyAttackState(Enemy::en_FrequencyFew);
+		//m_game->m_EnemyList[ListNum]
+		//	->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
+		m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyFew);
 	}
 
 	return;
 }
 
-void EnemyCamPos::CamOut(int ListNum)
+void EnemyCamPos::CamOut(int ListNum,const Vector3 enemypos)
 {
 	//もしm_camForwardList内に登録されているEnemyの配列番号と
 	//現在の探索場所が同じなら登録を解除する
@@ -211,8 +237,13 @@ void EnemyCamPos::CamOut(int ListNum)
 		m_camForwardList[m_emptyPoint].m_enemyRegist = false;
 	}
 
-	//攻撃頻度を"低"にする処理
-	m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyFew);
+	if (!AngleCheck(enemypos))
+	{
+		//攻撃頻度を"低"にする処理
+		//m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyFew);
+
+		m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyFew);
+	}
 	return;
 }
 
@@ -225,5 +256,7 @@ void EnemyCamPos::Registration(int ListNum)
 
 	m_camForwardList[m_emptyPoint].m_registNum = ListNum;
 	m_camForwardList[m_emptyPoint].m_enemyRegist = true;
-	m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+	//m_game->m_EnemyList[ListNum]->SetEnemyAttackState(Enemy::en_FrequencyHigh);
+
+	m_game->SetEnemyAttackState(ListNum, Enemy::en_FrequencyHigh);
 }

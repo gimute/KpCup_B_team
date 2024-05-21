@@ -29,6 +29,8 @@
     <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="EnemyAttackPoint.cpp" />
     <ClCompile Include="EnemyCamPos.cpp" />
+    <ClCompile Include="SignalUi.cpp" />
+    <ClCompile Include="SignalRailUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -53,5 +55,7 @@
     <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="EnemyAttackPoint.h" />
     <ClInclude Include="EnemyCamPos.h" />
+    <ClInclude Include="SignalUi.h" />
+    <ClInclude Include="SignalRailUi.h" />
   </ItemGroup>
 </Project>

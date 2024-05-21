@@ -7,60 +7,60 @@ namespace nsK2EngineLow {
 		SpriteRender() {};
 		~SpriteRender() {};
 
-		// ‰Šú‰»B
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 
-		//ƒ†[ƒU[‚ª—pˆÓ‚µ‚½SpriteInitData‚ğg‚Á‚½‰Šú‰»
+		//ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½pï¿½Ó‚ï¿½ï¿½ï¿½SpriteInitDataï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		void Init(SpriteInitData initData)
 		{
 			m_sprite.Init(initData);
 		}
 
-		//À•W‚ğİ’èBz‚Í0.0f‚ÅB
+		//ï¿½ï¿½ï¿½Wï¿½ï¿½İ’ï¿½Bzï¿½ï¿½0.0fï¿½ÅB
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
 		}
-		//À•W‚ğæ“¾
+		//ï¿½ï¿½ï¿½Wï¿½ï¿½æ“¾
 		const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
 
-		//ƒXƒP[ƒ‹‚ğİ’è
+		//ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½ï¿½İ’ï¿½
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
 		}
-		//ƒXƒP[ƒ‹‚ğæ“¾
+		//ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½ï¿½æ“¾
 		const Vector3& GetScale() const
 		{
 			return m_scale;
 		}
 
-		//‰ñ“]‚ğİ’èBZ²‚Ì‰ñ“]ˆÈŠO‚Í‹““®‚ª‚¨‚©‚µ‚­‚È‚é‚Ì‚Å’ˆÓ
+		//ï¿½ï¿½]ï¿½ï¿½İ’ï¿½BZï¿½ï¿½ï¿½Ì‰ï¿½]ï¿½ÈŠOï¿½Í‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Ì‚Å’ï¿½ï¿½ï¿½
 		void SetRotation(const Quaternion& rot)
 		{
 			m_rotation = rot;
 		}
-		//‰ñ“]‚ğæ“¾
+		//ï¿½ï¿½]ï¿½ï¿½æ“¾
 		const Quaternion& GetRotation() const
 		{
 			return m_rotation;
 		}
 
-		//ƒsƒ{ƒbƒg‚ğİ’èB
+		//ï¿½sï¿½{ï¿½bï¿½gï¿½ï¿½İ’ï¿½B
 		void SetPivot(const Vector2& pivot)
 		{
 			m_pivot = pivot;
 		}
-		/// ƒsƒ{ƒbƒg‚ğæ“¾B
+		/// ï¿½sï¿½{ï¿½bï¿½gï¿½ï¿½æ“¾ï¿½B
 		const Vector2& GetPivot() const
 		{
 			return m_pivot;
 		}
 
-		//XVˆ—
+		//ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
 		void Update()
 		{
 			m_sprite.Update(
@@ -70,19 +70,20 @@ namespace nsK2EngineLow {
 				m_pivot);
 		}
 
-		//•`‰æˆ—
+		//ï¿½`ï¿½æˆï¿½ï¿½
 		void Draw(RenderContext& rc);
 
-		//2D‚Ì•`‰æˆ—
+		//2Dï¿½Ì•`ï¿½æˆï¿½ï¿½
 		void OnRender2D(RenderContext& rc) override;
 
 	private:
 		Sprite		m_sprite;
-		Vector3			m_position = Vector3::Zero;				//À•WB
-		Quaternion		m_rotation = Quaternion::Identity;		//‰ñ“]B
+		Vector3			m_position = Vector3::Zero;				//ï¿½ï¿½ï¿½Wï¿½B
+		Quaternion		m_rotation = Quaternion::Identity;		//ï¿½ï¿½]ï¿½B
 		Vector3			m_scale = Vector3::One;
 
 		Vector2			m_pivot = Sprite::DEFAULT_PIVOT;
+
 	};
 
 }
