@@ -84,6 +84,7 @@ using namespace Microsoft::WRL;
 #include "RenderingEngine.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "LevelRender.h"
 //
 
 #include "graphics/GaussianBlur.h"
