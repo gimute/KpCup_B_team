@@ -55,40 +55,8 @@ public:
 
 	void SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate);
 
-	////エネミーアタックポイントの座標更新
-	//void EnemyAttackPointUpdate();
+	EnemyAttackPoint* GetEnemyAttackPointObject()
 
-	////引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
-	////アタックポインタが一定数以上使用中ならnullptrを返す
-	//EnemyAttackPoint* GetNearEnemyAttackPoint(Vector3 pos);
-
-	////指定された要素番号のアタックポイントを使用中にする
-	//void EnemyAttackPointSetUse(int number)
-	//{
-	//	if (m_enemyAttackPointList[number].m_use != true)
-	//	{
-	//		m_enemyAttackPointList[number].m_use = true;
-	//	}	
-	//}
-	////指定された要素番号のアタックポイントを未使用にする
-	//void EnemyAttackPointSetUnUse(int number)
-	//{
-	//	if (m_enemyAttackPointList[number].m_use != false)
-	//	{
-	//		m_enemyAttackPointList[number].m_use = false;
-	//	}
-	//}
-
-	////引数に渡された座標に一番近い使用可能なアタックポイントのアドレスを返す
-	////使用可能なアタックポイントが無ければnullptrを返す
-	//EnemyAttackPoint* GetEnemyAttackPoint(Vector3 pos);
-	////使用中アタックポイントの数のカウントを1減らすだけの関数
-	//void useAttackPointNumDecrement()
-	//{
-	//	m_useAttackPointNum--;
-	//}
-
-	EnemyAttackPoint* GetEnemyAttackPointInstance()
 	{
 		return &m_enemyAttackPoint;
 	}
@@ -119,9 +87,5 @@ public:
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
-	/// <summary>
-	/// 現在enemy配列を消去中かどうか
-	/// </summary>
-	//EnemyAttackPoint m_enemyAttackPointList[ENEMY_ATTACK_POINT_NUM];
 };
 
