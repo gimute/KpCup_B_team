@@ -87,7 +87,7 @@ void Game::Update()
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
 
-	if (g_pad[0]->IsTrigger(enButtonDown))
+	if (m_EnemyQua == 0)
 	{
 		door1->m_DoorOpen = true;
 	}

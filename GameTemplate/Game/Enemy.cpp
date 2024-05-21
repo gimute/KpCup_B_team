@@ -121,6 +121,11 @@ void Enemy::Update()
 	//回転処理
 	Rotation();
 	
+	if (m_enemystate != enEnemyState_Attack)
+	{
+		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+	}
+	
 	//当たり判定処理
 	Collision();
 	//アニメーション
@@ -129,11 +134,6 @@ void Enemy::Update()
 	if (m_attackTimer > 0.0f && m_enemystate == enEnemyState_Attack)
 	{
 		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
-	}
-
-	if (m_enemystate != enEnemyState_Attack )
-	{
-		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 	}
 
 	//描画更新

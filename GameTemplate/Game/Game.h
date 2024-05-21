@@ -101,7 +101,6 @@ public:
 
 	Enemy* GetEnemyListInstance(int Listnum)
 	{
-
 		return m_EnemyList[Listnum];
 	}
 
