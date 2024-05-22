@@ -17,6 +17,7 @@
 #include "SignalRailUi.h"
 #include "Bullet.h"
 #include "Door.h"
+#include "EventCamera.h"
 ///////////////////////////////
 
 Game::Game()
@@ -30,6 +31,8 @@ Game::Game()
 
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
+
+	EventCamera* test = NewGO<EventCamera>(0);
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(3, "UI");

@@ -32,6 +32,7 @@
     <ClCompile Include="SignalUi.cpp" />
     <ClCompile Include="SignalRailUi.cpp" />
     <ClCompile Include="Door.cpp" />
+    <ClCompile Include="EventCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -59,5 +60,6 @@
     <ClInclude Include="SignalUi.h" />
     <ClInclude Include="SignalRailUi.h" />
     <ClInclude Include="Door.h" />
+    <ClInclude Include="EventCamera.h" />
   </ItemGroup>
 </Project>
