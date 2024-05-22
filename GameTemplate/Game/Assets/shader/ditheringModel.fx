@@ -112,12 +112,13 @@ StructuredBuffer<float4x4> g_boneMatrix : register(t3); //ボーン行列。
 ///////////////////////////////////////////
 sampler g_sampler : register(s0);
 
+//ディザリングパターン定義
 static const int pattern[4][4] =
 {
-    { 0, 32, 8, 40 },
-    { 65, 16, 65, 24 },
-    { 12, 44, 4, 36 },
-    { 65, 28, 65, 20 },
+    {  10, 32,   8, 40 },
+    { 100, 16, 100, 24 },
+    {  12, 44,   4, 36 },
+    { 100, 28, 100, 20 },
 };
 
 ///////////////////////////////////////////
@@ -165,7 +166,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     psIn.worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos); // ワールド座標系からカメラ座標系に変換
     ///////////
-    float4 posInCameraSpace = psIn.pos;
+    // カメラ空間での座標は、実質カメラからその頂点に向かうベクトルのはずなので
+    // カメラ空間での座標を使って、カメラからの距離を計算する
+    psIn.distToEye = length(psIn.pos);
     ///////////
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.normal = mul(m, vsIn.normal); // 法線を回転させる
@@ -178,8 +181,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
     psIn.tangent = normalize(mul(m, vsIn.tangent));
     psIn.biNormal = normalize(mul(m, vsIn.biNormal));
     
-    // カメラからの距離を計算する
-    psIn.distToEye = length(posInCameraSpace);
+    
     
     return psIn;
 }
@@ -201,19 +203,36 @@ SPSIn VSSkinMain(SVSIn vsIn)
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     //ディザリング処理
+    //このピクセルのスクリーン座標系でのX座標、Y座標を4で割ったあまりを求める
     int x = (int) fmod(psIn.pos.x, 4.0f);
     int y = (int) fmod(psIn.pos.y, 4.0f);
 
+    //このピクセルのディザリング閾値を取得する
     int dither = pattern[y][x];
     
-    float clipRange = 100.0f;
+    //閾値が100より低ければディザリングの処理を行う
+    //閾値が100以上のピクセルはそもそもディザリングする気がない
+    if (dither < 100)
+    {
+        //クリップ範囲
+        float clipRange = 100.0f;
 
-    float eyeToClipRange = max(0.0f, psIn.distToEye - clipRange);
+        //視点からクリップ範囲までの距離を計算する
+        //結果がマイナスの場合0にする
+        float eyeToClipRange = max(0.0f, psIn.distToEye - clipRange);
     
-    float clipRate = 1.0f - min(1.0f, eyeToClipRange / 100.0f);
+        //クリップ率を求める
+        //クリップ率は0～1の値をとり、1になると確定でクリップされる
+        //eyeToClipRangeが0に近いほど、clipRateが1に近づく
+        float clipRate = 1.0f - min(1.0f, eyeToClipRange / 100.0f);
     
-    clip(dither - 64 * clipRate);
-    ////////////////////////////
+        //クリップ率を利用してピクセルキルを行う
+        //64にクリップ率をかけた数値が、ディザリング閾値を越えるとクリップされる
+        //64という数字は参考にした教科書の値を真似しているだけ
+        clip(dither - 64 * clipRate);
+    }
+    
+
     
     
     

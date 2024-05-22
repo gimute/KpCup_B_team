@@ -225,7 +225,7 @@ void Enemy::ProcessChaseStateTransition()
 	//利用可能なアタックポイントを探す
 	EnemyAttackPoint::AttackPoint* attackPoint;
 
-	attackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
+	attackPoint = m_game->GetEnemyAttackPointObject()->GetNearAttackPoint(m_position);
 
 	//アタックポイントが確保できなかった場合
 	if (attackPoint == nullptr)
@@ -260,7 +260,7 @@ void Enemy::ProcessAttackStateTransition()
 	if (m_AttackPoint == nullptr)
 	{
 		//利用可能なアタックポイント取得
-		m_AttackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
+		m_AttackPoint = m_game->GetEnemyAttackPointObject()->GetNearAttackPoint(m_position);
 
 		//アタックポイントを取得できなかったら
 		if (m_AttackPoint == nullptr)
@@ -273,7 +273,7 @@ void Enemy::ProcessAttackStateTransition()
 		else
 		{
 			//アタックポイントを使用中にする
-			m_game->GetEnemyAttackPointInstance()->UseAttackPoint(m_AttackPoint->m_number, this);
+			m_game->GetEnemyAttackPointObject()->UseAttackPoint(m_AttackPoint->m_number, this);
 		}
 	}
 	
@@ -299,7 +299,7 @@ void Enemy::ProcessIdleStateTransition()
 void Enemy::ProcessStandStateTransition()
 {
 	//アタックポイントが空いていたら
-	if (m_game->GetEnemyAttackPointInstance()->IsUsableAttackPoint() == true)
+	if (m_game->GetEnemyAttackPointObject()->IsUsableAttackPoint() == true)
 	{
 		//追跡ステートにしてアタックポイントを取りに行く
 		m_enemystate = enEnemyState_Chase;
@@ -318,7 +318,7 @@ void Enemy::Chase()
 {
 	//利用可能なアタックポイントを探す
 	EnemyAttackPoint::AttackPoint* attackPoint;
-	attackPoint = m_game->GetEnemyAttackPointInstance()->GetNearAttackPoint(m_position);
+	attackPoint = m_game->GetEnemyAttackPointObject()->GetNearAttackPoint(m_position);
 
 	//アタックポイントが確保できない場合
 	if (attackPoint == nullptr)
@@ -660,7 +660,7 @@ void Enemy::ReleaseAttackPoint()
 	}
 
 	//アタックポイントを解放
-	m_game->GetEnemyAttackPointInstance()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
+	m_game->GetEnemyAttackPointObject()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
 	//アタックポイントへのポインタも解放
 	m_AttackPoint = nullptr;
 }
