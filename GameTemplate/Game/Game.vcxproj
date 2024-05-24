@@ -234,7 +234,9 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="HpUi.cpp" />
+    <ClCompile Include="Load.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
@@ -264,7 +266,9 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="HpUi.h" />
+    <ClInclude Include="Load.h" />
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />

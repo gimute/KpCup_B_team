@@ -32,6 +32,8 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="Load.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -59,5 +61,7 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="Load.h" />
   </ItemGroup>
 </Project>

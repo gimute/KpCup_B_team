@@ -1,5 +1,6 @@
 #pragma once
 
+class Load;
 // タイトル。
 class Title : public IGameObject
 {
@@ -15,9 +16,12 @@ public:
 	void AlphaCalc();
 
 	//スプライトレンダー。
-	SpriteRender m_spriteRender;
-	SpriteRender m_spriteRender2;
+	SpriteRender m_spriteRender_title;
+	SpriteRender m_spriteRender_startButton;
 	
+	Load* m_load = nullptr;
+	bool m_isWaitFadeout = false;
+
 	//アルファチャンネルの調整用の変数
 	float m_alpha = 0.1f;
 	bool m_alphaCalcBool;

@@ -17,10 +17,19 @@ class HpUi;
 class Enemy;
 class EnemyHpUi;
 class GameClear;
+class GameTimer;
+class Load;
+class Title;
 //
 class Game : public IGameObject
 {
 public:
+	enum EnGameState {
+		enIdle,
+		enGameClear,
+		enGameOver
+	};
+
 	//エネミーの攻撃可能ポイント
 	//このポイントを確保できているエネミーのみ攻撃可能にする
 	//struct EnemyAttackPoint
@@ -33,8 +42,9 @@ public:
 	Game();
 	~Game();
 
-	
 	void Update();
+	//ゲームクリアを通知する
+	void NotifyGameClear();
 	void Render(RenderContext& rc);
 	void Delete_EnemyVec(const int num);
 
@@ -56,16 +66,21 @@ public:
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	GameClear* m_gameclear;
+	GameTimer* m_gametimer;
 	SpriteRender m_spriterender; //スプライトレンダー。
 	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
+	Load* m_load = nullptr;
+	//Load* m_load2 = nullptr;
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
-	
-
+	bool m_isSaveClearTime = false;
+	bool m_isWaitFadeout = false;
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
+
+	EnGameState m_gameState = enIdle;
 };
 
