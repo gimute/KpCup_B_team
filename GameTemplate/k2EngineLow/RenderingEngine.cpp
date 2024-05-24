@@ -14,6 +14,8 @@ namespace nsK2EngineLow {
 
     void RenderingEngine::Execute(RenderContext& rc)
     {
+        PreRender2D(rc);
+
         Render3DModel(rc);
 
         Render2D(rc);
@@ -38,4 +40,11 @@ namespace nsK2EngineLow {
         }
     }
 
+    void RenderingEngine::PreRender2D(RenderContext& rc)
+    {
+        for (auto& renderObj : m_renderObjects)
+        {
+            renderObj->OnPreRender2D(rc);
+        }
+    }
 }

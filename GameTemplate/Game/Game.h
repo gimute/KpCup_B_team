@@ -88,5 +88,7 @@ public:
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
+
+	PreSpriteRender m_preSpriteRender;
 };
 

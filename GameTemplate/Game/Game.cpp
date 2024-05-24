@@ -21,6 +21,9 @@
 
 Game::Game()
 {
+	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
+	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
+
 	//背景のオブジェクトを作る。
 	m_background = NewGO<BackGround>(0, "background");
 	
@@ -151,5 +154,5 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::Render(RenderContext& rc)
 {
-
+	m_preSpriteRender.Draw(rc);
 }

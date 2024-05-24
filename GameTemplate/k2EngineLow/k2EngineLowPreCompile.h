@@ -79,6 +79,7 @@ using namespace Microsoft::WRL;
 #include "IRenderer.h"
 #include "ModelRender.h"
 #include "SpriteRender.h"
+#include "PreSpriteRender.h"
 #include "FontRender.h"
 #include "SceneLight.h"
 #include "RenderingEngine.h"

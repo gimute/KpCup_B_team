@@ -7,60 +7,71 @@ namespace nsK2EngineLow {
 		SpriteRender() {};
 		~SpriteRender() {};
 
-		// �������B
+		//初期化
 		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 
-		//���[�U�[���p�ӂ���SpriteInitData��g����������
+		//ユーザーが用意したデータで初期化
 		void Init(SpriteInitData initData)
 		{
 			m_sprite.Init(initData);
 		}
 
-		//���W��ݒ�Bz��0.0f�ŁB
+		//座標を設定
 		void SetPosition(const Vector3& pos)
 		{
 			m_position = pos;
 		}
-		//���W��擾
+		//座標を取得
 		const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
 
-		//�X�P�[����ݒ�
+		//スケールを設定
 		void SetScale(const Vector3& scale)
 		{
 			m_scale = scale;
 		}
-		//�X�P�[����擾
+		//スケールを取得
 		const Vector3& GetScale() const
 		{
 			return m_scale;
 		}
 
-		//��]��ݒ�BZ���̉�]�ȊO�͋��������������Ȃ�̂Œ���
+		//回転を設定
 		void SetRotation(const Quaternion& rot)
 		{
 			m_rotation = rot;
 		}
-		//��]��擾
+		//回転を取得
 		const Quaternion& GetRotation() const
 		{
 			return m_rotation;
 		}
 
-		//�s�{�b�g��ݒ�B
+		//ピボットを設定
 		void SetPivot(const Vector2& pivot)
 		{
 			m_pivot = pivot;
 		}
-		/// �s�{�b�g��擾�B
+		//ピボットを取得
 		const Vector2& GetPivot() const
 		{
 			return m_pivot;
 		}
 
-		//�X�V����
+		//乗算カラーを設定
+		void SetMulColor(const Vector4& mulColor)
+		{
+			m_sprite.SetMulColor(mulColor);
+		}
+		//乗算カラーを取得
+		const Vector4& GetMulColor() const
+		{
+			return m_sprite.GetMulColor();
+		}
+
+		//更新処理
 		void Update()
 		{
 			m_sprite.Update(
@@ -70,19 +81,22 @@ namespace nsK2EngineLow {
 				m_pivot);
 		}
 
-		//�`�揈��
+		//描画処理
 		void Draw(RenderContext& rc);
 
-		//2D�̕`�揈��
-		void OnRender2D(RenderContext& rc) override;
+	private:
+		//2D描画パスから呼ばれる処理
+		void OnRender2D(RenderContext& rc) override
+		{
+			m_sprite.Draw(rc);
+		}
 
 	private:
-		Sprite		m_sprite;
-		Vector3			m_position = Vector3::Zero;				//���W�B
-		Quaternion		m_rotation = Quaternion::Identity;		//��]�B
-		Vector3			m_scale = Vector3::One;
-
-		Vector2			m_pivot = Sprite::DEFAULT_PIVOT;
+		Sprite			m_sprite;							//スプライト
+		Vector3			m_position = Vector3::Zero;			//座標
+		Quaternion		m_rotation = Quaternion::Identity;	//回転
+		Vector3			m_scale = Vector3::One;				//大きさ
+		Vector2			m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット
 
 	};
 
