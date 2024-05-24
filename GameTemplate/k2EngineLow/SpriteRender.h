@@ -59,8 +59,19 @@ namespace nsK2EngineLow {
 		{
 			return m_pivot;
 		}
+    
+		//��Z�J���[��ݒ�
+		void SetMulColor(const Vector4& mulColor)
+		{
+			m_sprite.SetMulColor(mulColor);
+		}
 
-		//�X�V����
+		//��Z�J���[���擾�B
+		const Vector4& GetMulColor() const
+		{
+			return m_sprite.GetMulColor();
+		}
+
 		void Update()
 		{
 			m_sprite.Update(
