@@ -41,7 +41,7 @@ public:
 	/// ˆÊ’u‚Æ‹——£‚É‚æ‚Á‚ÄEnemy‚ÌUŒ‚•p“x‚ğ
 	/// •ÏX‚·‚éŠÖ”
 	/// </summary>
-	void EnemyCamPosConfirmation();
+	float EnemyCamPosConfirmation(Enemy* enemy);
 	/// <summary>
 	/// ³–Ê‚ÉEnemy‚ª‘¶İ‚·‚é‚©”»’è‚·‚éŠÖ”
 	/// </summary>
@@ -68,7 +68,7 @@ public:
 	/// —v‘f‚ğ–¢“o˜^ó‘Ô‚É‚µEnemy‚ÌUŒ‚•p“x‚ğ"’á"‚É‚·‚éŠÖ”
 	/// </summary>
 	/// <param name="ListNum"></param>
-	void CamOut(int ListNum);
+	void CamOut(int ListNum,const Vector3 enemypos);
 	/// <summary>
 	///	m_camForwardList‚É‹ó‚«‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğ’²‚×‚éŠÖ”
 	/// </summary>

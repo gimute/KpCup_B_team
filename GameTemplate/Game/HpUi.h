@@ -13,36 +13,36 @@ class HpUi : public IGameObject
 {
 
 public:
-	//“§‰ßUIŒ¸­‘JˆÚ
+	//é€éUIæ¸›å°‘é·ç§»
 	enum DecreaseTransition {
-		//‘Ò‹@0
+		//å¾…æ©Ÿ0
 		en_Standby_TRAN,
-		//’x‰„ŠJn1
+		//é…å»¶é–‹å§‹1
 		en_DelayTimeON_TRAN,
-		//’x‰„ˆ—2
+		//é…å»¶å‡¦ç†2
 		en_DelayTimeLoop_TRAN,
-		//“§‰ßUIŒ¸­ŒvZ3
+		//é€éUIæ¸›å°‘è¨ˆç®—3
 		en_TransparentDecreaseCalc_TRAN,
-		//“§‰ßUIŒ¸­ŠJn4
+		//é€éUIæ¸›å°‘é–‹å§‹4
 		en_TransparentDecreaseON_TRAN
 	};
-	/////////////////////////////////////////ŠÖ”
+	/////////////////////////////////////////é–¢æ•°
 	HpUi() {}
 	~HpUi() {}
-	//ƒXƒ^[ƒgŠÖ”
+	//ã‚¹ã‚¿ãƒ¼ãƒˆé–¢æ•°
 	bool Start();
-	//ƒAƒbƒvƒf[ƒg
+	//ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 	void Update();
-	//‰ÁŒ¸ŒvZ
+	//åŠ æ¸›è¨ˆç®—
 	void Adjustment();
-	//“§‰ßƒo[‰ÁŒ¸ŒvZ
+	//é€éãƒãƒ¼åŠ æ¸›è¨ˆç®—
 	void AdjustmentTransparent();
-	//ƒŒƒ“ƒ_[
+	//ãƒ¬ãƒ³ãƒ€ãƒ¼
 	void Render(RenderContext& rc);
-	//HPŒ¸­ˆ—
+	//HPæ¸›å°‘å‡¦ç†
 	void DecreaseHP(int decrease)
 	{
-		//HP‚ğŒ¸­’lŒ¸‚ç‚·
+		//HPã‚’æ¸›å°‘å€¤æ¸›ã‚‰ã™
 		m_nowhp -= decrease;
 		return;
 	}
@@ -53,33 +53,33 @@ public:
 	}
 
 private:
-	/////////////////////////////////////////ƒƒ“ƒo•Ï”
+	/////////////////////////////////////////ãƒ¡ãƒ³ãƒå¤‰æ•°
 	//HPUI
 	SpriteRender m_hpUI_A;
-	//HPƒo[
+	//HPãƒãƒ¼
 	SpriteRender m_hpUI_B;
-	//“§‰ßHPƒo[
+	//é€éHPãƒãƒ¼
 	SpriteRender m_hpUI_C;
-	//“§‰ßUIŒ¸­‘JˆÚ
+	//é€éUIæ¸›å°‘é·ç§»
 	DecreaseTransition m_decrease_TRAN = en_Standby_TRAN;
-	/////////////////////////////////////////•Ï”
-	//Å‘åHP
+	/////////////////////////////////////////å¤‰æ•°
+	//æœ€å¤§HP
 	int m_fullhp = 100;
-	//Œ»İHP@
+	//ç¾åœ¨HPã€€
 	int m_nowhp = m_fullhp;
-	//‰ß‹HP
+	//éå»HP
 	int m_oldhp = m_fullhp;
-	//Œ»İhpƒo[ƒXƒP[ƒ‹(“®‚©‚·‚Ì‚Ím_hpUI_BAz‚ÍŒÅ’è)
+	//ç¾åœ¨hpãƒãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«(å‹•ã‹ã™ã®ã¯m_hpUI_Bã€zã¯å›ºå®š)
 	Vector3 m_scale_B = { 1.0,1.0,1.0 };
-	//Œ»İ“§‰ßhpƒo[ƒXƒP[ƒ‹(“®‚©‚·‚Ì‚Ím_hpUI_CAz‚ÍŒÅ’è)
+	//ç¾åœ¨é€éhpãƒãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«(å‹•ã‹ã™ã®ã¯m_hpUI_Cã€zã¯å›ºå®š)
 	Vector3 m_scale_C = { 1.0,1.0,1.0 };
-	//Œ¸­’x‰„ƒ^ƒCƒ}[
+	//æ¸›å°‘é…å»¶ã‚¿ã‚¤ãƒãƒ¼
 	float m_delaytimer = 0.0;
-	//“§‰ßŒ¸­Š„‡
+	//é€éæ¸›å°‘å‰²åˆ
 	Vector3 m_changeS_C = m_scale_C;
-	//Œ»İ“§‰ßŒ¸­’l
+	//ç¾åœ¨é€éæ¸›å°‘å€¤
 	Vector3 m_nowScale = m_hpUI_C.GetScale();
-	/////////////////////////////////////////‰Šúİ’èŒn“
+	/////////////////////////////////////////åˆæœŸè¨­å®šç³»çµ±
 	
 };
 

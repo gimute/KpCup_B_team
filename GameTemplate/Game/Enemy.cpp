@@ -5,6 +5,7 @@
 #include "EnemyHpUi.h"
 #include "Bullet.h"
 #include "EnemyAttackPoint.h"
+#include "EnemyCamPos.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -36,9 +37,9 @@ bool Enemy::Start()
 	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
-	m_animationclips[enAnimationClip_Attack].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
+	m_animationclips[enAnimationClip_ShotStandby].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
@@ -70,6 +71,7 @@ bool Enemy::Start()
 
 	m_player = FindGO<Player>("player");
 	m_game = FindGO<Game>("game");
+
 	m_Vectornum = m_game->m_EnemyQua;
 	m_game->m_EnemyQua++;
 	m_game->m_EnemyList.push_back(this);
@@ -121,12 +123,17 @@ void Enemy::Update()
 	//回転処理
 	Rotation();
 	
+	if (m_enemystate != enEnemyState_Attack)
+	{
+		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+	}
+	
 	//当たり判定処理
 	Collision();
 	//アニメーション
 	PlayAnimation();
 	
-	if (m_attackTimer > 0.0f)
+	if (m_attackTimer > 0.0f && m_enemystate == enEnemyState_Attack)
 	{
 		m_attackTimer -= g_gameTime->GetFrameDeltaTime();
 	}
@@ -150,14 +157,10 @@ void Enemy::PlayAnimation()
 		m_modelRender.PlayAnimation(enAnimationClip_Chase, 0.1f);
 		break;
 	case enEnemyState_Attack:
-		if (m_attackTimer <= 0.0f)
+		if (m_shotBool == true)
 		{
 			m_modelRender.SetAnimationSpeed(1.0f);
 			m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
-			if (m_modelRender.IsPlayingAnimation() == false)
-			{
-				m_attackTimer = SetEnemyAttackTime();
-			}
 		}
 		else
 		{
@@ -233,6 +236,7 @@ void Enemy::ProcessChaseStateTransition()
 		if ((m_player->GetPosition() - m_position).Length() <= 300.0f)
 		{
 			//ステートを構えに変更
+
 			m_enemystate = enEnemyState_Stand;
 			return;
 		}
@@ -245,6 +249,7 @@ void Enemy::ProcessChaseStateTransition()
 		{
 			//ステートを攻撃に変更
 			m_enemystate = enEnemyState_Attack;
+			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 			return;
 		}
 	}
@@ -273,7 +278,7 @@ void Enemy::ProcessAttackStateTransition()
 			m_game->GetEnemyAttackPointObject()->UseAttackPoint(m_AttackPoint->m_number, this);
 		}
 	}
-
+	
 	//エネミーからアタックポイントに向かうベクトルを求める
 	Vector3 diff = m_AttackPoint->m_position - m_position;
 
@@ -425,7 +430,14 @@ void Enemy::Rotation()
 
 void Enemy::Attack()
 {
-	//攻撃処理
+	if (m_attackTimer <= 0.0f)
+	{
+		m_shotBool = true;
+	}
+	else
+	{
+		m_enemyAttackStep = en_stanceStep;
+	}
 }
 
 void Enemy::Collision()
@@ -460,7 +472,7 @@ void Enemy::Collision()
 		//コリジョンとキャラコンが衝突したら。
 		if (collision->IsHit(m_collisionObject))
 		{
-			//SoundSource* se = NewGO<SoundSource>(5);
+			//SoundSource* se = NewGO<SoundSource>(5);e
 			//se = NewGO<SoundSource>(5);
 			//se->Init(5);
 			//se->Play(false);
@@ -614,7 +626,11 @@ void Enemy::ProcessCommonStateTransition()
 
 void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
-	if (wcscmp(eventName, L"shot_point") == 0)
+	if (wcscmp(eventName, L"B_signal_start") == 0)
+	{
+		m_enemyAttackStep = en_shotStep;
+	}
+	else if (wcscmp(eventName, L"A_shot_point") == 0)
 	{
 		Vector3 m_shotPos = m_player->GetPosition() - m_position;
 		m_shotPos.Normalize();
@@ -626,6 +642,12 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_bullet->Setrotation(rot);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Enemy);
+	}
+	else if (wcscmp(eventName, L"C_shot_end") == 0)
+	{
+		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+		m_enemyAttackStep = en_noneStep;
+		m_shotBool = false;
 	}
 }
 

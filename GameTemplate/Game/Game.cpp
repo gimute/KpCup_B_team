@@ -19,6 +19,9 @@
 #include "GameTimer.h"
 #include "Load.h"
 #include "Title.h"
+#include "SignalRailUi.h"
+#include "Bullet.h"
+#include "Door.h"
 ///////////////////////////////
 
 Game::Game()
@@ -43,6 +46,8 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(0, "UI");
+	//危険信号表示Ui
+	m_signalRailUi = NewGO<SignalRailUi>(3, "signalUi");
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
@@ -75,14 +80,8 @@ Game::Game()
 	//Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
 	//m_enemy10->m_position = { -850.0f,0.0f,300.0f };
 
-	//ロード画面からゲーム画面にフェードイン。
-	//m_load->StartFadeIn();
-	/*for (int i = 0; i < ENEMY_ATTACK_POINT_NUM; i++)
-	{
-		m_enemyAttackPointList[i].m_number = i;
-	}*/
-	//m_load = FindGO<Load>("load");
-	//m_load->StartFadeIn();
+	door1 = NewGO<Door>(0, "door");
+	door1->m_DoorMainPos = { 0.0f,0.0f,380.0f };
 }
 
 Game::~Game()
@@ -173,9 +172,12 @@ void Game::Update()
 	
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
+	m_hpui->Update();
 
-	m_enemyCamPos.EnemyCamPosConfirmation();
-
+	if (m_EnemyQua == 0)
+	{
+		door1->m_DoorOpen = true;
+	}
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -207,6 +209,39 @@ Vector3 Game::GetEnemyListPos(int num)
 	return m_EnemyList[num]->m_position;
 }
 
+bool Game::EnemyListExistence()
+{
+	if (m_EnemyList.empty())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool Game::EnemyListExistence(int num)
+{
+	if (num + 1 > m_EnemyList.size())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate)
+{
+	if (Listnum + 1 > m_EnemyList.size()
+		|| m_EnemyList.empty())
+	{
+		return;
+	}
+
+	m_EnemyList[Listnum]->m_enemyAttackSpeed = enemystate;
+	return;
+}
 
 void Game::Render(RenderContext& rc)
 {
