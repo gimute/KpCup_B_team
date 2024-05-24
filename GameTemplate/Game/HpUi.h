@@ -47,6 +47,11 @@ public:
 		return;
 	}
 
+	int GetNowHP()
+	{
+		return m_nowhp;
+	}
+
 private:
 	/////////////////////////////////////////メンバ変数
 	//HPUI

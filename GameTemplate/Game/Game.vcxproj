@@ -233,7 +233,11 @@
     <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="HpUi.cpp" />
+    <ClCompile Include="Load.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
@@ -251,6 +255,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -263,7 +268,11 @@
     <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="HpUi.h" />
+    <ClInclude Include="Load.h" />
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
@@ -276,6 +285,7 @@
     <ClInclude Include="SpriteTest.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="Title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

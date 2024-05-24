@@ -59,7 +59,7 @@ namespace nsK2EngineLow {
 		{
 			return m_pivot;
 		}
-
+    
 		//乗算カラーを設定
 		void SetMulColor(const Vector4& mulColor)
 		{
