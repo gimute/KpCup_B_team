@@ -14,7 +14,9 @@ public:
 		en_SceneNum,
 		en_Scene_None
 	};
-
+	/// <summary>
+	/// シーン内で使う座標記録用構造体
+	/// </summary>
 	struct SceneVector
 	{
 		/// <summary>
@@ -22,15 +24,21 @@ public:
 		/// </summary>
 		Vector3 m_vector = Vector3::Zero;
 		/// <summary>
-		/// float型
+		/// float型1
 		/// </summary>
 		float m_changeTime = 0.0f;
+		/// <summary>
+		/// float型2
+		/// </summary>
+		float m_easingTime = 0.0f;
 		/// <summary>
 		/// bool型
 		/// </summary>
 		bool isEasing = false;
 	};
-
+	/// <summary>
+	/// １シーンで使う変数などが入った構造体
+	/// </summary>
 	struct OneScene{
 		/// <summary>
 		/// カメラを動かす際のウェイポイント
@@ -71,6 +79,18 @@ public:
 	/// カメラターゲット更新
 	/// </summary>
 	void CamTargetUpdate();
+	/// <summary>
+	/// カメラ位置配列更新
+	/// </summary>
+	void CamPositionListChange();
+	/// <summary>
+	/// カメラターゲット位置配列更新
+	/// </summary>
+	void CamTargetListChange();
+	/// <summary>
+	/// 時間処理
+	/// </summary>
+	void Time();
 	/////////////////////////////////////////メンバ変数
 	/// <summary>
 	/// レベルレンダー
@@ -97,19 +117,37 @@ public:
 	/// イベントを再生するかしないかのフラグ
 	/// </summary>
 	bool m_eventFlag = false;
-	/////////////////////////////////////////初期設定系統
-	int GetSceneUseWayPoint(const EnEventScene setScene)
-	{
-		return m_scene[setScene].m_useWayPoint;
-	}
 	/// <summary>
-	/// シーンセット
+	/// カメラ座標変更までの時間
 	/// </summary>
-	/// <param name="setScene"></param>
+	float m_posChangeTime = 0.0f;
+	/// <summary>
+	/// カメラターゲット座標変更までの時間
+	/// </summary>
+	float m_tarChangeTime = 0.0f;
+	/// <summary>
+	/// 現在処理中のカメラ位置のイテレーター
+	/// </summary>
+	std::map<int, SceneVector>::iterator m_camPosListIterator;
+	/// <summary>
+	/// 現在処理中のカメラターゲット位置のイテレーター
+	/// </summary>
+	std::map<int, SceneVector>::iterator m_camTarListIterator;
+	/////////////////////////////////////////初期設定系統
 	void StartScene(const EnEventScene setScene)
 	{
 		m_sceneNow = setScene;
+
+		m_posChangeTime = m_scene[setScene].m_cameraWayPoint[0].m_changeTime;
+
+		m_tarChangeTime = m_scene[setScene].m_cameraChangeTarget[0].m_changeTime;
+
+		m_camPosListIterator = m_scene[setScene].m_cameraWayPoint.begin();
+
+		m_camTarListIterator = m_scene[setScene].m_cameraChangeTarget.begin();
+
 		m_eventFlag = true;
+
 		return;
 	}
 	/// <summary>
@@ -141,6 +179,10 @@ public:
 	bool IsEvent()
 	{
 		return m_eventFlag;
+	}
+	bool IsIteratorEasing(std::map<int, SceneVector>::iterator setIterator)
+	{
+		return setIterator->second.isEasing;
 	}
 };
 

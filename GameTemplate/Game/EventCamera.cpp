@@ -40,19 +40,24 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 	//構造体宣言
 	SceneVector setVector;
 
-	//0000を0A 0B 00Cとして0Aが先頭番号
-	//0BがBool、00Cが秒数とする。
+	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
+	//0BがBool、000Cがイージング秒数、
+	//000Dが切り替えまでの秒数とする。
 
 	//先頭番号
-	int Num = setNum / 1000;
+	int Num = setNum / 10000000;
 
 	//Bool、0か1かで判定
-	int BoolNum = setNum % 1000;
-	BoolNum /= 100;
+	int BoolNum = setNum % 10000000;
+	BoolNum /= 1000000;
 
-	//秒数
-	float Time = setNum % 100;
-	Time *= 0.1;
+	//カメライージング速度秒数
+	float EasingTime = (setNum / 1000) % 1000;
+	EasingTime *= 0.1;
+
+	//カメラ切り替え秒数
+	float ChangeTime = setNum % 100;
+	ChangeTime *= 0.1;
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
@@ -60,7 +65,9 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 	else
 		setVector.isEasing = true;
 
-	setVector.m_changeTime = Time;
+	setVector.m_changeTime = ChangeTime;
+
+	setVector.m_easingTime = EasingTime;
 
 	setVector.m_vector = setPos;
 
@@ -76,8 +83,9 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 	//構造体宣言
 	SceneVector setVector;
 
-	//0000を0A 0B 00Cとして0Aが先頭番号
-	//0BがBool、00Cが秒数とする。
+	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
+	//0BがBool、000Cがイージング秒数、
+	//000Dが切り替えまでの秒数とする。
 
 	//先頭番号
 	int Num = setNum / 1000;
@@ -86,9 +94,13 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 	int BoolNum = setNum % 1000;
 	BoolNum /= 100;
 
-	//秒数
-	float Time = setNum % 100;
-	Time *= 0.1;
+	//カメライージング速度秒数
+	float EasingTime = (setNum / 1000) % 1000;
+	EasingTime *= 0.1;
+
+	//カメライージング速度秒数
+	float ChangeTime = setNum % 100;
+	ChangeTime *= 0.1;
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
@@ -96,7 +108,9 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 	else
 		setVector.isEasing = true;
 
-	setVector.m_changeTime = Time;
+	setVector.m_changeTime = ChangeTime;
+
+	setVector.m_easingTime = EasingTime;
 
 	setVector.m_vector = setPos;
 
@@ -124,14 +138,42 @@ void EventCamera::Update()
 
 void EventCamera::CamPositionUpdate()
 {
-	int i = 0;
+	if (m_posChangeTime <= 0.0f)
+	{
+		CamPositionListChange();
+		return;
+	}
 
-	//m_sendCameraPosition = m_scene[m_sceneNow].m_cameraWayPoint[i];
+	if ()
+	{
+
+	}
 }
 
 void EventCamera::CamTargetUpdate()
 {
-	int i = 0;
 
-	//m_sendTargetPosition = m_scene[m_sceneNow].m_cameraChangeTarget[i];
+}
+
+void EventCamera::CamPositionListChange()
+{
+	m_camPosListIterator++;
+
+	m_posChangeTime = m_camPosListIterator->second.m_changeTime;
+
+	return;
+}
+
+void EventCamera::CamTargetListChange()
+{
+	m_camTarListIterator++;
+
+	m_tarChangeTime = m_camTarListIterator->second.m_changeTime;
+
+	return;
+}
+
+void EventCamera::Time()
+{
+
 }
