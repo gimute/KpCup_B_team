@@ -20,6 +20,7 @@ class Enemy;
 class EnemyHpUi;
 class SignalRailUi;
 class Door;
+class EventCamera;
 //
 class Game : public IGameObject
 {
@@ -84,7 +85,7 @@ public:
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
 	
-
+	EventCamera* test = nullptr;
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;

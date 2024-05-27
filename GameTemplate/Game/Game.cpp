@@ -32,7 +32,7 @@ Game::Game()
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
-	EventCamera* test = NewGO<EventCamera>(0);
+	test = NewGO<EventCamera>(0,"camera");
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(3, "UI");
@@ -93,6 +93,11 @@ void Game::Update()
 	if (m_EnemyQua == 0)
 	{
 		door1->m_DoorOpen = true;
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonDown))
+	{
+		test->StartScene(EventCamera::en_Scene1_Door);
 	}
 }
 
