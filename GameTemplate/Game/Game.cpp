@@ -97,7 +97,7 @@ void Game::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		test->StartScene(EventCamera::en_Scene1_Door);
+		test->StartScene(EventCamera::en_Scene2_MapUp);
 	}
 }
 

@@ -11,8 +11,16 @@ public:
 	/// </summary>
 	enum EnEventScene {
 		en_Scene1_Door,
+		en_Scene2_MapUp,
 		en_SceneNum,
 		en_Scene_None
+	};
+	/// <summary>
+	/// リスト更新モード
+	/// </summary>
+	enum ListUpdateMode {
+		en_ModePosition,
+		en_ModeTarget,
 	};
 	/// <summary>
 	/// シーン内で使う座標記録用構造体
@@ -32,9 +40,13 @@ public:
 		/// </summary>
 		float m_easingRatio = 0.0f;
 		/// <summary>
-		/// bool型
+		/// この地点からつぎの地点にイージングしたいのであればtrue
 		/// </summary>
 		bool isEasing = false;
+		/// <summary>
+		/// この地点のイージングが終了しているかどうか
+		/// </summary>
+		bool isEasingEnd = false;
 	};
 	/// <summary>
 	/// １シーンで使う変数などが入った構造体
@@ -74,15 +86,13 @@ public:
 	/// <summary>
 	/// カメラ位置更新
 	/// </summary>
-	void CamPositionUpdate();
-	/// <summary>
-	/// カメラターゲット更新
-	/// </summary>
-	void CamTargetUpdate();
+	Vector3 CamPositionUpdate(std::map<int, SceneVector>::iterator setIterator
+	, const float easingRatio);
 	/// <summary>
 	/// カメラ位置配列更新
 	/// </summary>
-	void CamPositionListChange();
+	void CamPositionListChange(std::map<int, SceneVector>::iterator setIterator
+	,ListUpdateMode updateMode);
 	/// <summary>
 	/// カメラターゲット位置配列更新
 	/// </summary>
@@ -162,6 +172,10 @@ public:
 	/// カメラターゲット位置イージング割合
 	/// </summary>
 	float m_easingTarRatio = 0.0f;
+	/// <summary>
+	/// カメラ位置のイージングが終了しているかいないか
+	/// </summary>
+	bool m_camPoseasingEnd = false;
 	/////////////////////////////////////////初期設定系統
 	///シーンスタート
 	void StartScene(const EnEventScene setScene)
@@ -226,10 +240,8 @@ public:
 		return m_eventFlag;
 	}
 	/// <summary>
-	/// 
+	/// カメラ位置のイテレーターのイージングがオンであるか
 	/// </summary>
-	/// <param name="setIterator"></param>
-	/// <returns></returns>
 	bool IsCamPosIteratorEasing()
 	{
 		if (m_camPosListIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
@@ -240,11 +252,9 @@ public:
 		return m_camPosListIterator->second.isEasing;
 	}
 	/// <summary>
-	/// 
+	/// カメラターゲット位置のイテレーターのイージングがオンであるか
 	/// </summary>
-	/// <param name="setIterator"></param>
-	/// <returns></returns>
-	bool IsCamTarIteratorEasing(std::map<int, SceneVector>::iterator setIterator)
+	bool IsCamTarIteratorEasing()
 	{
 		if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
 		{
@@ -252,6 +262,11 @@ public:
 		}
 
 		return m_camTarListIterator->second.isEasing;
+	}
+
+	bool IsIteratorEasingEnd(std::map<int, SceneVector>::iterator setIterator)
+	{
+		return setIterator->second.isEasingEnd;
 	}
 };
 
