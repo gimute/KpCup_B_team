@@ -30,7 +30,7 @@ public:
 		/// <summary>
 		/// float型2
 		/// </summary>
-		float m_easingTime = 0.0f;
+		float m_easingRatio = 0.0f;
 		/// <summary>
 		/// bool型
 		/// </summary>
@@ -88,6 +88,11 @@ public:
 	/// </summary>
 	void CamTargetListChange();
 	/// <summary>
+	/// イージング処理
+	/// </summary>
+	Vector3 Easing(std::map<int, SceneVector>::iterator setIterator
+	,const float easingRatio);
+	/// <summary>
 	/// 時間処理
 	/// </summary>
 	void Time();
@@ -126,6 +131,22 @@ public:
 	/// </summary>
 	float m_tarChangeTime = 0.0f;
 	/// <summary>
+	/// カメラ位置イージング時間
+	/// </summary>
+	float m_easingTimeCamPos = 0.0f;
+	/// <summary>
+	/// カメラターゲット位置イージング時間
+	/// </summary>
+	float m_easingTimeTarPos = 0.0f;
+	/// <summary>
+	/// カメラ位置のリストが終了しているかしていないか
+	/// </summary>
+	bool m_cameraPosListEnd = false;
+	/// <summary>
+	/// カメラターゲット位置のリストが終了しているかしていないか
+    /// </summary>
+	bool m_cameraTarListEnd = false;
+	/// <summary>
 	/// 現在処理中のカメラ位置のイテレーター
 	/// </summary>
 	std::map<int, SceneVector>::iterator m_camPosListIterator;
@@ -133,7 +154,16 @@ public:
 	/// 現在処理中のカメラターゲット位置のイテレーター
 	/// </summary>
 	std::map<int, SceneVector>::iterator m_camTarListIterator;
+	/// <summary>
+	/// カメラ位置イージング割合
+	/// </summary>
+	float m_easingPosRatio = 0.0f;
+	/// <summary>
+	/// カメラターゲット位置イージング割合
+	/// </summary>
+	float m_easingTarRatio = 0.0f;
 	/////////////////////////////////////////初期設定系統
+	///シーンスタート
 	void StartScene(const EnEventScene setScene)
 	{
 		m_sceneNow = setScene;
@@ -146,9 +176,24 @@ public:
 
 		m_camTarListIterator = m_scene[setScene].m_cameraChangeTarget.begin();
 
+		m_easingPosRatio = m_scene[setScene].m_cameraWayPoint[0].m_easingRatio;
+
+		m_easingTarRatio = m_scene[setScene].m_cameraChangeTarget[0].m_easingRatio;
+
 		m_eventFlag = true;
 
 		return;
+	}
+	///現在のイテレーターに格納中のカメラ座標を取得
+	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator)
+	{
+		return setIterator->second.m_vector;
+	}
+	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator, int add)
+	{
+		setIterator++;
+
+		return setIterator->second.m_vector;
 	}
 	/// <summary>
 	/// レベルから位置と4桁の番号を取得して位置をそのまま、
@@ -180,9 +225,33 @@ public:
 	{
 		return m_eventFlag;
 	}
-	bool IsIteratorEasing(std::map<int, SceneVector>::iterator setIterator)
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <returns></returns>
+	bool IsCamPosIteratorEasing()
 	{
-		return setIterator->second.isEasing;
+		if (m_camPosListIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+		{
+			return false;
+		}
+
+		return m_camPosListIterator->second.isEasing;
+	}
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <returns></returns>
+	bool IsCamTarIteratorEasing(std::map<int, SceneVector>::iterator setIterator)
+	{
+		if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
+		{
+			return false;
+		}
+
+		return m_camTarListIterator->second.isEasing;
 	}
 };
 

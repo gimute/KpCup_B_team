@@ -41,7 +41,7 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 	SceneVector setVector;
 
 	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング秒数、
+	//0BがBool、000Cがイージング割合、
 	//000Dが切り替えまでの秒数とする。
 
 	//先頭番号
@@ -67,7 +67,7 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 
 	setVector.m_changeTime = ChangeTime;
 
-	setVector.m_easingTime = EasingTime;
+	setVector.m_easingRatio = EasingTime;
 
 	setVector.m_vector = setPos;
 
@@ -84,7 +84,7 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 	SceneVector setVector;
 
 	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング秒数、
+	//0BがBool、000Cがイージング割合、
 	//000Dが切り替えまでの秒数とする。
 
 	//先頭番号
@@ -110,7 +110,7 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 
 	setVector.m_changeTime = ChangeTime;
 
-	setVector.m_easingTime = EasingTime;
+	setVector.m_easingRatio = EasingTime;
 
 	setVector.m_vector = setPos;
 
@@ -126,14 +126,25 @@ void EventCamera::Update()
 		return;
 
 	//カメラ位置更新
-	CamPositionUpdate();
+	if (!m_cameraPosListEnd)
+	{
+		CamPositionUpdate();
+	}
 
 	//ターゲット位置更新
-	CamTargetUpdate();
+	if (!m_cameraTarListEnd)
+	{
+		CamTargetUpdate();
+	}
+
+	Time();
 
 	//カメラに座標を送る
 	g_camera3D->SetPosition(m_sendCameraPosition);
 	g_camera3D->SetTarget(m_sendTargetPosition);
+
+	if (m_cameraTarListEnd && m_cameraPosListEnd)
+		m_eventFlag = false;
 }
 
 void EventCamera::CamPositionUpdate()
@@ -141,25 +152,58 @@ void EventCamera::CamPositionUpdate()
 	if (m_posChangeTime <= 0.0f)
 	{
 		CamPositionListChange();
+		if (m_cameraPosListEnd)
 		return;
 	}
 
-	if ()
+	if (IsCamPosIteratorEasing(m_camPosListIterator))
 	{
-
+		m_sendCameraPosition = Easing(m_camPosListIterator,m_easingTimeCamPos);
 	}
+	else
+	{
+		m_sendCameraPosition = GetListPos(m_camPosListIterator);
+	}
+
+
 }
 
 void EventCamera::CamTargetUpdate()
 {
+	if (m_tarChangeTime <= 0.0f)
+	{
+		CamTargetListChange();
+		if (m_cameraTarListEnd)
+			return;
+	}
 
+	if (IsCamTarIteratorEasing(m_camTarListIterator))
+	{
+		m_sendTargetPosition = Easing(m_camTarListIterator,m_easingTimeTarPos);
+	}
+	else
+	{
+		m_sendTargetPosition = GetListPos(m_camTarListIterator);
+	}
 }
 
 void EventCamera::CamPositionListChange()
 {
 	m_camPosListIterator++;
 
+	if (m_camPosListIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+	{
+		m_cameraPosListEnd = true;
+
+		return;
+	}
+
 	m_posChangeTime = m_camPosListIterator->second.m_changeTime;
+
+	if (IsCamPosIteratorEasing(m_camPosListIterator))
+	{
+		m_easingPosRatio = m_camPosListIterator->second.m_easingRatio;
+	}
 
 	return;
 }
@@ -168,12 +212,61 @@ void EventCamera::CamTargetListChange()
 {
 	m_camTarListIterator++;
 
+	if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
+	{
+		m_cameraTarListEnd = true;
+
+		return;
+	}
+
 	m_tarChangeTime = m_camTarListIterator->second.m_changeTime;
+
+	if (IsCamTarIteratorEasing(m_camPosListIterator))
+	{
+		m_easingTarRatio = m_camTarListIterator->second.m_easingRatio;
+	}
 
 	return;
 }
 
-void EventCamera::Time()
+Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
+,const float easingRatio)
 {
 
+	if (easingRatio >= 1.0f)
+	{
+		CamPositionListChange();
+		return GetListPos(setIterator);;
+	}
+
+	Vector3 Last;
+
+	Vector3 a = GetListPos(setIterator);
+
+	Vector3 b = GetListPos(setIterator,1);
+
+	Last.Lerp(easingRatio,a, b);
+
+	return Last;
+}
+
+void EventCamera::Time()
+{
+	if (IsCamPosIteratorEasing(m_camPosListIterator))
+	{
+		m_easingTimeCamPos +=  g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
+	}
+	else
+	{
+		m_posChangeTime -= g_gameTime->GetFrameDeltaTime();
+	}
+
+	if (IsCamTarIteratorEasing(m_camTarListIterator))
+	{
+		m_easingTimeTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
+	}
+	else
+	{
+		m_tarChangeTime -= g_gameTime->GetFrameDeltaTime();
+	}
 }
