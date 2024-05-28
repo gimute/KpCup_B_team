@@ -26,6 +26,9 @@
 
 Game::Game()
 {
+
+	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
+	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 	//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -245,5 +248,5 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::Render(RenderContext& rc)
 {
-	
+	m_preSpriteRender.Draw(rc);
 }

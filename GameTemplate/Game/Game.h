@@ -106,6 +106,7 @@ private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
 
+	PreSpriteRender m_preSpriteRender;
 	EnGameState m_gameState = enIdle;
 };
 
