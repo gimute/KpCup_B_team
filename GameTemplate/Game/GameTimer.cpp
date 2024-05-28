@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameTimer.h"
 #include "Gameclear.h"
+#include "Game.h"
 
 GameTimer::GameTimer()
 {
@@ -14,6 +15,10 @@ GameTimer::~GameTimer()
 
 bool GameTimer::Start()
 {
+	//スプライトレンダー設定
+	m_spriteRender.Init("Assets/modelData/maintimer/maintimer.DDS", 250.0f, 100.0f);
+	//スプライトレンダーの位置を設定
+	m_spriteRender.SetPosition(Vector3{ -645.0f, -370.0f, 0.0f});
 	//フォントの位置を設定
 	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
 	//フォントの大きさを設定
@@ -28,6 +33,8 @@ void GameTimer::Update()
 {
 	//タイム増加処理
 	IncreaseTimer();
+	//描画処理
+	m_spriteRender.Update();
 }
 
 void GameTimer::IncreaseTimer()
@@ -52,5 +59,6 @@ void GameTimer::FontDraw()
 
 void GameTimer::Render(RenderContext& rc)
 {
+	m_spriteRender.Draw(rc);
 	m_fontRender.Draw(rc);
 }

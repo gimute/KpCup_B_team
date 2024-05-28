@@ -18,12 +18,14 @@ public:
 	
 	//メンバ変数
 	SpriteRender m_spriterender;	//スプライトレンダー
+	SpriteRender m_spriterender_moya;	//スプライトレンダー
 
 	Game* m_game = nullptr;
 	GameTimer* m_gametimer = nullptr;
-	FontRender m_fontRender;
 	GameClear* m_gameclear;
 	Load* m_load = nullptr;
+	FontRender m_fontRender;
+	FontRender m_fontRender_tensen;
 
 	bool m_isWaitFadeout = false;
 	bool m_isSaveClearTime = false;

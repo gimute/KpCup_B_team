@@ -47,6 +47,8 @@ public:
 	~Game();
 
 	void Update();
+	//制限時間
+	void DisplayTime();
 	//ゲームクリアを通知する
 	void NotifyGameClear();
 	void Render(RenderContext& rc);
