@@ -128,10 +128,12 @@ void Enemy::Update()
 		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 	}
 	
-	//当たり判定処理
-	Collision();
 	//アニメーション
 	PlayAnimation();
+
+	//当たり判定処理
+	Collision();
+	
 	
 	if (m_attackTimer > 0.0f && m_enemystate == enEnemyState_Attack)
 	{
