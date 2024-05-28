@@ -90,6 +90,7 @@ Game::~Game()
 	DeleteGO(m_gametimer);
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
+	DeleteGO(m_signalRailUi);
 
 	DeleteGO(m_player);
 }
