@@ -132,26 +132,43 @@ void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
 
 void EventCamera::Update()
 {
+	//イベントフラグが立っていなければ
 	if (!m_eventFlag)
 	{
+		//処理はしない
 		return;
+	}
+
+	//カメラ位置変更時間が0以下だったら
+	if (m_posChangeTime <= 0.0f)
+	{
+		//カメラ位置のイテレーターの要素を進める
+		CamPositionListChange(m_camPosListIterator
+			,ListUpdateMode::en_ModePosition);
+	}
+
+	//カメラターゲット位置変更時間が0以下だったら
+	if (m_tarChangeTime <= 0.0f)
+	{
+		//カメラターゲット位置のイテレーターの要素を進める
+		CamPositionListChange(m_camTarListIterator
+			, ListUpdateMode::en_ModeTarget);
 	}
 
 	//カメラ位置更新
 	if (!m_cameraPosListEnd)
 	{
 		m_sendCameraPosition = CamPositionUpdate(m_camPosListIterator
-			,m_easingTimeCamPos);
+			,m_easingTimeCamPos,ListUpdateMode::en_ModePosition);
 	}
 
 	//ターゲット位置更新
 	if (!m_cameraTarListEnd)
 	{
-		m_sendCameraPosition = CamPositionUpdate(m_camTarListIterator
-			, m_easingTimeTarPos);
+		m_sendTargetPosition = CamPositionUpdate(m_camTarListIterator
+			, m_easingTimeTarPos,ListUpdateMode::en_ModeTarget);
 	}
 
-	Time();
 
 	//カメラに座標を送る
 	g_camera3D->SetPosition(m_sendCameraPosition);
@@ -161,38 +178,50 @@ void EventCamera::Update()
 		m_eventFlag = false;
 }
 
-//if (m_posChangeTime <= 0.0f)
-//{
-//	CamPositionListChange();
-//	if (m_cameraPosListEnd)
-//		return;
-//}
-
 Vector3 EventCamera::CamPositionUpdate(std::map<int, SceneVector>::iterator setIterator
-, const float easingTime)
+, const float easingTime,ListUpdateMode updateMode)
 {
+	Vector3 LastVector;
 
-	if (IsCamPosIteratorEasing())
+	if (IsCamPosIteratorEasing(setIterator,updateMode))
 	{
-		if (IsIteratorEasingEnd(setIterator))
+		if (!IsIteratorEasingEnd(setIterator))
 		{
-			return Easing(setIterator, easingTime);
+			LastVector = Easing(setIterator, easingTime);
 		}
 		else
 		{
-			return GetListPos(setIterator, 1);
+			LastVector = GetListPos(setIterator, 1,updateMode);
 		}
 	}
 	else
 	{
-		return GetListPos(setIterator);
-	}
-
+		LastVector = GetListPos(setIterator);
+	}	
+	
+	Time(setIterator,updateMode);
+	return LastVector;
 }
 
-void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator setIterator
+void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &setIterator
 , ListUpdateMode updateMode)
 {
+	switch (updateMode)
+	{
+	case EventCamera::en_ModePosition:
+		if (setIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+		{
+			return;
+		}
+		break;
+	case EventCamera::en_ModeTarget:
+		if (setIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
+		{
+			return;
+		}
+		break;
+	}
+
 	setIterator++;
 
 	switch (updateMode)
@@ -208,7 +237,7 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator set
 
 		m_posChangeTime = setIterator->second.m_changeTime;
 
-		if (IsCamPosIteratorEasing())
+		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModePosition))
 		{
 			m_easingPosRatio = m_camPosListIterator->second.m_easingRatio;
 		}
@@ -225,7 +254,7 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator set
 		m_tarChangeTime = setIterator->second.m_changeTime;
 
 
-		if (IsCamTarIteratorEasing())
+		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModeTarget))
 		{
 			m_easingTarRatio = m_camTarListIterator->second.m_easingRatio;
 		}
@@ -237,33 +266,13 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator set
 	return;
 }
 
-void EventCamera::CamTargetListChange()
-{
-	m_camTarListIterator++;
-
-	if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
-	{
-		m_cameraTarListEnd = true;
-
-		return;
-	}
-
-	m_tarChangeTime = m_camTarListIterator->second.m_changeTime;
-
-	if (IsCamTarIteratorEasing())
-	{
-		m_easingTarRatio = m_camTarListIterator->second.m_easingRatio;
-	}
-
-	return;
-}
-
 Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 ,const float easingRatio)
 {
 
 	if (easingRatio >= 1.0f)
 	{
+		m_easingTimeCamPos = 0.0f;
 		setIterator->second.isEasingEnd = true;
 		return GetListPos(setIterator);
 	}
@@ -279,23 +288,32 @@ Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 	return Last;
 }
 
-void EventCamera::Time()
+void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
+	, ListUpdateMode updateMode)
 {
-	if (!IsIteratorEasingEnd(m_camPosListIterator))
+	switch (updateMode)
 	{
-		m_easingTimeCamPos +=  g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
-	}
-	else
-	{
-		m_posChangeTime -= g_gameTime->GetFrameDeltaTime();
-	}
-
-	if (!IsIteratorEasingEnd(m_camTarListIterator))
-	{
-		m_easingTimeTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
-	}
-	else
-	{
-		m_tarChangeTime -= g_gameTime->GetFrameDeltaTime();
+	case EventCamera::en_ModePosition:
+		if (!IsIteratorEasingEnd(m_camPosListIterator)
+			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModePosition))
+		{
+			m_easingTimeCamPos += g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
+		}
+		else
+		{
+			m_posChangeTime -= g_gameTime->GetFrameDeltaTime();
+		}
+		break;
+	case EventCamera::en_ModeTarget:
+		if (!IsIteratorEasingEnd(m_camTarListIterator)
+			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModeTarget))
+		{
+			m_easingTimeTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
+		}
+		else
+		{
+			m_tarChangeTime -= g_gameTime->GetFrameDeltaTime();
+		}
+		break;
 	}
 }

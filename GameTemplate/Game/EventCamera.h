@@ -87,11 +87,11 @@ public:
 	/// カメラ位置更新
 	/// </summary>
 	Vector3 CamPositionUpdate(std::map<int, SceneVector>::iterator setIterator
-	, const float easingRatio);
+	, const float easingRatio,ListUpdateMode updateMode);
 	/// <summary>
 	/// カメラ位置配列更新
 	/// </summary>
-	void CamPositionListChange(std::map<int, SceneVector>::iterator setIterator
+	void CamPositionListChange(std::map<int, SceneVector>::iterator &setIterator
 	,ListUpdateMode updateMode);
 	/// <summary>
 	/// カメラターゲット位置配列更新
@@ -105,7 +105,8 @@ public:
 	/// <summary>
 	/// 時間処理
 	/// </summary>
-	void Time();
+	void Time(std::map<int, SceneVector>::iterator setIterator
+	, ListUpdateMode updateMode);
 	/////////////////////////////////////////メンバ変数
 	/// <summary>
 	/// レベルレンダー
@@ -209,6 +210,31 @@ public:
 
 		return setIterator->second.m_vector;
 	}
+	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator, int add
+		, ListUpdateMode updateMode)
+	{
+		std::map<int, SceneVector>::iterator subIterator = setIterator;
+
+		setIterator++;
+
+		switch (updateMode)
+		{
+		case EventCamera::en_ModePosition:
+			if (setIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+			{
+				return subIterator->second.m_vector;
+			}
+			break;
+		case EventCamera::en_ModeTarget:
+			if (setIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
+			{
+				return subIterator->second.m_vector;
+			}
+			break;
+		}
+
+		return setIterator->second.m_vector;
+	}
 	/// <summary>
 	/// レベルから位置と4桁の番号を取得して位置をそのまま、
 	/// 4桁の番号を0A先頭番号、0Bbool、00C秒数として
@@ -242,26 +268,26 @@ public:
 	/// <summary>
 	/// カメラ位置のイテレーターのイージングがオンであるか
 	/// </summary>
-	bool IsCamPosIteratorEasing()
+	bool IsCamPosIteratorEasing(std::map<int, SceneVector>::iterator setIterator
+		,ListUpdateMode updateMode)
 	{
-		if (m_camPosListIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+		switch (updateMode)
 		{
-			return false;
+		case EventCamera::en_ModePosition:
+			if (m_camPosListIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
+			{
+				return false;
+			}
+			break;
+		case EventCamera::en_ModeTarget:
+			if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
+			{
+				return false;
+			}
+			break;
 		}
 
-		return m_camPosListIterator->second.isEasing;
-	}
-	/// <summary>
-	/// カメラターゲット位置のイテレーターのイージングがオンであるか
-	/// </summary>
-	bool IsCamTarIteratorEasing()
-	{
-		if (m_camTarListIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
-		{
-			return false;
-		}
-
-		return m_camTarListIterator->second.isEasing;
+		return setIterator->second.isEasing;
 	}
 
 	bool IsIteratorEasingEnd(std::map<int, SceneVector>::iterator setIterator)
