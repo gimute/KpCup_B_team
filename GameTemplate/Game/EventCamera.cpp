@@ -204,6 +204,7 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &se
 	//enum型アップデートモードで分岐
 	switch (updateMode)
 	{
+
 	//アップデートモードがpositionだったら
 	case EventCamera::en_ModePosition:
 
@@ -271,6 +272,7 @@ Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 		return GetListPos(setIterator);
 	}
 
+	//ココから下はイージングの処理
 	Vector3 Last;
 
 	Vector3 a = GetListPos(setIterator);
@@ -285,27 +287,44 @@ Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 	, ListUpdateMode updateMode)
 {
+
+	//	//enum型アップデートモードで分岐
 	switch (updateMode)
 	{
+
+	//アップデートモードがpositionだったら
 	case EventCamera::en_ModePosition:
+
+		//現在処理中のイテレーターのイージングが終了しておらず
+		//現在処理中のイテレーターのイージングがオンであれば
 		if (!IsIteratorEasingEnd(m_camPosListIterator)
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModePosition))
 		{
+			//イージングの割合を増やす
 			m_easingTimeCamPos += g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
 		}
+		//上記の条件と合わなければ
 		else
 		{
+			//カメラ位置切り替え時間を減らす
 			m_posChangeTime -= g_gameTime->GetFrameDeltaTime();
 		}
 		break;
+
+	//アップデートモードがpositionだったら
 	case EventCamera::en_ModeTarget:
+
+		//現在処理中のイテレーターのイージングが終了しておらず
+		//現在処理中のイテレーターのイージングがオンであれば
 		if (!IsIteratorEasingEnd(m_camTarListIterator)
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModeTarget))
 		{
+			//イージングの割合を増やす
 			m_easingTimeTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
 		}
 		else
 		{
+			//カメラターゲット位置切り替え時間を減らす
 			m_tarChangeTime -= g_gameTime->GetFrameDeltaTime();
 		}
 		break;
