@@ -80,6 +80,17 @@ public:
 	/// <returns></returns>
 	bool Start();
 	/// <summary>
+	/// 00000000を0A 0B 000C 000Dとして0Aが先頭番号
+	/// 0BがBool、000Cがイージング割合、000Dが切り替えまでの秒数として
+	/// 指定したイベントシーンの要素数のカメラ位置格納用mapに格納する処理。
+	/// </summary>
+	/// <param name="setPos"></param>
+	/// <param name="setNum"></param>
+	/// <param name="setScene"></param>
+	/// <param name="updateMode"></param>
+	void SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
+		, const EnEventScene setScene, ListUpdateMode updateMode);
+	/// <summary>
 	/// アップデート関数
 	/// </summary>
 	void Update();
@@ -93,10 +104,6 @@ public:
 	/// </summary>
 	void CamPositionListChange(std::map<int, SceneVector>::iterator &setIterator
 	,ListUpdateMode updateMode);
-	/// <summary>
-	/// カメラターゲット位置配列更新
-	/// </summary>
-	void CamTargetListChange();
 	/// <summary>
 	/// イージング処理
 	/// </summary>
@@ -178,7 +185,10 @@ public:
 	/// </summary>
 	bool m_camPoseasingEnd = false;
 	/////////////////////////////////////////初期設定系統
-	///シーンスタート
+	/// <summary>
+	/// シーンスタート
+	/// </summary>
+	/// <param name="setScene"></param>
 	void StartScene(const EnEventScene setScene)
 	{
 		m_sceneNow = setScene;
@@ -199,17 +209,35 @@ public:
 
 		return;
 	}
-	///現在のイテレーターに格納中のカメラ座標を取得
+	/// <summary>
+	/// 現在のイテレーターに登録されているmap型配列に格納されている座標を取得する
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <returns></returns>
 	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator)
 	{
 		return setIterator->second.m_vector;
 	}
+	/// <summary>
+	/// 現在のイテレーターに登録されているmap型配列から１つ進んだ要素に格納されている座標を取得する
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <param name="add"></param>
+	/// <returns></returns>
 	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator, int add)
 	{
 		setIterator++;
 
 		return setIterator->second.m_vector;
 	}
+	/// <summary>
+	/// 現在のイテレーターに登録されているmap型配列から１つ進んだ要素に格納されている座標を取得する
+	/// １つ進んだ要素がendあれば元の座標の取得する
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <param name="add"></param>
+	/// <param name="updateMode"></param>
+	/// <returns></returns>
 	Vector3 GetListPos(std::map<int, SceneVector>::iterator setIterator, int add
 		, ListUpdateMode updateMode)
 	{
@@ -235,28 +263,6 @@ public:
 
 		return setIterator->second.m_vector;
 	}
-	/// <summary>
-	/// レベルから位置と4桁の番号を取得して位置をそのまま、
-	/// 4桁の番号を0A先頭番号、0Bbool、00C秒数として
-	/// 指定したイベントシーンの要素数のカメラ位置格納用map
-	/// に格納する処理。
-	/// </summary>
-	/// <param name="setPos"></param>
-	/// <param name="setNum"></param>
-	/// <param name="setScene"></param>
-	void SetSceneCamPos(const Vector3& setPos, const int setNum
-		, const EnEventScene setScene);
-	/// <summary>
-	/// レベルから位置と4桁の番号を取得して位置をそのまま、
-	/// 4桁の番号を0A先頭番号、0Bbool、00C秒数として
-	/// 指定したイベントシーンの要素数のカメラターゲット位置格納用map
-	/// に格納する処理。
-	/// </summary>
-	/// <param name="setPos"></param>
-	/// <param name="setNum"></param>
-	/// <param name="setScene"></param>
-	void SetSceneTarget(const Vector3& setPos, const int setNum
-		, const EnEventScene setScene);
 	/// <summary>
 	/// イベント再生中かどうか
 	/// </summary>

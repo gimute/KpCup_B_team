@@ -13,30 +13,29 @@ EventCamera::~EventCamera()
 
 bool EventCamera::Start()
 {
-	//SetScenePosInstance(en_Scene1_Door, SCENE_1_VECTOR);
 	//カメラ位置が記録されたレベルを読み込む
 	m_camLevelRender.Init("Assets/levelData/eventCamPosTar.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"A_Scene1Pos") == true)
 		{
-			SetSceneCamPos(objData.position, objData.number
-				, EnEventScene::en_Scene1_Door);
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene1_Door,ListUpdateMode::en_ModePosition);
 			return true;
 		}
 		else if(objData.ForwardMatchName(L"A_Scene1Tar") == true)
 		{
-			SetSceneTarget(objData.position, objData.number
-				, EnEventScene::en_Scene1_Door);
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene1_Door, ListUpdateMode::en_ModeTarget);
 		}
 		else if(objData.ForwardMatchName(L"B_Scene2Pos") == true)
 		{
-			SetSceneCamPos(objData.position, objData.number
-				, EnEventScene::en_Scene2_MapUp);
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene2_MapUp, ListUpdateMode::en_ModePosition);
 		}
 		else if (objData.ForwardMatchName(L"B_Scene2Tar") == true)
 		{
-			SetSceneTarget(objData.position, objData.number
-				, EnEventScene::en_Scene2_MapUp);
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene2_MapUp, ListUpdateMode::en_ModeTarget);
 		}
 		return true;
 	});
@@ -44,8 +43,8 @@ bool EventCamera::Start()
 	return true;
 }
 
-void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
-	, const EnEventScene setScene)
+void EventCamera::SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
+	, const EnEventScene setScene,ListUpdateMode updateMode)
 {
 	//構造体宣言
 	SceneVector setVector;
@@ -61,7 +60,7 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 	int BoolNum = setNum % 10000000;
 	BoolNum /= 1000000;
 
-	//カメライージング速度秒数
+	//カメライージング割合
 	float EasingTime = (setNum / 1000) % 1000;
 	EasingTime *= 0.1;
 
@@ -71,9 +70,13 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
+	{
 		setVector.isEasing = false;
+	}
 	else
+	{
 		setVector.isEasing = true;
+	}
 
 	setVector.m_changeTime = ChangeTime;
 
@@ -81,53 +84,22 @@ void EventCamera::SetSceneCamPos(const Vector3& setPos, const int setNum
 
 	setVector.m_vector = setPos;
 
-	//map型配列に格納
-	m_scene[setScene].m_cameraWayPoint.insert({ Num,setVector });
+	//enum型で格納対象を変更
+	switch (updateMode)
+	{
+	case EventCamera::en_ModePosition:
+		//カメラ位置map型配列に格納
+		m_scene[setScene].m_cameraWayPoint.insert({ Num,setVector });
 
-	m_scene[setScene].m_useWayPoint++;
-}
+		m_scene[setScene].m_useWayPoint++;
+		break;
+	case EventCamera::en_ModeTarget:
+		//カメラターゲット位置map型配列に格納
+		m_scene[setScene].m_cameraChangeTarget.insert({ Num,setVector });
 
-void EventCamera::SetSceneTarget(const Vector3& setPos, const int setNum
-	, const EnEventScene setScene)
-{
-	//構造体宣言
-	SceneVector setVector;
-
-	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング割合、
-	//000Dが切り替えまでの秒数とする。
-
-	//先頭番号
-	int Num = setNum / 10000000;
-
-	//Bool、0か1かで判定
-	int BoolNum = setNum % 10000000;
-	BoolNum /= 1000000;
-
-	//カメライージング速度秒数
-	float EasingTime = (setNum / 1000) % 1000;
-	EasingTime *= 0.1;
-
-	//カメラ切り替え秒数
-	float ChangeTime = setNum % 100;
-	ChangeTime *= 0.1;
-
-	//↑の変数を構造体に格納
-	if (BoolNum == 0)
-		setVector.isEasing = false;
-	else
-		setVector.isEasing = true;
-
-	setVector.m_changeTime = ChangeTime;
-
-	setVector.m_easingRatio = EasingTime;
-
-	setVector.m_vector = setPos;
-
-	//map型配列に格納
-	m_scene[setScene].m_cameraChangeTarget.insert({ Num,setVector });
-
-	m_scene[setScene].m_useChangeTarget++;
+		m_scene[setScene].m_useChangeTarget++;
+		break;
+	}
 }
 
 void EventCamera::Update()
@@ -139,123 +111,142 @@ void EventCamera::Update()
 		return;
 	}
 
-	//カメラ位置変更時間が0以下だったら
-	if (m_posChangeTime <= 0.0f)
+	//カメラ位置変更時間が0以下＆
+	//イテレーターがまだendじゃなかったら
+	if (m_posChangeTime <= 0.0f && 
+		!m_cameraPosListEnd)
 	{
 		//カメラ位置のイテレーターの要素を進める
 		CamPositionListChange(m_camPosListIterator
 			,ListUpdateMode::en_ModePosition);
 	}
 
-	//カメラターゲット位置変更時間が0以下だったら
-	if (m_tarChangeTime <= 0.0f)
+	//カメラターゲット位置変更時間が0以下＆
+	//イテレーターがまだendじゃなかったら
+	if (m_tarChangeTime <= 0.0f && 
+		!m_cameraTarListEnd)
 	{
 		//カメラターゲット位置のイテレーターの要素を進める
 		CamPositionListChange(m_camTarListIterator
 			, ListUpdateMode::en_ModeTarget);
 	}
 
-	//カメラ位置更新
+	//イテレーターがまだendじゃなかったら
 	if (!m_cameraPosListEnd)
 	{
+		//カメラ位置更新
 		m_sendCameraPosition = CamPositionUpdate(m_camPosListIterator
 			,m_easingTimeCamPos,ListUpdateMode::en_ModePosition);
 	}
 
-	//ターゲット位置更新
+	//イテレーターがまだendじゃなかったら
 	if (!m_cameraTarListEnd)
 	{
+		//ターゲット位置更新
 		m_sendTargetPosition = CamPositionUpdate(m_camTarListIterator
 			, m_easingTimeTarPos,ListUpdateMode::en_ModeTarget);
 	}
-
 
 	//カメラに座標を送る
 	g_camera3D->SetPosition(m_sendCameraPosition);
 	g_camera3D->SetTarget(m_sendTargetPosition);
 
+	//カメラ位置、カメラターゲット位置、どちらもイテレーターがendだったら
 	if (m_cameraTarListEnd && m_cameraPosListEnd)
+	{
+		//イベントを終了する
 		m_eventFlag = false;
+	}
 }
 
 Vector3 EventCamera::CamPositionUpdate(std::map<int, SceneVector>::iterator setIterator
 , const float easingTime,ListUpdateMode updateMode)
 {
+	//最終的に戻り値として返すベクトル
 	Vector3 LastVector;
 
+	//現在処理中のイテレーターのイージングがオンだったら
 	if (IsCamPosIteratorEasing(setIterator,updateMode))
 	{
+		//そしてイージングが終了していなかったら
 		if (!IsIteratorEasingEnd(setIterator))
 		{
+			//イージングした座礁を代入する
 			LastVector = Easing(setIterator, easingTime);
 		}
+		//イージングが終了していたら
 		else
 		{
+			//現在のイテレーターから要素を１つ進めたイテレーターの
+			//座標を代入する
 			LastVector = GetListPos(setIterator, 1,updateMode);
 		}
 	}
+	//オフだったら
 	else
 	{
+		//イテレーターに格納されている座標を代入
 		LastVector = GetListPos(setIterator);
 	}	
 	
+	//イージングの割合計算、カメラ切り替えまでの時間を処理する
 	Time(setIterator,updateMode);
+
 	return LastVector;
 }
 
 void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &setIterator
 , ListUpdateMode updateMode)
 {
-	switch (updateMode)
-	{
-	case EventCamera::en_ModePosition:
-		if (setIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
-		{
-			return;
-		}
-		break;
-	case EventCamera::en_ModeTarget:
-		if (setIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
-		{
-			return;
-		}
-		break;
-	}
-
+	//イテレーターの要素を１つ進める
 	setIterator++;
 
+	//enum型アップデートモードで分岐
 	switch (updateMode)
 	{
+	//アップデートモードがpositionだったら
 	case EventCamera::en_ModePosition:
 
+		//現在のイテレーターがendだったら
 		if (setIterator == m_scene[m_sceneNow].m_cameraWayPoint.end())
 		{
+			//endフラグをtrueにする
 			m_cameraPosListEnd = true;
 
 			return;
 		}
 
+		//カメラ位置切り替え時間を現在のイテレーターで初期化
 		m_posChangeTime = setIterator->second.m_changeTime;
 
+		//現在のイテレーターのイージングがオンだったら
 		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModePosition))
 		{
+			//イージングの割合を現在のイテレーターで初期化
 			m_easingPosRatio = m_camPosListIterator->second.m_easingRatio;
 		}
 
 		break;
+
+		//アップデートモードがtargetだったら
 	case EventCamera::en_ModeTarget:
+
+		//現在のイテレーターがendだったら
 		if (setIterator == m_scene[m_sceneNow].m_cameraChangeTarget.end())
-		{
+		{			
+			//endフラグをtrueにする
 			m_cameraTarListEnd = true;
 
 			return;
 		}
 
+		//カメラターゲット切り替え時間を現在のイテレーターで初期化
 		m_tarChangeTime = setIterator->second.m_changeTime;
 
-
+		//現在のイテレーターのイージングがオンだったら
 		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModeTarget))
 		{
+			//イージングの割合を現在のイテレーターで初期化
 			m_easingTarRatio = m_camTarListIterator->second.m_easingRatio;
 		}
 
@@ -270,9 +261,12 @@ Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 ,const float easingRatio)
 {
 
+	//イージング割合が最大になったら
 	if (easingRatio >= 1.0f)
 	{
+		//イージング割合を初期化
 		m_easingTimeCamPos = 0.0f;
+		//イージング終了フラグをtrueに
 		setIterator->second.isEasingEnd = true;
 		return GetListPos(setIterator);
 	}
