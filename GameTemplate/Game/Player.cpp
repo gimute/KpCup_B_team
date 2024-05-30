@@ -245,8 +245,8 @@ void Player::Collision()
 	{
 		
 
-		//被ダメージステートの時は当たり判定処理をしない
-		if (m_playerstate == enPlayerState_ReceiveDamage)
+		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
+		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
 		{
 			return;
 		}
