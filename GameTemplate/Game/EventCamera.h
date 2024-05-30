@@ -342,6 +342,10 @@ public:
 
 		return;
 	}
+	/// <summary>
+	/// アップデートモードを指定して指定された方のリストのイージングフラグを初期化
+	/// </summary>
+	/// <param name="updateMode"></param>
 	void EasingFlagListClear(ListUpdateMode updateMode)
 	{
 		switch (updateMode)

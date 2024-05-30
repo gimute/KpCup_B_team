@@ -95,9 +95,17 @@ void Game::Update()
 		door1->m_DoorOpen = true;
 	}
 
+	if (g_pad[0]->IsTrigger(enButtonRight))
+	{
+		test->StartScene(EventCamera::en_Scene1_Door);
+	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
 		test->StartScene(EventCamera::en_Scene3_MapUp2);
+	}
+	if (g_pad[0]->IsTrigger(enButtonLeft))
+	{
+		test->StartScene(EventCamera::en_Scene2_MapUp1);
 	}
 }
 
