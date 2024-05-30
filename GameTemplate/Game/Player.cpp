@@ -220,7 +220,7 @@ void Player::Collision()
 			if (collision->IsHit(m_collisionObject))
 			{
 				//HPを１減らす
-				m_game->m_hpui->DecreaseHP(5);
+				m_game->m_hpui->DecreaseHP(25);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
 				//被ダメージステートに遷移する。

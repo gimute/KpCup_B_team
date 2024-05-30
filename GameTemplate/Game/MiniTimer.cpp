@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MiniTimer.h"
 
-
 bool MiniTimer::Start()
 {
 	//フォントの位置を設定。

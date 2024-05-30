@@ -29,6 +29,11 @@
     <ClCompile Include="EnemyHpUi.cpp" />
     <ClCompile Include="EnemyAttackPoint.cpp" />
     <ClCompile Include="EnemyCamPos.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="Load.cpp" />
     <ClCompile Include="SignalUi.cpp" />
     <ClCompile Include="SignalRailUi.cpp" />
     <ClCompile Include="Door.cpp" />
@@ -57,6 +62,11 @@
     <ClInclude Include="EnemyHpUi.h" />
     <ClInclude Include="EnemyAttackPoint.h" />
     <ClInclude Include="EnemyCamPos.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="Load.h" />
     <ClInclude Include="SignalUi.h" />
     <ClInclude Include="SignalRailUi.h" />
     <ClInclude Include="Door.h" />

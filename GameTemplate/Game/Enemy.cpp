@@ -20,6 +20,8 @@ namespace
 Enemy::~Enemy()
 {
 	DeleteGO(m_collisionObject);
+	m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
+	m_game->Delete_EnemyVec(m_Vectornum);
 	ReleaseAttackPoint();
 }
 
@@ -126,10 +128,12 @@ void Enemy::Update()
 		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 	}
 	
-	//当たり判定処理
-	Collision();
 	//アニメーション
 	PlayAnimation();
+
+	//当たり判定処理
+	Collision();
+	
 	
 	if (m_attackTimer > 0.0f && m_enemystate == enEnemyState_Attack)
 	{
@@ -489,9 +493,7 @@ void Enemy::Collision()
 				if (m_hp == 0) {
 					//ダウンステートに遷移する。
 					//m_enemystate = enEnemyState_Idle;
-
-					m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
-					m_game->Delete_EnemyVec(m_Vectornum);
+					//m_enemyCount--;
 					DeleteGO(this);
 				}
 				else {
