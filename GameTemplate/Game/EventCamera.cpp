@@ -2,7 +2,6 @@
 #include "EventCamera.h"
 
 namespace {
-	int FIRST_NUM_CALC = 10000000;
 }
 
 EventCamera::EventCamera()
@@ -34,12 +33,22 @@ bool EventCamera::Start()
 		else if(objData.ForwardMatchName(L"B_Scene2Pos") == true)
 		{
 			SetSceneCamAndTarPos(objData.position, objData.number
-				, EnEventScene::en_Scene2_MapUp, ListUpdateMode::en_ModePosition);
+				, EnEventScene::en_Scene2_MapUp1, ListUpdateMode::en_ModePosition);
 		}
 		else if (objData.ForwardMatchName(L"B_Scene2Tar") == true)
 		{
 			SetSceneCamAndTarPos(objData.position, objData.number
-				, EnEventScene::en_Scene2_MapUp, ListUpdateMode::en_ModeTarget);
+				, EnEventScene::en_Scene2_MapUp1, ListUpdateMode::en_ModeTarget);
+		}
+		else if (objData.ForwardMatchName(L"C_Scene3Pos") == true)
+		{
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene3_MapUp2, ListUpdateMode::en_ModePosition);
+		}
+		else if (objData.ForwardMatchName(L"C_Scene3Tar") == true)
+		{
+			SetSceneCamAndTarPos(objData.position, objData.number
+				, EnEventScene::en_Scene3_MapUp2, ListUpdateMode::en_ModeTarget);
 		}
 		return true;
 	});
@@ -306,7 +315,7 @@ void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModePosition))
 		{
 			//イージングの割合を増やす
-			m_easingRatioCamPos += g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
+			m_easingRatioCamPos += g_gameTime->GetFrameDeltaTime() * m_easingPosRatio;
 		}
 		//上記の条件と合わなければ
 		else
@@ -325,7 +334,7 @@ void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModeTarget))
 		{
 			//イージングの割合を増やす
-			m_easingRatioTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
+			m_easingRatioTarPos += g_gameTime->GetFrameDeltaTime() * m_easingTarRatio;
 		}
 		else
 		{

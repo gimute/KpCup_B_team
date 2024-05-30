@@ -11,7 +11,8 @@ public:
 	/// </summary>
 	enum EnEventScene {
 		en_Scene1_Door,
-		en_Scene2_MapUp,
+		en_Scene2_MapUp1,
+		en_Scene3_MapUp2,
 		en_SceneNum,
 		en_Scene_None
 	};
