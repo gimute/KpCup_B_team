@@ -107,8 +107,11 @@ public:
 	/// <summary>
 	/// イージング処理
 	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <param name="easingRatio"></param>
+	/// <returns></returns>
 	Vector3 Easing(std::map<int, SceneVector>::iterator setIterator
-	,const float easingRatio);
+	,float easingRatio,ListUpdateMode updateMode);
 	/// <summary>
 	/// 時間処理
 	/// </summary>
@@ -149,13 +152,13 @@ public:
 	/// </summary>
 	float m_tarChangeTime = 0.0f;
 	/// <summary>
-	/// カメラ位置イージング時間
+	/// カメラ位置イージング割合
 	/// </summary>
-	float m_easingTimeCamPos = 0.0f;
+	float m_easingRatioCamPos = 0.0f;
 	/// <summary>
-	/// カメラターゲット位置イージング時間
+	/// カメラターゲット位置イージング割合
 	/// </summary>
-	float m_easingTimeTarPos = 0.0f;
+	float m_easingRatioTarPos = 0.0f;
 	/// <summary>
 	/// カメラ位置のリストが終了しているかしていないか
 	/// </summary>
@@ -191,6 +194,11 @@ public:
 	/// <param name="setScene"></param>
 	void StartScene(const EnEventScene setScene)
 	{
+		if (m_eventFlag == true)
+		{
+			return;
+		}
+
 		m_sceneNow = setScene;
 
 		m_posChangeTime = m_scene[setScene].m_cameraWayPoint[0].m_changeTime;
@@ -204,6 +212,14 @@ public:
 		m_easingPosRatio = m_scene[setScene].m_cameraWayPoint[0].m_easingRatio;
 
 		m_easingTarRatio = m_scene[setScene].m_cameraChangeTarget[0].m_easingRatio;
+		
+		m_cameraTarListEnd = false;
+		
+		m_cameraPosListEnd = false;
+
+		EasingFlagListClear(ListUpdateMode::en_ModePosition);
+
+		EasingFlagListClear(ListUpdateMode::en_ModeTarget);
 
 		m_eventFlag = true;
 
@@ -272,8 +288,11 @@ public:
 		return m_eventFlag;
 	}
 	/// <summary>
-	/// カメラ位置のイテレーターのイージングがオンであるか
+	/// 引数のイテレーターのイージングがオンであるかどうか
 	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <param name="updateMode"></param>
+	/// <returns></returns>
 	bool IsCamPosIteratorEasing(std::map<int, SceneVector>::iterator setIterator
 		,ListUpdateMode updateMode)
 	{
@@ -295,10 +314,56 @@ public:
 
 		return setIterator->second.isEasing;
 	}
-
+	/// <summary>
+	/// 引数のイテレーターのイージングが終了しているかどうか
+	/// </summary>
+	/// <param name="setIterator"></param>
+	/// <returns></returns>
 	bool IsIteratorEasingEnd(std::map<int, SceneVector>::iterator setIterator)
 	{
 		return setIterator->second.isEasingEnd;
+	}
+	/// <summary>
+	/// 指定したアップデートモードのイージング割合を初期化
+	/// </summary>
+	/// <param name="updataMode"></param>
+	void EasingClear(ListUpdateMode updataMode)
+	{
+		switch (updataMode)
+		{
+		case EventCamera::en_ModePosition:
+			m_easingRatioCamPos = 0.0f;
+			break;
+		case EventCamera::en_ModeTarget:
+			m_easingRatioTarPos = 0.0f;
+			break;
+		}
+
+		return;
+	}
+	void EasingFlagListClear(ListUpdateMode updateMode)
+	{
+		switch (updateMode)
+		{
+		case EventCamera::en_ModePosition:
+			for (std::map<int, SceneVector>::iterator forIterator = m_scene[m_sceneNow]
+				.m_cameraWayPoint.begin()
+				;forIterator != m_scene[m_sceneNow].m_cameraWayPoint.end()
+				;forIterator++)
+			{
+				forIterator->second.isEasingEnd = false;
+			}
+			break;
+		case EventCamera::en_ModeTarget:
+			for (std::map<int, SceneVector>::iterator forIterator = m_scene[m_sceneNow]
+				.m_cameraChangeTarget.begin()
+				; forIterator != m_scene[m_sceneNow].m_cameraChangeTarget.end()
+				; forIterator++)
+			{
+				forIterator->second.isEasingEnd = false;
+			}
+			break;
+		}
 	}
 };
 

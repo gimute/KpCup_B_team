@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "EventCamera.h"
 
+namespace {
+	int FIRST_NUM_CALC = 10000000;
+}
+
 EventCamera::EventCamera()
 {
 	
@@ -136,7 +140,7 @@ void EventCamera::Update()
 	{
 		//カメラ位置更新
 		m_sendCameraPosition = CamPositionUpdate(m_camPosListIterator
-			,m_easingTimeCamPos,ListUpdateMode::en_ModePosition);
+			,m_easingRatioCamPos,ListUpdateMode::en_ModePosition);
 	}
 
 	//イテレーターがまだendじゃなかったら
@@ -144,7 +148,7 @@ void EventCamera::Update()
 	{
 		//ターゲット位置更新
 		m_sendTargetPosition = CamPositionUpdate(m_camTarListIterator
-			, m_easingTimeTarPos,ListUpdateMode::en_ModeTarget);
+			, m_easingRatioTarPos,ListUpdateMode::en_ModeTarget);
 	}
 
 	//カメラに座標を送る
@@ -172,7 +176,8 @@ Vector3 EventCamera::CamPositionUpdate(std::map<int, SceneVector>::iterator setI
 		if (!IsIteratorEasingEnd(setIterator))
 		{
 			//イージングした座礁を代入する
-			LastVector = Easing(setIterator, easingTime);
+			LastVector = Easing(setIterator, easingTime
+			,updateMode);
 		}
 		//イージングが終了していたら
 		else
@@ -259,17 +264,17 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &se
 }
 
 Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
-,const float easingRatio)
+,float easingRatio,ListUpdateMode updateMode)
 {
 
 	//イージング割合が最大になったら
 	if (easingRatio >= 1.0f)
 	{
+		easingRatio = 1.0f;
 		//イージング割合を初期化
-		m_easingTimeCamPos = 0.0f;
+		EasingClear(updateMode);
 		//イージング終了フラグをtrueに
 		setIterator->second.isEasingEnd = true;
-		return GetListPos(setIterator);
 	}
 
 	//ココから下はイージングの処理
@@ -301,7 +306,7 @@ void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModePosition))
 		{
 			//イージングの割合を増やす
-			m_easingTimeCamPos += g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
+			m_easingRatioCamPos += g_gameTime->GetFrameDeltaTime() / m_easingPosRatio;
 		}
 		//上記の条件と合わなければ
 		else
@@ -320,7 +325,7 @@ void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 			&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModeTarget))
 		{
 			//イージングの割合を増やす
-			m_easingTimeTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
+			m_easingRatioTarPos += g_gameTime->GetFrameDeltaTime() / m_easingTarRatio;
 		}
 		else
 		{
