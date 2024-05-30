@@ -250,6 +250,7 @@
       <Filter>graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="LevelRender.cpp" />
+    <ClCompile Include="PreSpriteRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -552,6 +553,7 @@
       <Filter>graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="LevelRender.h" />
+    <ClInclude Include="PreSpriteRender.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

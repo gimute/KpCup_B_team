@@ -231,6 +231,7 @@
     <ClCompile Include="EnemyAttackPoint.cpp" />
     <ClCompile Include="EnemyCamPos.cpp" />
     <ClCompile Include="EnemyHpUi.cpp" />
+    <ClCompile Include="EventCamera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameClear.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="EnemyAttackPoint.h" />
     <ClInclude Include="EnemyCamPos.h" />
     <ClInclude Include="EnemyHpUi.h" />
+    <ClInclude Include="EventCamera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameClear.h" />

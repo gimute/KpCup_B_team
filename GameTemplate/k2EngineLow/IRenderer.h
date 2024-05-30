@@ -19,5 +19,11 @@ namespace nsK2EngineLow {
 		{
 
 		}
+
+		//Ž–‘O2D•`‰æ
+		virtual void OnPreRender2D(RenderContext& rc)
+		{
+
+		}
 	};
 }

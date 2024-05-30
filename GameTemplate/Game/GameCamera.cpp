@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "Player.h";
+#include "EventCamera.h"
 
 GameCamera::GameCamera()
 {
@@ -19,6 +20,8 @@ bool GameCamera::Start()
 	m_toCameraPos *= 0.5;
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
+
+	m_eventCam = FindGO<EventCamera>("camera");
 	
 	//カメラのニアクリップとファークリップを設定。
 	g_camera3D->SetNear(1.0f);
@@ -29,6 +32,9 @@ bool GameCamera::Start()
 
 void GameCamera::Update()
 {
+	if (m_eventCam->IsEvent())
+		return;
+
 	////注視点を計算
 	//Vector3 target = m_player->m_position;
 	////注視点 プレイヤーの座標に設定

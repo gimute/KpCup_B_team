@@ -20,10 +20,14 @@ namespace nsK2EngineLow {
 		//2D描画
 		void Render2D(RenderContext& rc);
 
+		//事前2D描画
+		void PreRender2D(RenderContext& rc);
+
+		//実行
 		void Execute(RenderContext& rc);
 
 	private:
-		std::vector< IRenderer* > m_renderObjects;                      // 描画オブジェクトのリスト。
+		std::vector< IRenderer* > m_renderObjects;	// 描画オブジェクトのリスト。
 	};
 }
 

@@ -22,10 +22,14 @@
 #include "SignalRailUi.h"
 #include "Bullet.h"
 #include "Door.h"
+#include "EventCamera.h"
 ///////////////////////////////
 
 Game::Game()
 {
+
+	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
+	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 	//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -43,6 +47,8 @@ Game::Game()
 
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
+
+	test = NewGO<EventCamera>(0,"camera");
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(0, "UI");
@@ -179,6 +185,19 @@ void Game::Update()
 	{
 		door1->m_DoorOpen = true;
 	}
+
+	if (g_pad[0]->IsTrigger(enButtonRight))
+	{
+		test->StartScene(EventCamera::en_Scene1_Door);
+	}
+	if (g_pad[0]->IsTrigger(enButtonDown))
+	{
+		test->StartScene(EventCamera::en_Scene3_MapUp2);
+	}
+	if (g_pad[0]->IsTrigger(enButtonLeft))
+	{
+		test->StartScene(EventCamera::en_Scene2_MapUp1);
+	}
 }
 
 //制限時間表示
@@ -266,4 +285,5 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 void Game::Render(RenderContext& rc)
 {
 	m_fontrender.Draw(rc);
+	m_preSpriteRender.Draw(rc);
 }
