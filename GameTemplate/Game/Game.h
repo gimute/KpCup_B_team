@@ -24,6 +24,7 @@ class Load;
 class Title;
 class SignalRailUi;
 class Door;
+class EventCamera;
 //
 class Game : public IGameObject
 {
@@ -100,6 +101,7 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
+	EventCamera* test = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
 private:
