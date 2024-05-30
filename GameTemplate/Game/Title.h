@@ -25,5 +25,6 @@ public:
 	//アルファチャンネルの調整用の変数
 	float m_alpha = 0.1f;
 	bool m_alphaCalcBool;
+	FontRender m_f;
 };
 

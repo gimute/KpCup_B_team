@@ -56,7 +56,7 @@ bool Door::Start()
 void Door::Update()
 {
 	//コリジョンの当たり判定処理
-	//Collision();
+	Collision();
 	//開閉
 	OpenClose();
 	// 当たり判定の座標を更新
@@ -78,7 +78,7 @@ void Door::Collision()
 		//コリジョンとキャラコンが衝突したら。
 		if (collision->IsHit(m_collisionObject))
 		{
-			m_DoorOpen = true;
+			//m_DoorOpen = true;
 			return;
 		}
 	}

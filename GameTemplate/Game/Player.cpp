@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "Game.h"
@@ -17,6 +17,12 @@ Player::~Player()
 
 bool Player::Start()
 {
+	wchar_t wcsbuf[256];
+	swprintf_s(wcsbuf, 256, L"カードキーがないため、扉は開きません。");
+	m_f.SetText(wcsbuf);
+	m_f.SetScale(0.7f);
+	m_f.SetPosition(Vector3(-400.0f, 10.0f, 0.0f));
+	m_f.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
@@ -71,6 +77,7 @@ void Player::Update()
 	Move();
 	//回転処理。
 	Rotation();
+	CollisionDoor();
 	//当たり判定処理
 	Collision();
 	//アニメーション処理
@@ -117,7 +124,7 @@ void Player::Move()
 
 	if (m_playerstate == enPlayerState_Walk||m_playerstate == enPlayerState_Idle)
 	{
-		//���X�e�B�b�N�̓��͗ʂ�120.0f����Z�B
+		//   X e B b N ̓  ͗ʂ 120.0f    Z B
 		right *= stickL.x * 200.0f;
 		forward *= stickL.y * 200.0f;
 	}
@@ -144,6 +151,7 @@ void Player::Move()
 	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
+	m_charaCon.SetPosition(m_position);
 }
 
 void Player::Rolling()
@@ -190,8 +198,39 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 
 }
+
+bool Player::CollisionDoor()
+{
+	if (m_collDoor = 1.0f)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void Player::Collision()
 {
+	//ドアのコリジョンの配列を取得する。
+	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("door_col");
+	//配列をfor文で回す。
+	for (auto collision : collisions)
+	{
+		//コリジョンとキャラコンが衝突したら
+		if (collision->IsHit(m_charaCon))
+		{
+			
+			m_collDoor = true;
+			break;
+		}
+		else
+		{
+			m_collDoor = false;
+		}
+		m_collDoor = 0.0f;
+	}
 	if (m_muteki_timer >= 0.0f)
 	{
 		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
@@ -475,4 +514,10 @@ void Player::Render(RenderContext& rc)
 {
 	//モデルの描画。
 	m_modelRender.Draw(rc);
+	
+	if(m_collDoor == true)
+	{
+		//文字の描画
+		m_f.Draw(rc);
+	}
 }

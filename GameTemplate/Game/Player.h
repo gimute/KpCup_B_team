@@ -2,6 +2,7 @@
 class Game;
 class Enemy;
 class Bullet;
+class Collision;
 class Player : public IGameObject
 {
 public:
@@ -35,6 +36,7 @@ public:
 	void Render(RenderContext& rc);
 	void PlayAnimation();
 	void Rotation();
+	bool CollisionDoor();
 	void Collision();
 	void AttackRotation();
 	bool AngleCheck(const Vector3& position);
@@ -83,6 +85,9 @@ public:
 	float rollingCoolDownTime = 0.5;						//回避クールダウン時間
 	float m_muteki_timer = 0.0f;							//無敵タイマー
 	float m_reset_timer = 0.0f;								//リセットタイマー
+
+	FontRender m_f;								//フォントレンダー
+	bool m_collDoor = false;
 
 private:
 
