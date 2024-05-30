@@ -48,7 +48,7 @@ Game::Game()
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
-	test = NewGO<EventCamera>(0,"camera");
+	m_eventCamera = NewGO<EventCamera>(0,"camera");
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(0, "UI");
@@ -188,15 +188,15 @@ void Game::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
-		test->StartScene(EventCamera::en_Scene1_Door);
+		m_eventCamera->StartScene(EventCamera::en_Scene1_Door);
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		test->StartScene(EventCamera::en_Scene3_MapUp2);
+		m_eventCamera->StartScene(EventCamera::en_Scene3_MapUp2);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLeft))
 	{
-		test->StartScene(EventCamera::en_Scene2_MapUp1);
+		m_eventCamera->StartScene(EventCamera::en_Scene2_MapUp1);
 	}
 }
 

@@ -101,7 +101,7 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
-	EventCamera* test = nullptr;
+	EventCamera* m_eventCamera = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
 private:
