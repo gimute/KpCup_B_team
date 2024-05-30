@@ -53,7 +53,7 @@ Game::Game()
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(0, "UI");
 	//危険信号表示Ui
-	m_signalRailUi = NewGO<SignalRailUi>(3, "signalUi");
+	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
 
 	//追いかけてくる敵を作る
 	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
@@ -62,29 +62,29 @@ Game::Game()
 	Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
 	m_enemy2->m_position = { -800.0f,0.0f,800.0f };
 
-	//Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
-	//m_enemy3->m_position = { -1200.0f,0.0f,1000.0f };
+	/*Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
+	m_enemy3->m_position = { -1200.0f,0.0f,1000.0f };
 
-	//Enemy* m_enemy4 = NewGO<Enemy>(0, "enemy");
-	//m_enemy4->m_position = { -1000.0f,0.0f,500.0f };
+	Enemy* m_enemy4 = NewGO<Enemy>(0, "enemy");
+	m_enemy4->m_position = { -1000.0f,0.0f,500.0f };
 
-	//Enemy* m_enemy5 = NewGO<Enemy>(0, "enemy");
-	//m_enemy5->m_position = { -900.0f,0.0f,200.0f };
+	Enemy* m_enemy5 = NewGO<Enemy>(0, "enemy");
+	m_enemy5->m_position = { -900.0f,0.0f,200.0f };
 
-	//Enemy* m_enemy6 = NewGO<Enemy>(0, "enemy");
-	//m_enemy6->m_position = { -900.0f,0.0f,1300.0f };
+	Enemy* m_enemy6 = NewGO<Enemy>(0, "enemy");
+	m_enemy6->m_position = { -900.0f,0.0f,1300.0f };
 
-	//Enemy* m_enemy7 = NewGO<Enemy>(0, "enemy");
-	//m_enemy7->m_position = { -800.0f,0.0f,700.0f };
+	Enemy* m_enemy7 = NewGO<Enemy>(0, "enemy");
+	m_enemy7->m_position = { -800.0f,0.0f,700.0f };
 
-	//Enemy* m_enemy8 = NewGO<Enemy>(0, "enemy");
-	//m_enemy8->m_position = { -800.0f,0.0f,600.0f };
+	Enemy* m_enemy8 = NewGO<Enemy>(0, "enemy");
+	m_enemy8->m_position = { -800.0f,0.0f,600.0f };
 
-	//Enemy* m_enemy9 = NewGO<Enemy>(0, "enemy");
-	//m_enemy9->m_position = { -1100.0f,0.0f,600.0f };
+	Enemy* m_enemy9 = NewGO<Enemy>(0, "enemy");
+	m_enemy9->m_position = { -1100.0f,0.0f,600.0f };
 
-	//Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
-	//m_enemy10->m_position = { -850.0f,0.0f,300.0f };
+	Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
+	m_enemy10->m_position = { -850.0f,0.0f,300.0f };*/
 
 	door1 = NewGO<Door>(0, "door");
 	door1->m_DoorMainPos = { 0.0f,0.0f,380.0f };
@@ -109,7 +109,7 @@ void Game::NotifyGameClear()
 
 void Game::Update()
 {
-
+	DisplayTime();
 	switch (m_gameState)
 	{
 	case enIdle:
@@ -200,6 +200,25 @@ void Game::Update()
 	}
 }
 
+//制限時間表示
+void Game::DisplayTime()
+{
+	m_gametimer = FindGO<GameTimer>("gametimer");
+	wchar_t wcsbuf[256];
+	//制限時間を表示
+	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_gametimer->m_timer),int(m_gametimer->m_minit));
+	//表示するテキストを設定
+	m_fontrender.SetText(wcsbuf);
+	//フォントの位置を設定
+	m_fontrender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
+	//フォントの大きさを設定
+	m_fontrender.SetScale(2.0f);
+	//フォントの色を設定
+	m_fontrender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+
+
+}
+
 void Game::Delete_EnemyVec(const int num)
 {
 	m_EnemyList.erase(m_EnemyList.begin() + num);
@@ -265,5 +284,6 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::Render(RenderContext& rc)
 {
+	m_fontrender.Draw(rc);
 	m_preSpriteRender.Draw(rc);
 }

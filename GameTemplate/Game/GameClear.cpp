@@ -12,14 +12,20 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
-
+	DeleteGO(m_gametimer);
 }
 
 bool GameClear::Start()
 {
+	m_gametimer = FindGO<GameTimer>("gametimer");
 
 	//ゲームクリアの画面を読み込む。
 	m_spriterender.Init("Assets/sprite/Game_Clear2.dds", 1920.0f, 1080.0f);
+	//リザルトを見えやすくするためにモヤモヤの画面を読み込む
+	m_spriterender_moya.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
+	m_spriterender_moya.SetPosition(Vector3{ 400.0f,-280.0f,0.0f });
+	m_spriterender_moya.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
+	m_spriterender_moya.Update();
 
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -46,8 +52,8 @@ void GameClear::Update()
 			m_load->StartFadeOut();
 		}
 	}
-	////クリアタイム表示　一時敵
-	//DisplayTime();
+	//クリアタイム表示　一時敵
+	DisplayTime();
 	////Bボタンが押されていたら。
 	//if (g_pad[0]->IsTrigger(enButtonY))
 	//{
@@ -77,7 +83,7 @@ void GameClear::Update()
 //クリアタイム表示
 void GameClear::DisplayTime()
 {
-	m_gametimer = FindGO<GameTimer>("gametimer");
+	
 	//クリアタイムのデータを持ってくる
 	if (!m_isSaveClearTime) {
 		m_cleartimer = m_gametimer->m_timer;	//分
@@ -95,13 +101,24 @@ void GameClear::DisplayTime()
 	//フォントの大きさを設定
 	m_fontRender.SetScale(2.0f);
 	//フォントの色を設定
-	m_fontRender.SetColor({ 0.0f,0.0f,0.0f,1.0f});
+	m_fontRender.SetColor({ 0.0f,1.0f,0.0f,1.0f});
+	
+	//表示するテキストを設定
+	m_fontRender_tensen.SetText(L"..................................");
+	//フォントの位置を設定
+	m_fontRender_tensen.SetPosition(Vector3(120.0f, -350.0f, 0.0f));
+	//フォントの大きさを設定
+	m_fontRender_tensen.SetScale(1.0f);
+	//フォントの色を設定
+	m_fontRender_tensen.SetColor({ 0.0f,0.0f,0.0f,0.7f });
+
 }
 
 //描画処理
 void GameClear::Render(RenderContext& rc)
 {
 	m_spriterender.Draw(rc);
-
+	m_spriterender_moya.Draw(rc);
 	m_fontRender.Draw(rc);
+	m_fontRender_tensen.Draw(rc);
 }
