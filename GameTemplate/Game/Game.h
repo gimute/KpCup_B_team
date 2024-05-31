@@ -115,6 +115,7 @@ public:
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
+	LevelRender m_levelRender;
 
 	PreSpriteRender m_preSpriteRender;
 	EnGameState m_gameState = enIdle;
