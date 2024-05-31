@@ -284,6 +284,28 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::Render(RenderContext& rc)
 {
-	m_fontrender.Draw(rc);
-	m_preSpriteRender.Draw(rc);
+
+	if (m_TempDelHpUi == true)
+	{
+		m_fontrender.Draw(rc);
+		m_preSpriteRender.Draw(rc);
+	}
+
+	if (m_TempDelGameTimer == true)
+	{
+		m_fontrender.Draw(rc);
+		m_preSpriteRender.Draw(rc);
+	}
+
+	if (m_TempDelPlayer == true)
+	{
+		m_fontrender.Draw(rc);
+		m_preSpriteRender.Draw(rc);
+	}
+
+	if (m_TempDelSignalUi == true)
+	{
+		m_fontrender.Draw(rc);
+		m_preSpriteRender.Draw(rc);
+	}
 }

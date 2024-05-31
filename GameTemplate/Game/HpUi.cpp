@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "HpUi.h"
+#include "Game.h"
 ///
 /// </summary>
 
@@ -143,10 +144,13 @@ void HpUi::AdjustmentTransparent()
 
 void HpUi::Render(RenderContext& rc)
 {
-	//HPUIの描画処理を先に
-	m_hpUI_A.Draw(rc);
-	//バーの描画処理を後に
-	m_hpUI_B.Draw(rc);
-	//透過バーの描画処理を一番後に
-	m_hpUI_C.Draw(rc);
+	m_game = FindGO<Game>("game");
+	if (m_game->m_TempDelHpUi == true) {
+		//HPUIの描画処理を先に
+		m_hpUI_A.Draw(rc);
+		//バーの描画処理を後に
+		m_hpUI_B.Draw(rc);
+		//透過バーの描画処理を一番後に
+		m_hpUI_C.Draw(rc);
+	}
 }

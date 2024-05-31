@@ -21,7 +21,8 @@ public:
 	//メンバ変数
 	SpriteRender m_spriteRender;	//スプライトレンダー
 	FontRender m_fontRender;		//フォントレンダー。
-	GameClear* m_gameclear;
+	Game* m_game;					//ゲーム
+	GameClear* m_gameclear;			//ゲームクリア
 
 	bool m_isSaveClearTime = false;
 

@@ -109,5 +109,8 @@ void SignalRailUi::DeleteSignalList(const int num)
 
 void SignalRailUi::Render(RenderContext& rc)
 {
-	m_ReticleUi.Draw(rc);
+	if (m_game->m_TempDelSignalUi == true)
+	{
+		m_ReticleUi.Draw(rc);
+	}
 }
