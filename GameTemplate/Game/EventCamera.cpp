@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "EventCamera.h"
+#include <string>
 
 namespace {
+	int m_forBegin[] = { 0,1,2,5,8 };
+	int m_forLength[] = { 1,1,3,3,2 };
 }
 
 EventCamera::EventCamera()
@@ -12,6 +15,40 @@ EventCamera::EventCamera()
 EventCamera::~EventCamera()
 {
 
+}
+
+void EventCamera::StartScene(const EnEventScene setScene)
+{
+	if (m_eventFlag == true)
+	{
+		return;
+	}
+
+	m_sceneNow = setScene;
+
+	m_posChangeTime = m_scene[setScene].m_cameraWayPoint[0].m_changeTime;
+
+	m_tarChangeTime = m_scene[setScene].m_cameraChangeTarget[0].m_changeTime;
+
+	m_camPosListIterator = m_scene[setScene].m_cameraWayPoint.begin();
+
+	m_camTarListIterator = m_scene[setScene].m_cameraChangeTarget.begin();
+
+	m_easingPosRatio = m_scene[setScene].m_cameraWayPoint[0].m_easingRatio;
+
+	m_easingTarRatio = m_scene[setScene].m_cameraChangeTarget[0].m_easingRatio;
+
+	m_cameraTarListEnd = false;
+
+	m_cameraPosListEnd = false;
+
+	EasingFlagListClear(ListUpdateMode::en_ModePosition);
+
+	EasingFlagListClear(ListUpdateMode::en_ModeTarget);
+
+	m_eventFlag = true;
+
+	return;
 }
 
 bool EventCamera::Start()
@@ -62,24 +99,43 @@ void EventCamera::SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
 	//構造体宣言
 	SceneVector setVector;
 
-	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング割合、
-	//000Dが切り替えまでの秒数とする。
+	std::string num_str = std::to_string(setNum);
+	 
+	//一番先頭は文字列に入れるための物なので要らないため捨てる
+	num_str.erase(num_str.begin());
+
+	for (int i = 0; i < 5; i++)
+	{
+		int beginNum = m_forBegin[i];
+		int lengthNum = m_forLength[i];
+		for (int i = 0; i < lengthNum; i++)
+		{
+			
+		}
+	}
+
+	//0000000000を0A 0B 000C 000Dとして0Aが先頭番号
+	//0BがBool、000Cがイージング割合、000Dが切り替えまでの秒数、
+	//0Eが実行フラグを使用するかどうか、00Fが実行フラグとする。
 
 	//先頭番号
-	int Num = setNum / 10000000;
+	int Num = setNum / 10000000000;
 
 	//Bool、0か1かで判定
-	int BoolNum = setNum % 10000000;
-	BoolNum /= 1000000;
+	int BoolNum = setNum % 10000000000;
+	BoolNum /= 100000000;
 
 	//カメライージング割合
-	float EasingTime = (setNum / 1000) % 1000;
+	float EasingTime = (setNum / 100000) % 100000;
 	EasingTime *= 0.1;
 
 	//カメラ切り替え秒数
-	float ChangeTime = setNum % 100;
+	float ChangeTime = (setNum / 100000000) % 100000000;
 	ChangeTime *= 0.1;
+
+	int ChangeFlagBoolNum = (setNum / 100000000) % 100000000;
+
+	int ChangeFlag = setNum % 100;
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
