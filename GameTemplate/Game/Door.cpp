@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Door.h"
 #include "Player.h"
+#include "Game.h"
 
 Door::Door()
 {
@@ -47,8 +48,16 @@ bool Door::Start()
 	m_collisionObject->SetPosition(m_DoorMainPos + corre1);
 	//コリジョンオブジェクトが自動で削除されないようにする。
 	m_collisionObject->SetIsEnableAutoDelete(false);
-
+	//プレイヤーのインスタンスを受け取る
 	m_player = FindGO<Player>("player");
+	//ゲームのインスタンスを受け取る
+	m_game = FindGO<Game>("game");
+
+	//フォントレンダーの設定
+	m_fontRender.SetText(L"敵をすべて倒さないと開かないようだ");
+	m_fontRender.SetScale(0.7f);
+	m_fontRender.SetPosition(Vector3(-350.0f, 10.0f, 0.0f));
+	m_fontRender.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	return true;
 }
@@ -75,19 +84,31 @@ void Door::Collision()
 	//コリジョンの配列をfor文で回す。
 	for (auto collision : collisions)
 	{
-		//コリジョンとキャラコンが衝突したら。
+		//コリジョンとコリジョンが衝突したら。
 		if (collision->IsHit(m_collisionObject))
 		{
-			//m_DoorOpen = true;
-			return;
+			if (m_game->GetEnemyAllKillFlag())
+			{
+				m_DoorOpen = true;
+
+				return;
+			}
+			else
+			{
+				m_fontDraw = true;
+				return;
+			}
 		}
 	}
+	m_fontDraw = false;
 }
 
 void Door::OpenClose()
 {
-	if (!m_DoorOpen)
+	if (m_DoorOpen == false)
+	{
 		return;
+	}
 
 	//最低速度に上限があってもいいかも
 	Vector3 MovePowL = m_DoorLMove[1] - m_DoorLPos;
@@ -102,7 +123,7 @@ void Door::OpenClose()
 		float test = MovePowL.Length();
 	}
 
-	if (m_DoorLPos.Length() < m_DoorLMove[1].Length())
+	if ((m_DoorLPos - m_DoorLMove[1]).Length() >= 0.01f)
 	{
 		m_DoorLPos += MovePowL;
 		m_DoorRPos += MovePowR;
@@ -116,4 +137,9 @@ void Door::Render(RenderContext& rc)
 	m_RenderDoorMain.Draw(rc);
 	m_RenderDoorL.Draw(rc);
 	m_RenderDoorR.Draw(rc);
+
+	if (m_fontDraw == true)
+	{
+		m_fontRender.Draw(rc);
+	}
 }

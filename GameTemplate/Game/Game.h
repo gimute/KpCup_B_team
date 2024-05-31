@@ -66,9 +66,17 @@ public:
 
 	bool EnemyListExistence(int num);
 
-
-
 	void SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate);
+
+	//ゲームのステートを遷移する処理
+	void GameStateTransition();
+	//他のクラスから呼ぶためのゲームクリア処理。
+	void GameClearProcess();
+	//エネミーを全員倒したかのフラグを返す
+	bool GetEnemyAllKillFlag()
+	{
+		return m_enemyAllKillFlag;
+	}
 
 	EnemyAttackPoint* GetEnemyAttackPointObject()
 
@@ -119,5 +127,7 @@ private:
 
 	PreSpriteRender m_preSpriteRender;
 	EnGameState m_gameState = enIdle;
+
+	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
 };
 

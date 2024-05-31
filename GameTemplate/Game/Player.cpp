@@ -17,13 +17,6 @@ Player::~Player()
 
 bool Player::Start()
 {
-	wchar_t wcsbuf[256];
-	swprintf_s(wcsbuf, 256, L"カードキーがないため、扉は開きません。");
-	m_f.SetText(wcsbuf);
-	m_f.SetScale(0.7f);
-	m_f.SetPosition(Vector3(-350.0f, 10.0f, 0.0f));
-	m_f.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-
 	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/proto_player/run.tka");
@@ -77,7 +70,6 @@ void Player::Update()
 	Move();
 	//回転処理。
 	Rotation();
-	CollisionDoor();
 	//当たり判定処理
 	Collision();
 	//アニメーション処理
@@ -199,38 +191,8 @@ void Player::Rotation()
 
 }
 
-bool Player::CollisionDoor()
-{
-	if (m_collDoor = 1.0f)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 void Player::Collision()
 {
-	//ドアのコリジョンの配列を取得する。
-	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("door_col");
-	//配列をfor文で回す。
-	for (auto collision : collisions)
-	{
-		//コリジョンとキャラコンが衝突したら
-		if (collision->IsHit(m_charaCon))
-		{
-			
-			m_collDoor = true;
-			break;
-		}
-		else
-		{
-			m_collDoor = false;
-		}
-		m_collDoor = 0.0f;
-	}
 	if (m_muteki_timer >= 0.0f)
 	{
 		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
@@ -514,11 +476,4 @@ void Player::Render(RenderContext& rc)
 {
 		//モデルの描画。
 		m_modelRender.Draw(rc);
-	
-	
-	if(m_collDoor == true)
-	{
-		//文字の描画
-		m_f.Draw(rc);
-	}
 }
