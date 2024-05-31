@@ -93,22 +93,44 @@ void Bullet::Inpacttime()
 
 void Bullet::Inpacthit()
 {
-	//enemyのコリジョンを取得する												//↓enemyの共通コリジョン
-	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_col");
-	//コリジョンの配列をfor文で回す
-	for (auto collision : collisions)
-	{
-		//コリジョンとキャラコンが衝突したら
-		if (collision->IsHit(m_collisionObject))
+	if (m_collisionObject->GetName() == "player_attack") {
+		//enemyのコリジョンを取得する												//↓enemyの共通コリジョン
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_col");
+		//コリジョンの配列をfor文で回す
+		for (auto collision : collisions)
 		{
-			if (m_isDelete == false) {
-				//deletebulletのif文が通るようにする
-				m_isDelete = true;
-				//deletetimerは現在0.2f
-				m_deleteTimer = deletetimer;
+			//コリジョンとキャラコンが衝突したら
+			if (collision->IsHit(m_collisionObject))
+			{
+				if (m_isDelete == false) {
+					//deletebulletのif文が通るようにする
+					m_isDelete = true;
+					//deletetimerは現在0.2f
+					m_deleteTimer = deletetimer;
+				}
 			}
 		}
 	}
+
+	if (m_collisionObject->GetName() == "enemy_attack") {
+		//playerのコリジョンを取得する
+		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_col");
+		//コリジョンの配列をfor文で回す
+		for (auto collision : collisions)
+		{
+			//コリジョンとキャラコンが衝突したら
+			if (collision->IsHit(m_collisionObject))
+			{
+				if (m_isDelete == false) {
+					//deletebulletのif文が通るようにする
+					m_isDelete = true;
+					//deletetimerは現在0.2f
+					m_deleteTimer = deletetimer;
+				}
+			}
+		}
+	}
+
 }
 
 void Bullet::deletebullet()
