@@ -41,9 +41,31 @@ Game::Game()
 	//ゲームタイマー表示
 	m_gametimer = NewGO<GameTimer>(0, "gametimer");
 
-	//プレイヤーのオブジェクトを作る。
-	m_player = NewGO<Player>(0, "player");
-	m_player->m_position = { 0.0f,0.0f,0.0f };
+	m_levelRender.Init("Assets/levelData/map1level.tkl", [&](LevelObjectData_Render& objData)
+	{
+		if (objData.ForwardMatchName(L"player") == true)
+		{
+			//プレイヤーのオブジェクトを作る。
+			m_player = NewGO<Player>(0, "player");
+			m_player->m_position = objData.position;
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"door") == true)
+		{
+			door1 = NewGO<Door>(0, "door");
+			door1->m_DoorMainPos = objData.position;
+			door1->SetRotation(objData.rotation);
+			return true;
+		}
+		else if (objData.ForwardMatchName(L"enemy") == true)
+		{
+			Enemy* m_enemy = NewGO<Enemy>(0, "enemy");
+			m_enemy->m_position = objData.position;
+
+			return true;
+		}
+		return true;
+	});
 
 	//ゲームカメラのオブジェクトを作る。
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
@@ -56,11 +78,9 @@ Game::Game()
 	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
 
 	//追いかけてくる敵を作る
-	Enemy* m_enemy1 = NewGO<Enemy>(0, "enemy");
-	m_enemy1->m_position = { -1250.0f,0.0f,300.0f };
 
-	Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
-	m_enemy2->m_position = { -800.0f,0.0f,800.0f };
+	//Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
+	//m_enemy2->m_position = { -800.0f,0.0f,800.0f };
 
 	/*Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
 	m_enemy3->m_position = { -1200.0f,0.0f,1000.0f };
@@ -86,8 +106,6 @@ Game::Game()
 	Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
 	m_enemy10->m_position = { -850.0f,0.0f,300.0f };*/
 
-	door1 = NewGO<Door>(0, "door");
-	door1->m_DoorMainPos = { 0.0f,0.0f,380.0f };
 }
 
 Game::~Game()
