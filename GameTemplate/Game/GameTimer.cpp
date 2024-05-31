@@ -59,6 +59,8 @@ void GameTimer::FontDraw()
 
 void GameTimer::Render(RenderContext& rc)
 {
-	m_spriteRender.Draw(rc);
-	m_fontRender.Draw(rc);
+	m_game = FindGO<Game>("game");
+	if (m_game->m_TempDelGameTimer == true) {
+		m_spriteRender.Draw(rc);
+	}
 }

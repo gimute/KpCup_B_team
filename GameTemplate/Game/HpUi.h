@@ -9,6 +9,7 @@
 #define DecreaseTransition2	m_decrease_TRAN == en_DelayTimeLoop_TRAN
 #define DecreaseTransition3	m_decrease_TRAN == en_TransparentDecreaseCalc_TRAN
 #define DecreaseTransition4	m_decrease_TRAN == en_TransparentDecreaseON_TRAN
+class Game;
 class HpUi : public IGameObject
 {
 
@@ -62,6 +63,8 @@ private:
 	SpriteRender m_hpUI_C;
 	//透過UI減少遷移
 	DecreaseTransition m_decrease_TRAN = en_Standby_TRAN;
+	//ゲーム
+	Game* m_game = nullptr;
 	/////////////////////////////////////////変数
 	//最大HP
 	int m_fullhp = 100;

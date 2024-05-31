@@ -106,6 +106,12 @@ public:
 	EventCamera* test = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
+
+	bool m_TempDelHpUi = false;
+	bool m_TempDelSignalUi = false;
+	bool m_TempDelGameTimer = false;
+	bool m_TempDelPlayer = false;
+
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;

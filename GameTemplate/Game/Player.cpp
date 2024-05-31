@@ -21,7 +21,7 @@ bool Player::Start()
 	swprintf_s(wcsbuf, 256, L"カードキーがないため、扉は開きません。");
 	m_f.SetText(wcsbuf);
 	m_f.SetScale(0.7f);
-	m_f.SetPosition(Vector3(-400.0f, 10.0f, 0.0f));
+	m_f.SetPosition(Vector3(-350.0f, 10.0f, 0.0f));
 	m_f.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
@@ -512,8 +512,9 @@ void Player::TimeAdjustment()
 
 void Player::Render(RenderContext& rc)
 {
-	//モデルの描画。
-	m_modelRender.Draw(rc);
+		//モデルの描画。
+		m_modelRender.Draw(rc);
+	
 	
 	if(m_collDoor == true)
 	{
