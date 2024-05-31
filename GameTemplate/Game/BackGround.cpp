@@ -14,7 +14,7 @@ BackGround::~BackGround()
 bool BackGround::Start()
 {
 	//モデルを読み込む。
-	m_modelRender.Init("Assets/modelData/Map/Map4.tkm", nullptr, 0, enModelUpAxisZ, true);
+	m_modelRender.Init("Assets/modelData/Map/Map3.tkm", nullptr, 0, enModelUpAxisZ, true);
 	//座標を設定する。
 	m_modelRender.SetPosition(m_position);
 	//大きさを設定する。
