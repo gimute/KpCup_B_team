@@ -99,7 +99,7 @@ public:
 		m_RenderDoorL.SetRotation(m_DoorLRot);
 		m_DoorLPos = m_DoorMainLeft;
 		m_DoorLPos.Normalize();
-		m_DoorLPos *= 30.0f;
+		m_DoorLPos *= 35.0f;
 		m_DoorLPos += position;
 		m_RenderDoorL.SetPosition(m_DoorLPos);
 		m_RenderDoorL.SetScale(scale);
@@ -123,7 +123,7 @@ public:
 		m_RenderDoorR.SetRotation(m_DoorRRot);
 		m_DoorRPos = m_DoorMainRight;
 		m_DoorRPos.Normalize();
-		m_DoorRPos *= 30.0f;
+		m_DoorRPos *= 35.0f;
 		m_DoorRPos += position;
 		m_RenderDoorR.SetPosition(m_DoorRPos);
 		m_RenderDoorR.SetScale(scale);
