@@ -25,6 +25,18 @@ bool BackGround::Start()
 	//静的物理オブジェクトを作成
 	physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
+	//モデルを読み込む
+	m_floor.Init("Assets/modelData/Map/Map_floor.tkm");
+	//座標を設定する。
+	m_floor.SetPosition(m_position);
+	//大きさを設定する。
+	m_floor.SetScale(m_scale);
+
+	//モデルを更新する。
+	m_floor.Update();
+	//静的物理オブジェクトを作成
+	physicsStaticObject_floor.CreateFromModel(m_floor.GetModel(), m_floor.GetModel().GetWorldMatrix());
+
 	// 当たり判定を可視化する。
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
@@ -43,4 +55,5 @@ void BackGround::Render(RenderContext& rc)
 {
 	//モデルを描画する。
 	m_modelRender.Draw(rc);
+	m_floor.Draw(rc);
 }
