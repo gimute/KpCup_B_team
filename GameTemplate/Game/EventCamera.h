@@ -1,8 +1,11 @@
 #pragma once
 
+#include"Game.h"
+
 #define WAYPOINT_MAX 10
 #define CHANGE_TARGET_MAX 10
 
+class Game;
 class EventCamera :public IGameObject
 {
 public:
@@ -123,6 +126,10 @@ public:
 	/// レベルレンダー
 	/// </summary>
 	LevelRender m_camLevelRender;
+	/// <summary>
+	/// ゲームクラスのインスタンス格納用変数
+	/// </summary>
+	Game* m_game = nullptr;
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// g_3Dcameraにカメラの座標を送るための変数
@@ -199,6 +206,8 @@ public:
 		{
 			return;
 		}
+
+		m_game->EventUiDelete(true);
 
 		m_sceneNow = setScene;
 
