@@ -50,11 +50,11 @@ void GameTimer::IncreaseTimer()
 
 void GameTimer::FontDraw()
 {
-	wchar_t wcsbuf[256];
-	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_timer), int(m_minit));
+		wchar_t wcsbuf[256];
+		swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_timer), int(m_minit));
 
-	//表示するテキストを設定。
-	m_fontRender.SetText(wcsbuf);
+		//表示するテキストを設定。
+		m_fontRender.SetText(wcsbuf);
 }
 
 void GameTimer::Render(RenderContext& rc)

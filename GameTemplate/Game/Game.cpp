@@ -224,7 +224,7 @@ void Game::DisplayTime()
 	m_gametimer = FindGO<GameTimer>("gametimer");
 	wchar_t wcsbuf[256];
 	//制限時間を表示
-	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_gametimer->m_timer),int(m_gametimer->m_minit));
+	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_gametimer->m_timer), int(m_gametimer->m_minit));
 	//表示するテキストを設定
 	m_fontrender.SetText(wcsbuf);
 	//フォントの位置を設定
@@ -233,8 +233,6 @@ void Game::DisplayTime()
 	m_fontrender.SetScale(2.0f);
 	//フォントの色を設定
 	m_fontrender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
-
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -300,30 +298,31 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 	return;
 }
 
+void Game::EventUiDelete(bool mode)
+{
+	if (mode)
+	{
+		m_TempDelHpUi = false;
+
+		m_TempDelGameTimer = false;
+
+		m_TempDelSignalUi = false;
+	}
+	else
+	{
+		m_TempDelHpUi = true;
+
+		m_TempDelGameTimer = true;
+
+		m_TempDelSignalUi = true;
+	}
+}
+
 void Game::Render(RenderContext& rc)
 {
-
-	if (m_TempDelHpUi == true)
-	{
-		m_fontrender.Draw(rc);
-		m_preSpriteRender.Draw(rc);
-	}
-
 	if (m_TempDelGameTimer == true)
 	{
 		m_fontrender.Draw(rc);
-		m_preSpriteRender.Draw(rc);
 	}
-
-	if (m_TempDelPlayer == true)
-	{
-		m_fontrender.Draw(rc);
-		m_preSpriteRender.Draw(rc);
-	}
-
-	if (m_TempDelSignalUi == true)
-	{
-		m_fontrender.Draw(rc);
-		m_preSpriteRender.Draw(rc);
-	}
+	m_preSpriteRender.Draw(rc);
 }

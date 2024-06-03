@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EventCamera.h"
+#include "Game.h"
 
 namespace {
 }
@@ -52,6 +53,9 @@ bool EventCamera::Start()
 		}
 		return true;
 	});
+
+	//ゲームクラスのインスタンスを取得
+	m_game = FindGO<Game>("game");
 
 	return true;
 }
@@ -168,6 +172,7 @@ void EventCamera::Update()
 	if (m_cameraTarListEnd && m_cameraPosListEnd)
 	{
 		//イベントを終了する
+		m_game->EventUiDelete(false);
 		m_eventFlag = false;
 	}
 }

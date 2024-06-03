@@ -66,6 +66,8 @@ public:
 
 	bool EnemyListExistence(int num);
 
+	void EventUiDelete(bool mode);
+
 
 
 	void SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate);
@@ -107,9 +109,9 @@ public:
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
 
-	bool m_TempDelHpUi = false;
-	bool m_TempDelSignalUi = false;
-	bool m_TempDelGameTimer = false;
+	bool m_TempDelHpUi = true;
+	bool m_TempDelSignalUi = true;
+	bool m_TempDelGameTimer = true;
 	bool m_TempDelPlayer = false;
 
 private:
