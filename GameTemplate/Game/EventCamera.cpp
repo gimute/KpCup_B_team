@@ -3,6 +3,8 @@
 #include "Game.h"
 
 namespace {
+	int extractionNumListA[] = { 0,1,2,5,8 };
+	int extractionNumListB[] = { 1,1,3,3,1 };
 }
 
 EventCamera::EventCamera()
@@ -18,7 +20,7 @@ EventCamera::~EventCamera()
 bool EventCamera::Start()
 {
 	//カメラ位置が記録されたレベルを読み込む
-	m_camLevelRender.Init("Assets/levelData/eventCamPosTar.tkl", [&](LevelObjectData_Render& objData)
+	m_camLevelRender.Init("Assets/levelData/eventCamTest.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"A_Scene1Pos") == true)
 		{
@@ -66,24 +68,47 @@ void EventCamera::SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
 	//構造体宣言
 	SceneVector setVector;
 
-	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング割合、
-	//000Dが切り替えまでの秒数とする。
+	std::string charStrA = std::to_string(setNum);
 
-	//先頭番号
-	int Num = setNum / 10000000;
+	charStrA.erase(charStrA.begin());
 
-	//Bool、0か1かで判定
-	int BoolNum = setNum % 10000000;
-	BoolNum /= 1000000;
+	int Num, BoolNum,IfNum;
+	float EasingTime,ChangeTime;
 
-	//カメライージング割合
-	float EasingTime = (setNum / 1000) % 1000;
-	EasingTime *= 0.1;
+	for (int i = 0; i < 5; i++)
+	{
+		//00000000を0A 0B 000C 000Dとして0Aが先頭番号
+		//0BがBool、000Cがイージング割合、
+		//000Dが切り替えまでの秒数とする。
 
-	//カメラ切り替え秒数
-	float ChangeTime = setNum % 100;
-	ChangeTime *= 0.1;
+		std::string charStrB = charStrA.substr(extractionNumListA[i],
+			extractionNumListB[i]);
+
+		switch (i)
+		{
+		case 0:
+			//先頭番号
+			Num = std::stoi(charStrB);
+			break;		
+		case 1:
+			//bool１か０かで判定
+			BoolNum = std::stoi(charStrB);
+			break;		
+		case 2:
+			//カメライージング割合
+			EasingTime = std::stoi(charStrB);
+			EasingTime *= 0.1;
+			break;		
+		case 3:
+			//カメラ切り替え秒数
+			ChangeTime = std::stoi(charStrB);
+			ChangeTime *= 0.1;
+			break;
+		case 4:
+			IfNum = std::stoi(charStrB);
+			break;
+		}
+	}
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
