@@ -1,5 +1,6 @@
 #pragma once
 class Player;
+class Game;
 class Door : public IGameObject
 {
 public:
@@ -25,6 +26,8 @@ public:
 	ModelRender m_RenderDoorL;
 	//プレイヤー
 	Player* m_player = nullptr;
+	//ゲーム
+	Game* m_game = nullptr;
 	//コリジョンオブジェクト
 	CollisionObject* m_collisionObject;
 	//ドア枠当たり判定
@@ -58,8 +61,15 @@ public:
 	Vector3 m_DoorLMove[2];
 	//ドア右移動ベクトル配列
 	Vector3 m_DoorRMove[2];
+private:
 	//ドア開閉フラグ
 	bool m_DoorOpen = false;
+	// 文字を表示するか
+	bool m_fontDraw = false;
+	//カードキーを持ってないときに出す文字
+	FontRender m_fontRender;
+
+public:
 	/////////////////////////////////////////初期設定系統
 	//位置設定
 	void SetPosition(const Vector3& position)
@@ -138,6 +148,12 @@ public:
 		Right += m_DoorRMove[0];
 		m_DoorRMove[1] = Right;
 		return;
+	}
+
+	//ドアが空いているかどうか
+	bool GetDoorOpenFlag()
+	{
+		return m_DoorOpen;
 	}
 };
 

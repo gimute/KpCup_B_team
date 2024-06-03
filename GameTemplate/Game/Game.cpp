@@ -76,36 +76,6 @@ Game::Game()
 	m_hpui = NewGO<HpUi>(0, "UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
-
-	//追いかけてくる敵を作る
-
-	//Enemy* m_enemy2 = NewGO<Enemy>(0, "enemy");
-	//m_enemy2->m_position = { -800.0f,0.0f,800.0f };
-
-	/*Enemy* m_enemy3 = NewGO<Enemy>(0, "enemy");
-	m_enemy3->m_position = { -1200.0f,0.0f,1000.0f };
-
-	Enemy* m_enemy4 = NewGO<Enemy>(0, "enemy");
-	m_enemy4->m_position = { -1000.0f,0.0f,500.0f };
-
-	Enemy* m_enemy5 = NewGO<Enemy>(0, "enemy");
-	m_enemy5->m_position = { -900.0f,0.0f,200.0f };
-
-	Enemy* m_enemy6 = NewGO<Enemy>(0, "enemy");
-	m_enemy6->m_position = { -900.0f,0.0f,1300.0f };
-
-	Enemy* m_enemy7 = NewGO<Enemy>(0, "enemy");
-	m_enemy7->m_position = { -800.0f,0.0f,700.0f };
-
-	Enemy* m_enemy8 = NewGO<Enemy>(0, "enemy");
-	m_enemy8->m_position = { -800.0f,0.0f,600.0f };
-
-	Enemy* m_enemy9 = NewGO<Enemy>(0, "enemy");
-	m_enemy9->m_position = { -1100.0f,0.0f,600.0f };
-
-	Enemy* m_enemy10 = NewGO<Enemy>(0, "enemy");
-	m_enemy10->m_position = { -850.0f,0.0f,300.0f };*/
-
 }
 
 Game::~Game()
@@ -115,6 +85,7 @@ Game::~Game()
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
 	DeleteGO(m_signalRailUi);
+	DeleteGO(door1);
 
 	DeleteGO(m_player);
 }
@@ -128,59 +99,24 @@ void Game::NotifyGameClear()
 void Game::Update()
 {
 	DisplayTime();
+
+	GameStateTransition();
+
 	switch (m_gameState)
 	{
 	case enIdle:
-		//エネミーをすべて倒したら
-		if (m_EnemyQua == 0)
-		{
-
-			for (auto& enemyhpui : m_EnemyHpUiList)
-			{
-				DeleteGO(enemyhpui);
-			}
-
-			for (auto& enemy : m_EnemyList)
-			{
-				DeleteGO(enemy);
-			}
-
-			m_load->StartFadeOut();
-
-			m_gameState = enGameClear;
-		}
-
-		if (m_hpui->GetNowHP() <= 0.0f)
-		{
-			//エネミーより先にゲームが消えてしまうとエラーを吐くので
-			//一時的にここにエネミーを消す処理を記述
-			//あとで修正
-			//DeleteGO(m_hpui);
-			for (auto& enemyhpui : m_EnemyHpUiList)
-			{
-				DeleteGO(enemyhpui);
-			}
-
-			for (auto& enemy : m_EnemyList)
-			{
-				DeleteGO(enemy);
-			}
-
-			m_load->StartFadeOut();
-
-			m_gameState = enGameOver;
-		}
+		//現状特別な処理は無し
 		break;
 
 	case enGameClear:
-			if (!m_load->IsFade()) {
-				//自身を削除する。
-				DeleteGO(this);
-				//プレイヤーのHPのUIを削除
-				//DeleteGO(m_hpui);
-				//ゲームクリアのオブジェクトをつくる。
-				m_gameclear = NewGO<GameClear>(0, "gameclear");
-			}
+		if (!m_load->IsFade()) {
+			//自身を削除する。
+			DeleteGO(this);
+			//プレイヤーのHPのUIを削除
+			//DeleteGO(m_hpui);
+			//ゲームクリアのオブジェクトをつくる。
+			m_gameclear = NewGO<GameClear>(0, "gameclear");
+		}
 		break;
 
 	case enGameOver:
@@ -194,15 +130,32 @@ void Game::Update()
 		}
 		break;
 	}
+
+	//エネミーをすべて倒したら
+	if (m_EnemyQua == 0)
+	{
+		//念のためエネミーの削除処理をする。
+		for (auto& enemyhpui : m_EnemyHpUiList)
+		{
+			DeleteGO(enemyhpui);
+		}
+
+		for (auto& enemy : m_EnemyList)
+		{
+			DeleteGO(enemy);
+		}
+
+		//エネミー全滅フラグをtureにする
+		m_enemyAllKillFlag = true;
+	}
+
+	
+
+	
 	
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
-
-	if (m_EnemyQua == 0)
-	{
-		door1->m_DoorOpen = true;
-	}
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
@@ -296,6 +249,53 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 	m_EnemyList[Listnum]->m_enemyAttackSpeed = enemystate;
 	return;
+}
+
+void Game::GameStateTransition()
+{
+	if (m_gameState == enIdle)
+	{
+		if (door1->GetDoorOpenFlag())
+		{
+			for (auto& enemyhpui : m_EnemyHpUiList)
+			{
+				DeleteGO(enemyhpui);
+			}
+
+			for (auto& enemy : m_EnemyList)
+			{
+				DeleteGO(enemy);
+			}
+
+			m_load->StartFadeOut();
+
+			m_gameState = enGameClear;
+		}
+
+		if (m_hpui->GetNowHP() <= 0.0f)
+		{
+			for (auto& enemyhpui : m_EnemyHpUiList)
+			{
+				DeleteGO(enemyhpui);
+			}
+
+			for (auto& enemy : m_EnemyList)
+			{
+				DeleteGO(enemy);
+			}
+
+			m_load->StartFadeOut();
+
+			m_gameState = enGameOver;
+		}
+	}
+	
+}
+
+void Game::GameClearProcess()
+{
+	m_gameState = enGameClear;
+	m_load->StartFadeOut();
 }
 
 void Game::EventUiDelete(bool mode)
