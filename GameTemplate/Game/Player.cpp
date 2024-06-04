@@ -12,7 +12,7 @@ Player::Player()
 
 Player::~Player()
 {
-
+	DeleteGO(m_collisionObject);
 }
 
 bool Player::Start()
@@ -474,6 +474,9 @@ void Player::TimeAdjustment()
 
 void Player::Render(RenderContext& rc)
 {
+	if (m_game->m_TempDelPlayer == false)
+	{
 		//モデルの描画。
 		m_modelRender.Draw(rc);
+	}
 }

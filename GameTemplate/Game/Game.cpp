@@ -81,7 +81,6 @@ Game::Game()
 Game::~Game()
 {
 	DeleteGO(m_background);	
-	DeleteGO(m_gametimer);
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
 	DeleteGO(m_signalRailUi);
@@ -134,17 +133,6 @@ void Game::Update()
 	//エネミーをすべて倒したら
 	if (m_EnemyQua == 0)
 	{
-		//念のためエネミーの削除処理をする。
-		for (auto& enemyhpui : m_EnemyHpUiList)
-		{
-			DeleteGO(enemyhpui);
-		}
-
-		for (auto& enemy : m_EnemyList)
-		{
-			DeleteGO(enemy);
-		}
-
 		//エネミー全滅フラグをtureにする
 		m_enemyAllKillFlag = true;
 	}
@@ -253,10 +241,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
+	//イベントシーンが再生中なら
+	if (test->IsEvent() == true)
+	{
+		m_gameState = enEvent;
+	}
+
+	//ゲームステートがIdleなら
 	if (m_gameState == enIdle)
 	{
+		//ドアが開いているなら
 		if (door1->GetDoorOpenFlag())
 		{
+			//エネミー削除処理
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -267,13 +264,16 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
-			m_load->StartFadeOut();
-
-			m_gameState = enGameClear;
+			test->StartScene(EventCamera::en_Scene2_MapUp1);
+			m_EventAfterState = enGameClear;
+			m_TempDelPlayer = true;
+			return;
 		}
 
+		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
+			//エネミー削除処理
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -284,12 +284,44 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
-			m_load->StartFadeOut();
+			test->StartScene(EventCamera::en_Scene3_MapUp2);
+			m_EventAfterState = enGameOver;
 
-			m_gameState = enGameOver;
+			return;
 		}
 	}
 	
+	if (m_gameState == enEvent)
+	{
+		//イベントシーンが終了したら
+		if (test->IsEvent() == false)
+		{
+			switch (m_EventAfterState)
+			{
+			case enGameClear:
+				//フェードアウトを開始
+				m_load->StartFadeOut();
+				//ステートをゲームクリアに
+				m_gameState = enGameClear;
+
+				break;
+
+			case enGameOver:
+				//フェードアウトを開始
+				m_load->StartFadeOut();
+				//ステートをゲームクリアに
+				m_gameState = enGameOver;
+
+				DeleteGO(m_gametimer);
+
+				break;
+
+			default:
+				m_gameState = m_EventAfterState;
+			}
+		}
+	}
+
 }
 
 void Game::GameClearProcess()

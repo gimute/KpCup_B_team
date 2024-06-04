@@ -32,7 +32,8 @@ public:
 	enum EnGameState {
 		enIdle,
 		enGameClear,
-		enGameOver
+		enGameOver,
+		enEvent
 	};
 
 	//エネミーの攻撃可能ポイント
@@ -129,6 +130,7 @@ private:
 
 	PreSpriteRender m_preSpriteRender;
 	EnGameState m_gameState = enIdle;
+	EnGameState m_EventAfterState;	//イベントシーン終了後に移行するステート
 
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
 };
