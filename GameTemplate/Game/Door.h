@@ -11,6 +11,8 @@ public:
 	bool Start();
 	//アップデート
 	void Update();
+	//アルファチャンネル調整
+	void AlphaCalc();
 	//当たり判定処
 	void Collision();
 	//開閉処理
@@ -66,8 +68,20 @@ private:
 	bool m_DoorOpen = false;
 	// 文字を表示するか
 	bool m_fontDraw = false;
+	// アンダーバーを表示するか
+	bool m_spUnderDraw = false;
+	//モヤモヤの画像を表示するか
+	bool m_spriteDraw = false;
 	//カードキーを持ってないときに出す文字
 	FontRender m_fontRender;
+	//アルファチャンネルの調整用変数
+	float m_alpha = 0.1f;
+	//アルファチャンネルの判定
+	bool m_alphaCalcBool;
+	//アンダーバーの文字
+	SpriteRender m_spRen_under;
+	//モヤモヤの画像
+	SpriteRender m_spriteRender_moya;
 
 public:
 	/////////////////////////////////////////初期設定系統

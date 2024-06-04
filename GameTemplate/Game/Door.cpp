@@ -53,10 +53,35 @@ bool Door::Start()
 	//ゲームのインスタンスを受け取る
 	m_game = FindGO<Game>("game");
 
+	//文字を見えやすくするためにモヤモヤの画面を読み込む
+	m_spriteRender_moya.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
+	m_spriteRender_moya.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
+	m_spriteRender_moya.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
+	m_spriteRender_moya.Update();
+
+	//アンダーバー画像の設定
+	SpriteInitData initData;
+	//DDSファイル（画像データ）のファイルパスを指定する
+	//スタートボタンの画像データを指定する
+	initData.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
+	//Sprite表示用のシェーダーのファイルパスを指定する
+	initData.m_fxFilePath = "Assets/shader/spriteUnder.fx";
+	initData.m_expandConstantBuffer = &m_alpha;
+	initData.m_expandConstantBufferSize += sizeof(float);
+	//スプライトの幅と高さを指定する
+	initData.m_width = static_cast<UINT>(25);
+	initData.m_height = static_cast<UINT>(1.5);
+	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+	m_spRen_under.Init(initData);
+	m_spRen_under.SetPosition(Vector3{ 165.0f,-373.0f,0.0f });
+	//m_spRen_under.SetMulColor({ 1.0f,1.0f,1.0f,1.0f });
+	m_spRen_under.Update();
+
 	//フォントレンダーの設定
 	m_fontRender.SetText(L"敵をすべて倒さないと開かないようだ");
 	m_fontRender.SetScale(0.7f);
-	m_fontRender.SetPosition(Vector3(-350.0f, 10.0f, 0.0f));
+	m_fontRender.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_fontRender.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	return true;
@@ -64,6 +89,10 @@ bool Door::Start()
 
 void Door::Update()
 {
+	//アルファチャンネルの調整
+	AlphaCalc();
+	m_spRen_under.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
+	m_spRen_under.Update();
 	//コリジョンの当たり判定処理
 	Collision();
 	//開閉
@@ -76,6 +105,25 @@ void Door::Update()
 	m_RenderDoorMain.Update();
 	m_RenderDoorL.Update();
 	m_RenderDoorR.Update();
+}
+
+void Door::AlphaCalc()
+{
+	if (m_alpha >= 1.0f)
+	{
+		m_alphaCalcBool = false;
+	}
+	if (m_alphaCalcBool)
+	{
+		m_alpha += 0.04f;
+		return;
+	}
+	m_alpha -= 0.04f;
+	if (m_alpha <= 0.1f)
+	{
+		m_alphaCalcBool = true;
+	}
+	
 }
 
 void Door::Collision()
@@ -95,12 +143,16 @@ void Door::Collision()
 			}
 			else
 			{
+				m_spriteDraw = true;
 				m_fontDraw = true;
+				m_spUnderDraw = true;
 				return;
 			}
 		}
 	}
+	m_spriteDraw = false;
 	m_fontDraw = false;
+	m_spUnderDraw = false;
 }
 
 void Door::OpenClose()
@@ -141,5 +193,13 @@ void Door::Render(RenderContext& rc)
 	if (m_fontDraw == true)
 	{
 		m_fontRender.Draw(rc);
+	}
+	if (m_spUnderDraw == true)
+	{
+		m_spRen_under.Draw(rc);
+	}
+	if (m_spriteDraw == true)
+	{
+		m_spriteRender_moya.Draw(rc);
 	}
 }
