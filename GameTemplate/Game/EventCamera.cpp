@@ -3,6 +3,8 @@
 #include "Game.h"
 
 namespace {
+	int extractionNumListA[] = { 0,1,2,5,6 };
+	int extractionNumListB[] = { 1,1,3,1,3 };
 }
 
 EventCamera::EventCamera()
@@ -18,7 +20,7 @@ EventCamera::~EventCamera()
 bool EventCamera::Start()
 {
 	//カメラ位置が記録されたレベルを読み込む
-	m_camLevelRender.Init("Assets/levelData/eventCamPosTar.tkl", [&](LevelObjectData_Render& objData)
+	m_camLevelRender.Init("Assets/levelData/eventCamTest.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"A_Scene1Pos") == true)
 		{
@@ -66,24 +68,55 @@ void EventCamera::SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
 	//構造体宣言
 	SceneVector setVector;
 
-	//00000000を0A 0B 000C 000Dとして0Aが先頭番号
-	//0BがBool、000Cがイージング割合、
-	//000Dが切り替えまでの秒数とする。
+	std::string charStrA = std::to_string(setNum);
 
-	//先頭番号
-	int Num = setNum / 10000000;
+	charStrA.erase(charStrA.begin());
 
-	//Bool、0か1かで判定
-	int BoolNum = setNum % 10000000;
-	BoolNum /= 1000000;
+	int Num, BoolNum,IfNum;
+	float EasingTime,ChangeTime;
 
-	//カメライージング割合
-	float EasingTime = (setNum / 1000) % 1000;
-	EasingTime *= 0.1;
+	for (int i = 0; i < 5; i++)
+	{
+		//00000000を0A 0B 000C 000Dとして0Aが先頭番号
+		//0BがBool、000Cがイージング割合、0Dが切り替え条件の付与、
+		//000Eが切り替えまでの秒数とする。
 
-	//カメラ切り替え秒数
-	float ChangeTime = setNum % 100;
-	ChangeTime *= 0.1;
+		//※注意！
+		//切り替え条件がオン(切り替え条件の付与変数が１)になっている場合は
+		//切り替えまでの秒数(000E)が切り替え条件対象ナンバーとなります。
+
+		std::string charStrB = charStrA.substr(extractionNumListA[i],
+			extractionNumListB[i]);
+
+		switch (i)
+		{
+		case 0:
+			//先頭番号
+			Num = std::stoi(charStrB);
+			break;		
+		case 1:
+			//bool１か０かで判定
+			BoolNum = std::stoi(charStrB);
+			break;		
+		case 2:
+			//カメライージング割合
+			EasingTime = std::stoi(charStrB);
+			EasingTime *= 0.1;
+			break;		
+		case 3:
+			//切り替え条件の付与
+			IfNum = std::stoi(charStrB);
+			break;
+		case 4:
+			//カメラ切り替え秒数
+			ChangeTime = std::stoi(charStrB);
+			if (IfNum == 0)
+			{
+				ChangeTime *= 0.1;
+			}
+			break;
+		}
+	}
 
 	//↑の変数を構造体に格納
 	if (BoolNum == 0)
@@ -95,11 +128,21 @@ void EventCamera::SetSceneCamAndTarPos(const Vector3& setPos, const int setNum
 		setVector.isEasing = true;
 	}
 
+	if (IfNum == 0)
+	{
+		setVector.isSwitchingCon = false;
+	}
+	else
+	{
+		setVector.isSwitchingCon = true;
+	}
+
 	setVector.m_changeTime = ChangeTime;
 
 	setVector.m_easingRatio = EasingTime;
 
 	setVector.m_vector = setPos;
+
 
 	//enum型で格納対象を変更
 	switch (updateMode)
@@ -236,8 +279,22 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &se
 			return;
 		}
 
-		//カメラ位置切り替え時間を現在のイテレーターで初期化
-		m_posChangeTime = setIterator->second.m_changeTime;
+
+		//現在のイテレーターのカメラ切り替え条件がオンになっているなら
+		if (setIterator->second.isSwitchingCon == true)
+		{
+			//カメラターゲット切り替え時間を1.0で初期化
+			m_posChangeTime = 1.0;
+			//カメラターゲット切り替え条件ナンバーを初期化
+			m_camSwitchingNum = setIterator->second.m_changeTime;
+		}
+		//オフだったら
+		else
+		{
+			//カメラ位置切り替え時間を現在のイテレーターで初期化
+			m_posChangeTime = setIterator->second.m_changeTime;
+		}
+
 
 		//現在のイテレーターのイージングがオンだったら
 		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModePosition))
@@ -260,8 +317,20 @@ void EventCamera::CamPositionListChange(std::map<int, SceneVector>::iterator &se
 			return;
 		}
 
-		//カメラターゲット切り替え時間を現在のイテレーターで初期化
-		m_tarChangeTime = setIterator->second.m_changeTime;
+		//現在のイテレーターのカメラ切り替え条件がオンになっているなら
+		if (setIterator->second.isSwitchingCon == true)
+		{
+			//カメラターゲット切り替え時間を1.0で初期化
+			m_tarChangeTime = 1.0;
+			//カメラターゲット切り替え条件ナンバーを初期化
+			m_tarSwitchingNum = setIterator->second.m_changeTime;
+		}
+		//オフだったら
+		else
+		{
+			//カメラターゲット切り替え時間を現在のイテレーターで初期化
+			m_tarChangeTime = setIterator->second.m_changeTime;
+		}
 
 		//現在のイテレーターのイージングがオンだったら
 		if (IsCamPosIteratorEasing(setIterator,ListUpdateMode::en_ModeTarget))
@@ -306,7 +375,58 @@ Vector3 EventCamera::Easing(std::map<int, SceneVector>::iterator setIterator
 void EventCamera::Time(std::map<int, SceneVector>::iterator setIterator
 	, ListUpdateMode updateMode)
 {
+	//切り替え条件がナンバーの時の処理
+	if (setIterator->second.isSwitchingCon == true)
+	{
+		switch (updateMode)
+		{
+		case EventCamera::en_ModePosition:
+			//現在処理中のイテレーターのイージングが終了しておらず
+			//現在処理中のイテレーターのイージングがオンであれば
+			if (!IsIteratorEasingEnd(m_camPosListIterator)
+				&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModePosition))
+			{
+				//イージングの割合を増やす
+				m_easingRatioCamPos += g_gameTime->GetFrameDeltaTime() * m_easingPosRatio;
+			}
+			//上記の条件と合わなければ
+			else
+			{
+				//もしカメラターゲットのナンバーが
+				//指定した条件ナンバーだったら
+				if (m_camTarListIterator->first == m_camSwitchingNum)
+				{
+					//カメラ位置切り替えタイマーを0.0fにする
+					m_posChangeTime = 0.0f;
+				}
+			}
+			break;
+		case EventCamera::en_ModeTarget:
+			//現在処理中のイテレーターのイージングが終了しておらず
+			//現在処理中のイテレーターのイージングがオンであれば
+			if (!IsIteratorEasingEnd(m_camTarListIterator)
+				&& IsCamPosIteratorEasing(setIterator, ListUpdateMode::en_ModeTarget))
+			{
+				//イージングの割合を増やす
+				m_easingRatioTarPos += g_gameTime->GetFrameDeltaTime() * m_easingTarRatio;
+			}
+			//上記の条件と合わなければ
+			else
+			{
+				//もしカメラターゲットのナンバーが
+				//指定した条件ナンバーだったら
+				if (m_camPosListIterator->first == m_tarSwitchingNum)
+				{
+					//カメラ位置切り替えタイマーを0.0fにする
+					m_tarChangeTime = 0.0f;
+				}
+			}
+			break;
+		}
+		return;
+	}
 
+	//切り替え条件が時間の時の処理
 	//	//enum型アップデートモードで分岐
 	switch (updateMode)
 	{

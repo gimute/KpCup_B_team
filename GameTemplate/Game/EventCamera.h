@@ -51,6 +51,10 @@ public:
 		/// この地点のイージングが終了しているかどうか
 		/// </summary>
 		bool isEasingEnd = false;
+		/// <summary>
+		/// 切り替え条件の付与
+		/// </summary>
+		bool isSwitchingCon = false;
 	};
 	/// <summary>
 	/// １シーンで使う変数などが入った構造体
@@ -192,9 +196,13 @@ public:
 	/// </summary>
 	float m_easingTarRatio = 0.0f;
 	/// <summary>
-	/// カメラ位置のイージングが終了しているかいないか
+	/// カメラ切り替え条件ナンバー
 	/// </summary>
-	bool m_camPoseasingEnd = false;
+	int m_camSwitchingNum = -1;
+	/// <summary>
+	/// カメラターゲット切り替え条件ナンバー
+	/// </summary>
+	int m_tarSwitchingNum = -1;
 	/////////////////////////////////////////初期設定系統
 	/// <summary>
 	/// シーンスタート
@@ -211,10 +219,6 @@ public:
 
 		m_sceneNow = setScene;
 
-		m_posChangeTime = m_scene[setScene].m_cameraWayPoint[0].m_changeTime;
-
-		m_tarChangeTime = m_scene[setScene].m_cameraChangeTarget[0].m_changeTime;
-
 		m_camPosListIterator = m_scene[setScene].m_cameraWayPoint.begin();
 
 		m_camTarListIterator = m_scene[setScene].m_cameraChangeTarget.begin();
@@ -226,6 +230,30 @@ public:
 		m_cameraTarListEnd = false;
 		
 		m_cameraPosListEnd = false;
+
+		if (m_camPosListIterator->second.isSwitchingCon)
+		{
+			m_posChangeTime = 1.0;
+			m_camSwitchingNum = m_scene[setScene].
+				m_cameraWayPoint[0].m_changeTime;
+		}
+		else
+		{
+			m_posChangeTime = m_scene[setScene].
+				m_cameraWayPoint[0].m_changeTime;
+		}
+
+		if (m_camTarListIterator->second.isSwitchingCon)
+		{
+			m_tarChangeTime = 1.0;
+			m_tarSwitchingNum = m_scene[setScene].
+				m_cameraChangeTarget[0].m_changeTime;
+		}
+		else
+		{
+			m_tarChangeTime = m_scene[setScene].
+				m_cameraChangeTarget[0].m_changeTime;
+		}
 
 		EasingFlagListClear(ListUpdateMode::en_ModePosition);
 
