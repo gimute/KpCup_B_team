@@ -60,6 +60,12 @@ void GameTimer::FontDraw()
 void GameTimer::Render(RenderContext& rc)
 {
 	m_game = FindGO<Game>("game");
+
+	//ゲームオブジェクトが見つからなければ処理を飛ばす
+	if (m_game == nullptr)
+	{
+		return;
+	}
 	if (m_game->m_TempDelGameTimer == true) {
 		m_spriteRender.Draw(rc);
 	}
