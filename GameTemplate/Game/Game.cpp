@@ -284,7 +284,7 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
-			test->StartScene(EventCamera::en_Scene3_MapUp2);
+			test->StartScene(EventCamera::en_Scene2_MapUp1);
 			m_EventAfterState = enGameOver;
 
 			return;
