@@ -23,6 +23,7 @@
 #include "Bullet.h"
 #include "Door.h"
 #include "EventCamera.h"
+#include "EventModel.h"
 ///////////////////////////////
 
 Game::Game()
@@ -71,6 +72,8 @@ Game::Game()
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	test = NewGO<EventCamera>(0,"camera");
+
+	test2 = NewGO<EventModel>(0, "camera");
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(0, "UI");

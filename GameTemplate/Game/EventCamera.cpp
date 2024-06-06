@@ -20,6 +20,7 @@ EventCamera::~EventCamera()
 bool EventCamera::Start()
 {
 	//カメラ位置が記録されたレベルを読み込む
+	////↓レベルレンダーで移動経路などを取得する処理↓////
 	m_camLevelRender.Init("Assets/levelData/eventCamTest.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"A_Scene1Pos") == true)
@@ -55,6 +56,7 @@ bool EventCamera::Start()
 		}
 		return true;
 	});
+	////↑レベルレンダーで移動経路などを取得する処理↑////
 
 	//ゲームクラスのインスタンスを取得
 	m_game = FindGO<Game>("game");

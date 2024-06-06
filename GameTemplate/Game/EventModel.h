@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 class EventCamera;
 
 class EventModel : public IGameObject
@@ -17,7 +19,7 @@ public:
 		/// <summary>
 		/// このシーンで使用するアニメーション
 		/// </summary>
-		AnimationClip* m_animationclips;
+		std::unique_ptr<AnimationClip[]> m_animationclips;
 		/// <summary>
 		/// このシーンで使用するアニメーションの数
 		/// </summary>
@@ -29,13 +31,22 @@ public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
+		/// <param name="listNum"></param>
+		/// <param name="tkmfilePath"></param>
 		SceneModel(int listNum,const char* tkmfilePath)
 		{
-			//int型の引数で配列を動的に確保
-			m_animationclips = new AnimationClip[listNum];
+			//int型の引数で配列を動的に確保、スマートポインタにメモリの所有権を委ねる
+			m_animationclips = std::make_unique<AnimationClip[]>(listNum);
 
 			//引数のファイルパスを登録
 			m_sceneFilePath = tkmfilePath;
+		}
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~SceneModel()
+		{
+			//スマートポインタに任せてるから今は何も書いてない
 		}
 		/// <summary>
 		/// 第一引数のint型の数のアニメーションクリップの要素番号の場所に
@@ -53,8 +64,15 @@ public:
 			//引数のbool型でループフラグを設定
 			m_animationclips[listNum].SetLoopFlag(loopFlag);
 		}
+		/// <summary>
+		/// モデルレンダーに登録を確定
+		/// </summary>
+		void RegistrationConfirmed()
+		{
+			//登録を確定する
+			m_modelRender.Init(m_sceneFilePath, m_animationclips.get(), m_useAnimationclips);
+		}
 	};
-
 public:
 	/////////////////////////////////////////関数
 	EventModel();
@@ -64,6 +82,10 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool Start();
+	/// <summary>
+	/// アップデート関数
+	/// </summary>
+	void Update();
 	/////////////////////////////////////////メンバ変数
 	/// <summary>
 	/// レベルレンダー
@@ -74,7 +96,14 @@ public:
 	/// </summary>
 	EventCamera* m_eventCam = nullptr;
 	/////////////////////////////////////////変数
-
+	/// <summary>
+	/// モデルの配列
+	/// </summary>
+	std::list<SceneModel> m_sceneModelMapList;
+	/// <summary>
+	/// イベントを再生するかしないかのフラグ
+	/// </summary>
+	bool m_eventFlag = false;
 	/////////////////////////////////////////初期設定系統
 };
 
