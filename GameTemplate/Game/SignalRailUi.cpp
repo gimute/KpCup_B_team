@@ -11,7 +11,10 @@ SignalRailUi::SignalRailUi()
 
 SignalRailUi::~SignalRailUi()
 {
-
+	for (int i = 0; i < m_signalUiList_t.size(); i++)
+	{
+		DeleteGO(m_signalUiList_t[i]);
+	}
 }
 
 bool SignalRailUi::Start()
@@ -23,6 +26,13 @@ bool SignalRailUi::Start()
 	m_ReticleUi.SetPosition(pos);
 
 	m_game = FindGO<Game>("game");
+
+	for (int i = 0; i < m_signalUiList_t.size(); i++)
+	{
+		m_signalUiList_t[i] = NewGO<SignalUi>(0, "signalui");
+		m_signalUiList_t[i]->m_VecNum = i;
+	}
+	//m_signalUiList_t
 
 	return true;
 }
@@ -39,13 +49,24 @@ void SignalRailUi::AttackEnemySearch()
 {
 	for (int Listnum = 0; Listnum < m_game->m_EnemyList.size(); Listnum++)
 	{
-		Vector3 enemypos = m_game->GetEnemyListPos(Listnum);
+		//Vector3 enemypos = m_game->GetEnemyListPos(Listnum);
 
 		if (EnemyStateIsAttack(Listnum)&& !ListCheck(Listnum)
 			/*&& AngleCheck(enemypos)*/)
 		{
-			SignalUi* m_signalUi = NewGO<SignalUi>(3, "Ui");
-			m_signalUi->SetEnemyVecNum(Listnum);
+			//SignalUi* m_signalUi = NewGO<SignalUi>(3, "Ui");
+			//m_signalUi->SetEnemyVecNum(Listnum);
+			for (int i = 0; i < m_signalUiList_t.size(); i++)
+			{
+				if (m_signalUiList_t[i]->GetIsUse() == false)
+				{
+					m_signalUiList_t[i]->IsUse();
+					m_signalUiList_t[i]->SetEnemyVecNum(Listnum);
+					m_useSignalUiNum++;
+					break;
+				}
+				
+			}
 		}
 	}
 }
@@ -72,11 +93,11 @@ bool SignalRailUi::AngleCheck(const Vector3& position)
 bool SignalRailUi::ListCheck(int Listnum)
 {
 	//ç\ë¢ëÃîzóÒÇâÒÇ∑
-	for (int i = 0; i < m_signalUiList.size(); i++)
+	for (int i = 0; i < m_signalUiList_t.size(); i++)
 	{
 		//ìnÇ≥ÇÍÇΩEnemyÇÃîzóÒî‘çÜÇ∆ìØÇ∂î‘çÜÇ™
 		//m_camForwardListÇ…Ç†ÇÍÇŒ
-		if (m_signalUiList[i]->m_enemyConnectNum == Listnum)
+		if (m_signalUiList_t[i]->m_enemyConnectNum == Listnum)
 		{
 			//trueÇï‘Ç∑
 			return true;
@@ -100,11 +121,16 @@ bool SignalRailUi::EnemyStateIsAttack(int ListNum)
 
 void SignalRailUi::DeleteSignalList(const int num)
 {
-	m_signalUiList.erase(m_signalUiList.begin() + num);
+	/*m_signalUiList.erase(m_signalUiList.begin() + num);
 	for (int VecNow = num; VecNow < m_signalUiList.size(); VecNow++) {
 		m_signalUiList[VecNow]->m_VecNum -= 1;
-	}
-	m_signalQua--;
+	}*/
+
+	m_signalUiList_t[num]->IsUnUse();
+	m_signalUiList_t[num]->SetEnemyVecNum(-1);
+
+	m_useSignalUiNum--;
+	//m_signalQua--;
 }
 
 void SignalRailUi::Render(RenderContext& rc)
