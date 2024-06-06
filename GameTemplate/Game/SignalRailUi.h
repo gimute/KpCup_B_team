@@ -70,10 +70,16 @@ public:
 	/// <summary>
 	/// 危険信号Uiの数
 	/// </summary>
-	int m_signalQua = 0;
+	//int m_signalQua = 0;
 	/// <summary>
 	/// 危険信号Uiのリスト
 	/// </summary>
-	std::vector<SignalUi*> m_signalUiList;
+	std::array<SignalUi*, 10> m_signalUiList_t;
+
+
+	//使用中のシグナルUiの数
+	int m_useSignalUiNum = 0;
+
+	//std::vector<SignalUi*> m_signalUiList;
 };
 
