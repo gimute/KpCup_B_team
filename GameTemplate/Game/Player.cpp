@@ -17,26 +17,26 @@ Player::~Player()
 
 bool Player::Start()
 {
-	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
+	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/V2_player/idle.tka");
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/proto_player/run.tka");
-	m_animationclips[enAnimationClip_Walk].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Crouching].Load("Assets/modelData/player/proto_player/crouching.tka");
-	m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
-	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
-	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");
-	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_PostureIdle].Load("Assets/modelData/player/proto_player/shotstandby.tka");
-	m_animationclips[enAnimationClip_PostureIdle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/proto_player/rolling.tka");
-	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
-	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
+	//m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/proto_player/run.tka");
+	//m_animationclips[enAnimationClip_Walk].SetLoopFlag(true);
+	//m_animationclips[enAnimationClip_Crouching].Load("Assets/modelData/player/proto_player/crouching.tka");
+	//m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
+	//m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
+	//m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
+	//m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
+	//m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
+	//m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");
+	//m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
+	//m_animationclips[enAnimationClip_PostureIdle].Load("Assets/modelData/player/proto_player/shotstandby.tka");
+	//m_animationclips[enAnimationClip_PostureIdle].SetLoopFlag(true);
+	//m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/proto_player/rolling.tka");
+	//m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
+	//m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
+	//m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
-	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/player/V2_player/player.tkm", m_animationclips, enAnimationClip_Num);
 
 	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
@@ -348,36 +348,36 @@ void Player::PlayAnimation()
 		m_modelRender.SetAnimationSpeed(1.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.1f);
 		break;
-	case Player::enPlayerState_Walk:
-		//歩き
-		m_modelRender.SetAnimationSpeed(1.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
-		break;
-	case Player::enPlayerState_Attack:
-		//攻撃
-		m_modelRender.SetAnimationSpeed(5.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
-		break;
-	case Player::enPlayerState_PostureWalk:
-		if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
-			m_modelRender.SetAnimationSpeed(1.0f);
-			m_modelRender.PlayAnimation(enAnimationClip_PostureWalk, 0.1f);
-		}
-		else
-		{
-			m_modelRender.SetAnimationSpeed(1.0f);
-			m_modelRender.PlayAnimation(enAnimationClip_PostureIdle, 0.1f);
-		}
-		break;
-	case Player::enPlayerState_Rolling:
-		m_modelRender.SetAnimationSpeed(2.0);
-		m_modelRender.PlayAnimation(enAnimationClip_Rolling, 0.1f);
-		break;
-	case Player::enPlayerState_ReceiveDamage:
-		//被ダメージ
-		m_modelRender.SetAnimationSpeed(3.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
-		break;
+	//case Player::enPlayerState_Walk:
+	//	//歩き
+	//	m_modelRender.SetAnimationSpeed(1.0f);
+	//	m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
+	//	break;
+	//case Player::enPlayerState_Attack:
+	//	//攻撃
+	//	m_modelRender.SetAnimationSpeed(5.0f);
+	//	m_modelRender.PlayAnimation(enAnimationClip_Gunshot, 0.1f);
+	//	break;
+	//case Player::enPlayerState_PostureWalk:
+	//	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
+	//		m_modelRender.SetAnimationSpeed(1.0f);
+	//		m_modelRender.PlayAnimation(enAnimationClip_PostureWalk, 0.1f);
+	//	}
+	//	else
+	//	{
+	//		m_modelRender.SetAnimationSpeed(1.0f);
+	//		m_modelRender.PlayAnimation(enAnimationClip_PostureIdle, 0.1f);
+	//	}
+	//	break;
+	//case Player::enPlayerState_Rolling:
+	//	m_modelRender.SetAnimationSpeed(2.0);
+	//	m_modelRender.PlayAnimation(enAnimationClip_Rolling, 0.1f);
+	//	break;
+	//case Player::enPlayerState_ReceiveDamage:
+	//	//被ダメージ
+	//	m_modelRender.SetAnimationSpeed(3.0f);
+	//	m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
+	//	break;
 	}
 }
 

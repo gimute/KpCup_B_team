@@ -8,15 +8,15 @@ class Player : public IGameObject
 public:
 	//アニメーションクリップ
 	enum EnAnimationClip {
-		enAnimationClip_Walk,			//歩き
+		//enAnimationClip_Walk,			//歩き
 		enAnimationClip_Idle,			//棒立ち
-		enAnimationClip_Crouching,      //しゃがみ
-		enAnimationClip_Punch,			//パンチモーション
-		enAnimationClip_Gunshot,		//射撃モーション
-		enAnimationClip_PostureWalk,	//構え歩き
-		enAnimationClip_PostureIdle,	//構え立ち
-		enAnimationClip_Rolling,		//ローリング
-		enAnimationClip_Damage,			//被ダメージモーション
+		//enAnimationClip_Crouching,      //しゃがみ
+		//enAnimationClip_Punch,			//パンチモーション
+		//enAnimationClip_Gunshot,		//射撃モーション
+		//enAnimationClip_PostureWalk,	//構え歩き
+		//enAnimationClip_PostureIdle,	//構え立ち
+		//enAnimationClip_Rolling,		//ローリング
+		//enAnimationClip_Damage,			//被ダメージモーション
 		enAnimationClip_Num				//アニメーション数
 	};
 	//プレイヤーステート
