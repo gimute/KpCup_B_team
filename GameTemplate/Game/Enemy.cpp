@@ -252,6 +252,34 @@ void Enemy::ProcessChaseStateTransition()
 			//ステートを攻撃に変更
 			m_enemystate = enEnemyState_Attack;
 			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+
+			// プレイヤーが攻撃範囲内に居たら、
+			if (SearchAttackDistance() == true)
+			{
+				// ステートを攻撃にする。
+				m_enemystate = enEnemyState_Attack;
+				m_chaseTimer = 3.0f;
+				return;
+			}
+			// 攻撃範囲内で無ければ
+			else
+			{
+				// 追跡ステートのまま返す。
+				m_chaseTimer = 3.0f;
+				return;
+			}	
+		}
+		// プレイヤーが近くに居ない場合
+		else
+		{
+			//チェイスタイマーを進める(値を減らす)
+			m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
+			//タイマーが0以下なら
+			if (m_chaseTimer <= 0)
+			{
+				// ステートを遷移する
+				ProcessCommonStateTransition();
+			}
 			return;
 		}
 	}
@@ -291,6 +319,12 @@ void Enemy::ProcessAttackStateTransition()
 		ReleaseAttackPoint();
 		//追跡ステートにする
 		m_enemystate = enEnemyState_Chase;
+	}
+	//プレイヤーが一定以上離れたら
+	if ((m_player->m_position - m_position).Length() >= 400.0f)
+	{
+		// ステートを遷移する
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -402,8 +436,6 @@ void Enemy::Rotation()
 		m_forward = Vector3::AxisZ;
 		m_rotation.Apply(m_forward);
 		break;
-
-		
 	case Enemy::enEnemyState_Attack:
 		//プレイヤーのいる方向に向かせる
 		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。
@@ -527,6 +559,7 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 		return 0.0f;
 	}
 };
+
 bool Enemy::WallCheck(const Vector3 position)
 {
 	btTransform start, end;
