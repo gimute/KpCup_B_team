@@ -23,6 +23,7 @@
 #include "Bullet.h"
 #include "Door.h"
 #include "EventCamera.h"
+#include "sound/SoundEngine.h"
 ///////////////////////////////
 
 Game::Game()
@@ -41,7 +42,7 @@ Game::Game()
 	//ゲームタイマー表示
 	m_gametimer = NewGO<GameTimer>(0, "gametimer");
 
-	m_levelRender.Init("Assets/levelData/map1level.tkl", [&](LevelObjectData_Render& objData)
+	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
@@ -76,6 +77,13 @@ Game::Game()
 	m_hpui = NewGO<HpUi>(0, "UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
+	//ゲーム中のBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
+	//ゲーム中のBGMを再生する
+	m_gameBgm = NewGO<SoundSource>(1);
+	m_gameBgm->Init(1);
+	m_gameBgm->Play(true);
+
 }
 
 Game::~Game()
@@ -85,7 +93,7 @@ Game::~Game()
 	DeleteGO(m_hpui);
 	DeleteGO(m_signalRailUi);
 	DeleteGO(door1);
-
+	DeleteGO(m_gameBgm);
 	DeleteGO(m_player);
 }
 
@@ -115,6 +123,7 @@ void Game::Update()
 			//DeleteGO(m_hpui);
 			//ゲームクリアのオブジェクトをつくる。
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
+
 		}
 		break;
 

@@ -4,6 +4,7 @@
 #include "EnemyCamPos.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "sound/SoundSource.h"
 
 //エネミーアタックポイントの数
 //#define ENEMY_ATTACK_POINT_NUM 15
@@ -111,6 +112,7 @@ public:
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
+	SoundSource* m_gameBgm;
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
