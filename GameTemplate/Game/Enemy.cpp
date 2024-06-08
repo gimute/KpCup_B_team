@@ -6,6 +6,8 @@
 #include "Bullet.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
+#include "sound/SoundEngine.h"
+#include "sound/SoundSource.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -19,6 +21,7 @@ namespace
 
 Enemy::~Enemy()
 {
+	DeleteGO(m_bgm);
 	DeleteGO(m_collisionObject);
 	m_game->m_EnemyHpUiList[m_Vectornum]->DeleteUi();
 	m_game->Delete_EnemyVec(m_Vectornum);
@@ -84,7 +87,14 @@ bool Enemy::Start()
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 
+	//音を読み込む
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
 	
+	//BGM
+	m_bgm = NewGO<SoundSource>(0);
+	//m_footBgm->Init(5);
+	//m_footBgm->Play(true);
+	//m_footBgm->SetVolume(3.0f);
 
 	return true;
 }
@@ -104,6 +114,9 @@ void Enemy::Update()
 	case enEnemyState_Chase:
 		//追跡処理
 		Chase();
+		/*SoundSource* se = NewGO<SoundSource>(0);
+		se->Init(5);
+		se->Play(false);*/
 		break;
 
 	case enEnemyState_Attack:
@@ -650,6 +663,13 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 		m_enemyAttackStep = en_noneStep;
 		m_shotBool = false;
+	}
+	else if(wcscmp(eventName, L"soundStart") == 0)
+	{
+		//SoundSource* se = NewGO<SoundSource>(0);
+		//se->Init(5);
+		//se->Play(false);
+		//se->SetVolume(0.3f);
 	}
 }
 

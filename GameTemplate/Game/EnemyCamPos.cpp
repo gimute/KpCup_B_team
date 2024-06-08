@@ -55,11 +55,11 @@ float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
 
 	if (enemy->m_enemyAttackSpeed == Enemy::en_FrequencyHigh)
 	{
-		return 3.0f;
+		return 1.0f;
 	}
 	else
 	{
-		return 10.0f;
+		return 5.0f;
 	}
 }
 
