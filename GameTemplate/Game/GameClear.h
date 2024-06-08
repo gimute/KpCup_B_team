@@ -1,5 +1,5 @@
 #pragma once
-
+#include "sound/SoundSource.h"
 class Game;
 class GameTimer;
 class Load;
@@ -26,6 +26,7 @@ public:
 	Load* m_load = nullptr;
 	FontRender m_fontRender;
 	FontRender m_fontRender_tensen;
+	SoundSource* m_clearBgm;
 
 	bool m_isWaitFadeout = false;
 	bool m_isSaveClearTime = false;

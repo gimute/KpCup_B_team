@@ -2,6 +2,7 @@
 #include "Title.h"
 #include "Game.h"
 #include "Load.h"
+#include "sound/SoundEngine.h"
 
 Title::Title()
 {
@@ -10,7 +11,8 @@ Title::Title()
 
 Title::~Title()
 {
-
+	//タイトルのBGMを削除する
+	DeleteGO(m_titleBgm);
 }
 
 bool Title::Start()
@@ -38,9 +40,15 @@ bool Title::Start()
 	m_spriteRender_startButton.SetPosition({0.0f, -300.0f, 0.0f});
 	m_spriteRender_startButton.Update();
 	
+	//タイトルのBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/m_title2.wav");
+	//タイトルのBGMを再生する
+	m_titleBgm = NewGO<SoundSource>(0);
+	m_titleBgm->Init(0);
+	m_titleBgm->Play(true);
+
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
-
 	return true;
 }
 
