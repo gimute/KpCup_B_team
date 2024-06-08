@@ -1,5 +1,5 @@
 #pragma once
-
+#include "sound/SoundSource.h"
 class Game;
 class Load;
 class GameOver : public IGameObject 
@@ -18,6 +18,7 @@ public:
 
 	//メンバ変数
 	SpriteRender m_spriteRender;	//スプライトレンダー
+	SoundSource* m_overBgm;			//ゲームオーバーのBGM
 	bool m_isWaitFadeout = false;
 };
 
