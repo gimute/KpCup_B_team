@@ -614,7 +614,7 @@ const bool Enemy::SearchAttackDistance() const
 void Enemy::ProcessCommonStateTransition()
 {
 	//プレイヤーが視界内に居るか
-	if (SearchPlayer())
+	if (SearchPlayer()||AroundStateCheckChase())
 	{
 		//居たら追跡ステートに。
 		m_enemystate = enEnemyState_Chase;
@@ -665,6 +665,57 @@ void Enemy::ReleaseAttackPoint()
 	m_game->GetEnemyAttackPointObject()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
 	//アタックポイントへのポインタも解放
 	m_AttackPoint = nullptr;
+}
+
+bool Enemy::AroundStateCheckChase()
+{
+	if (m_enemystate == enEnemyState_Chase)
+	{
+		return true;
+	}
+
+	for (int i = 0; i < m_game->m_EnemyList.size(); i++)
+	{
+		if (i == m_Vectornum)
+		{
+			continue;
+		}
+
+		Vector3 EnemyPos = m_game->GetEnemyListPos(i);
+
+		Vector3 Enemylength = EnemyPos - m_position;
+
+
+		if (Enemylength.Length() <= 500.0f)
+		{
+			btTransform start, end;
+
+			start.setIdentity();
+			end.setIdentity();
+
+			start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+
+			end.setOrigin(btVector3(EnemyPos.x, EnemyPos.y + 70.0f, EnemyPos.z));
+
+			SweepResultWall callback;
+			//制作したコライダーを始点から終点まで動かして壁に接触したか判定
+			PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+			//壁と衝突した時
+			if (callback.isHit == true)
+			{
+				return false;
+			}
+
+			if (m_game->GetEnemyListInstance(i)->m_enemystate
+				== enEnemyState_Chase)
+			{
+				return true;
+			}
+		}
+
+	}
+
+	return false;
 }
 
 void Enemy::Render(RenderContext& rc)
