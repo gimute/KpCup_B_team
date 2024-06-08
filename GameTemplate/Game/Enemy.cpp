@@ -252,6 +252,34 @@ void Enemy::ProcessChaseStateTransition()
 			//ステートを攻撃に変更
 			m_enemystate = enEnemyState_Attack;
 			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
+
+			// プレイヤーが攻撃範囲内に居たら、
+			if (SearchAttackDistance() == true)
+			{
+				// ステートを攻撃にする。
+				m_enemystate = enEnemyState_Attack;
+				m_chaseTimer = 3.0f;
+				return;
+			}
+			// 攻撃範囲内で無ければ
+			else
+			{
+				// 追跡ステートのまま返す。
+				m_chaseTimer = 3.0f;
+				return;
+			}	
+		}
+		// プレイヤーが近くに居ない場合
+		else
+		{
+			//チェイスタイマーを進める(値を減らす)
+			m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
+			//タイマーが0以下なら
+			if (m_chaseTimer <= 0)
+			{
+				// ステートを遷移する
+				ProcessCommonStateTransition();
+			}
 			return;
 		}
 	}
@@ -291,6 +319,12 @@ void Enemy::ProcessAttackStateTransition()
 		ReleaseAttackPoint();
 		//追跡ステートにする
 		m_enemystate = enEnemyState_Chase;
+	}
+	//プレイヤーが一定以上離れたら
+	if ((m_player->m_position - m_position).Length() >= 400.0f)
+	{
+		// ステートを遷移する
+		ProcessCommonStateTransition();
 	}
 }
 
@@ -402,8 +436,6 @@ void Enemy::Rotation()
 		m_forward = Vector3::AxisZ;
 		m_rotation.Apply(m_forward);
 		break;
-
-		
 	case Enemy::enEnemyState_Attack:
 		//プレイヤーのいる方向に向かせる
 		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。
@@ -527,6 +559,7 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 		return 0.0f;
 	}
 };
+
 bool Enemy::WallCheck(const Vector3 position)
 {
 	btTransform start, end;
@@ -614,7 +647,7 @@ const bool Enemy::SearchAttackDistance() const
 void Enemy::ProcessCommonStateTransition()
 {
 	//プレイヤーが視界内に居るか
-	if (SearchPlayer())
+	if (SearchPlayer()||AroundStateCheckChase())
 	{
 		//居たら追跡ステートに。
 		m_enemystate = enEnemyState_Chase;
@@ -665,6 +698,57 @@ void Enemy::ReleaseAttackPoint()
 	m_game->GetEnemyAttackPointObject()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
 	//アタックポイントへのポインタも解放
 	m_AttackPoint = nullptr;
+}
+
+bool Enemy::AroundStateCheckChase()
+{
+	if (m_enemystate == enEnemyState_Chase)
+	{
+		return true;
+	}
+
+	for (int i = 0; i < m_game->m_EnemyList.size(); i++)
+	{
+		if (i == m_Vectornum)
+		{
+			continue;
+		}
+
+		Vector3 EnemyPos = m_game->GetEnemyListPos(i);
+
+		Vector3 Enemylength = EnemyPos - m_position;
+
+
+		if (Enemylength.Length() <= 500.0f)
+		{
+			btTransform start, end;
+
+			start.setIdentity();
+			end.setIdentity();
+
+			start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+
+			end.setOrigin(btVector3(EnemyPos.x, EnemyPos.y + 70.0f, EnemyPos.z));
+
+			SweepResultWall callback;
+			//制作したコライダーを始点から終点まで動かして壁に接触したか判定
+			PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+			//壁と衝突した時
+			if (callback.isHit == true)
+			{
+				return false;
+			}
+
+			if (m_game->GetEnemyListInstance(i)->m_enemystate
+				== enEnemyState_Chase)
+			{
+				return true;
+			}
+		}
+
+	}
+
+	return false;
 }
 
 void Enemy::Render(RenderContext& rc)

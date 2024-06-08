@@ -83,6 +83,10 @@ public:
 	//あった場合false、なかった場合tureが返される
 	bool WallCheck(const Vector3 position);
 
+	//自身の近くの敵がチェイス状態に入ったらtrueを返す
+	bool AroundStateCheckChase();
+
+
 	///////////////////////////////////////////////////////////
 	//初期設定系統
 	//メンバ関数宣言
