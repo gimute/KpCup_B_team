@@ -94,6 +94,7 @@ public:
 	Enemy* m_enemy = nullptr;
 	Game* m_game = nullptr;
 	Bullet* m_bullet = nullptr;
+	SoundSource* m_bgm = nullptr;
 	
 
 	AnimationClip m_animationclips[enAnimationClip_Num];     //アニメーションクリップ
