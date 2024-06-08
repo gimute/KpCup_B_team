@@ -17,11 +17,11 @@ public:
 		/// </summary>
 		ModelRender m_modelRender;
 		/// <summary>
-		/// このシーンで使用するアニメーション
+		/// このモデルで使用するアニメーション
 		/// </summary>
 		std::unique_ptr<AnimationClip[]> m_animationclips;
 		/// <summary>
-		/// このシーンで使用するアニメーションの数
+		/// このモデルで使用するアニメーションの数
 		/// </summary>
 		int m_useAnimationclips = 0;
 		/// <summary>
@@ -35,8 +35,10 @@ public:
 		/// <param name="tkmfilePath"></param>
 		SceneModel(int listNum,const char* tkmfilePath)
 		{
+			m_animationclips = std::move(m_animationclips);
+
 			//int型の引数で配列を動的に確保、スマートポインタにメモリの所有権を委ねる
-			m_animationclips = std::make_unique<AnimationClip[]>(listNum);
+			m_animationclips.reset(new AnimationClip[listNum]);
 
 			//引数のファイルパスを登録
 			m_sceneFilePath = tkmfilePath;
@@ -69,7 +71,6 @@ public:
 		/// </summary>
 		void RegistrationConfirmed()
 		{
-			//登録を確定する
 			m_modelRender.Init(m_sceneFilePath, m_animationclips.get(), m_useAnimationclips);
 		}
 	};
@@ -86,6 +87,11 @@ public:
 	/// アップデート関数
 	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画関数
+	/// </summary>
+	/// <param name="rc"></param>
+	void Render(RenderContext& rc);
 	/////////////////////////////////////////メンバ変数
 	/// <summary>
 	/// レベルレンダー
@@ -97,13 +103,15 @@ public:
 	EventCamera* m_eventCam = nullptr;
 	/////////////////////////////////////////変数
 	/// <summary>
-	/// モデルの配列
+	/// モデルの登録配列
 	/// </summary>
-	std::list<SceneModel> m_sceneModelMapList;
+	std::map<int,SceneModel*> m_sceneModelMapList;
+	std::map<int, SceneModel*>::iterator testIter;
 	/// <summary>
 	/// イベントを再生するかしないかのフラグ
 	/// </summary>
 	bool m_eventFlag = false;
+	int testState = 0;
 	/////////////////////////////////////////初期設定系統
 };
 
