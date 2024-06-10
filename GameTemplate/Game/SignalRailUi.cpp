@@ -110,7 +110,8 @@ bool SignalRailUi::ListCheck(int Listnum)
 
 bool SignalRailUi::EnemyStateIsAttack(int ListNum)
 {
-	if (m_game->m_EnemyList[ListNum]->m_enemyAttackStep == Enemy::en_stanceStep
+	if ((m_game->m_EnemyList[ListNum]->m_enemyAttackStep == Enemy::en_stanceStep 
+		|| m_game->m_EnemyList[ListNum]->m_enemyAttackStep == Enemy::en_shotStep)
 		&& m_game->m_EnemyList[ListNum]->m_enemystate 
 		== Enemy::enEnemyState_Attack)
 	{
