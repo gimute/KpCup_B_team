@@ -264,6 +264,7 @@ void Enemy::ProcessChaseStateTransition()
 		{
 			//ステートを攻撃に変更
 			m_enemystate = enEnemyState_Attack;
+			m_shotBool = false;
 			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
 
 			// プレイヤーが攻撃範囲内に居たら、
