@@ -76,8 +76,6 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
-	//タイマー変数加減処理
-	TimeAdjustment();
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
@@ -384,23 +382,31 @@ void Player::PlayAnimation()
 void Player::ProcessCommonStateTransition()
 {
 	//Aボタンが押されたら
-	if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+	if (g_pad[0]->IsTrigger(enButtonA))
 	{
-		//左スティックの入力量を受け取る。
 		float lStick_x = g_pad[0]->GetLStickXF();
 		float lStick_y = g_pad[0]->GetLStickYF();
-		//カメラの前方方向と右方向を取得。
-		Vector3 cameraForward = g_camera3D->GetForward();
-		Vector3 cameraRight = g_camera3D->GetRight();
-		//XZ平面での前方方向、右方向に変換する。
-		cameraForward.y = 0.0f;
-		cameraForward.Normalize();
-		cameraRight.y = 0.0f;
-		cameraRight.Normalize();
-		m_rollingVec += cameraForward * lStick_y * 200.0f;	//奥方向への移動速度を加算。
-		m_rollingVec += cameraRight * lStick_x * 200.0f;		//右方向への移動速度を加算。
-		//キャラクターの方向を変える。
-		m_rotation.SetRotationYFromDirectionXZ(m_rollingVec);
+		if ((lStick_x <= 0.0f && lStick_x >= 0.0f)
+			&& (lStick_y <= 0.0f && lStick_y >= 0.0f))
+		{
+			m_rollingVec = m_forward;
+		}
+		else
+		{
+			//左スティックの入力量を受け取る。
+			//カメラの前方方向と右方向を取得。
+			Vector3 cameraForward = g_camera3D->GetForward();
+			Vector3 cameraRight = g_camera3D->GetRight();
+			//XZ平面での前方方向、右方向に変換する。
+			cameraForward.y = 0.0f;
+			cameraForward.Normalize();
+			cameraRight.y = 0.0f;
+			cameraRight.Normalize();
+			m_rollingVec += cameraForward * lStick_y * 200.0f;	//奥方向への移動速度を加算。
+			m_rollingVec += cameraRight * lStick_x * 200.0f;		//右方向への移動速度を加算。
+			//キャラクターの方向を変える。
+			m_rotation.SetRotationYFromDirectionXZ(m_rollingVec);
+		}
 		//絵描きさんに回転を教える。
 		m_modelRender.SetRotation(m_rotation);
 		/*m_rollingVec = m_forward;*/
@@ -459,7 +465,6 @@ void Player::ProcessRollingStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		m_rollingVec = Vector3::Zero;
-		m_rollingCoolDown = rollingCoolDownTime;
 		ProcessCommonStateTransition();
 	}
 }
@@ -478,14 +483,6 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	if (wcscmp(eventName, L"shot_point") == 0)
 	{
 		AttackRotation();
-	}
-}
-
-void Player::TimeAdjustment()
-{
-	if (m_rollingCoolDown > 0.0f)
-	{
-		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
 	}
 }
 
