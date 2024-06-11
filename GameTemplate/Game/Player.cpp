@@ -165,6 +165,9 @@ void Player::Rolling()
 	//ちょっとだけモデルの座標を挙げる。
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
+
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
 }
 
 void Player::Rotation()
