@@ -115,13 +115,13 @@ void Player::Move()
 	if (m_playerstate == enPlayerState_Walk||m_playerstate == enPlayerState_Idle)
 	{
 		//   X e B b N ̓  ͗ʂ 120.0f    Z B
-		right *= stickL.x * 200.0f;
-		forward *= stickL.y * 200.0f;
+		right *= stickL.x * 400.0f;
+		forward *= stickL.y * 400.0f;
 	}
 	else if(m_playerstate == enPlayerState_PostureWalk || m_playerstate == enPlayerState_Attack)
 	{
-		right *= stickL.x * 70.0f;
-		forward *= stickL.y * 70.0f;
+		right *= stickL.x * 140.0f;
+		forward *= stickL.y * 140.0f;
 	}
 	else
 	{
@@ -132,13 +132,9 @@ void Player::Move()
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
 
+	//座標を移動
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-	Vector3 modelPosition = m_position;
-	//ちょっとだけモデルの座標を挙げる。
-	modelPosition.y += 2.5f;
-	m_modelRender.SetPosition(modelPosition);
-	//キャラクターコントローラーを使って座標を移動させる。
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
+
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
 	m_charaCon.SetPosition(m_position);
