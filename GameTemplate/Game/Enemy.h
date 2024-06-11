@@ -12,12 +12,12 @@ class Enemy : public IGameObject
 public:
 	//行動ステート
 	enum EnEnemyState {
-		enEnemyState_Idle,			//待機
-		enEnemyState_Chase,			//追跡
-		enEnemyState_Attack,		//攻撃
-		enEnemyState_Stand,			//構え
-		enEnemyState_ReceiveDamage,	//被ダメージ
-		enEnemyState_Down			//ダウン
+		enEnemyState_Idle,				//待機
+		enEnemyState_Chase,				//追跡
+		enEnemyState_Attack,			//攻撃
+		enEnemyState_Stand,				//構え
+		enEnemyState_ReceiveDamage,		//被ダメージ
+		enEnemyState_Down				//ダウン
 	};
 	//攻撃頻度のステート
 	enum EnEnemyAttackSpeed {
@@ -37,6 +37,7 @@ public:
 		enAnimationClip_Chase,			//追跡
 		enAnimationClip_Attack,			//攻撃
 		enAnimationClip_ShotStandby,    //攻撃待機
+		enAnimationClip_PostureWalk,	//構え歩き
 		enAnimationClip_Damage,			//被ダメージモーション
 		enAnimationClip_Num,			//アニメーション数
 	};
@@ -58,8 +59,9 @@ public:
 	//モデルの回転をする関数
 	void Rotation();                                       //回転
 	void Collision();										//本体の当たり判定
-	void Chase();										   //追跡
-	void Attack();										   //攻撃
+	void Chase();										   //追跡ステートの時に行う処理
+	void Attack();										   //攻撃ステートの時に行う処理
+	void Stand();											//構えステートの時に行う処理
 
 	//プレイヤーが視界内に居るか確かめる関数
 	bool SearchPlayer();
@@ -128,9 +130,8 @@ public:
 private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ
-
-	///テスト
 	SphereCollider m_sphereCollider;		//プレイヤーと自分の間に壁があるか判定するのに使うコライダー
-	///
+
+	bool m_gunmove = false;
 };
 

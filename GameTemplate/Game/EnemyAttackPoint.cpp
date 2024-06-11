@@ -86,6 +86,96 @@ EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 posi
 	return tmp;
 }
 
+EnemyAttackPoint::AttackPoint* EnemyAttackPoint::GetNearAttackPoint(Vector3 position, Enemy* enemy)
+{
+	//アタックポイントが使用可能でなければnullptrを返す
+	if (IsUsableAttackPoint() == false)
+	{
+		return nullptr;
+	}
+
+	//距離比較用の変数
+	float distance = 10000.0f;	//	最初は極端に大きい値にしておく
+
+	//一番近いアタックポイントのアドレスを入れておくポインタ
+	AttackPoint* tmp = nullptr;
+
+	//アタックポイントの配列を回す
+	for (AttackPoint& attackPoint : m_AttackPointList)
+	{
+		//アタックポイントが使用中なら処理を飛ばす
+		if (attackPoint.m_use == true)
+		{
+			continue;
+		}
+
+		//アタックポイントとの距離を求める
+		float compareDistance = (attackPoint.m_position - position).Length();
+
+		//保持しているアタックポイントとの距離より、今回出したアタックポイントとの距離の方が小さければ
+		if (distance > compareDistance)
+		{
+			//保持しているアタックポイントとの距離を、今回出したアタックポイントとの距離に変更し
+			distance = compareDistance;
+			//そのアタックポイントのアドレスを保存する
+			tmp = &attackPoint;
+		}
+	}
+
+	if (tmp != nullptr)
+	{
+		UseAttackPoint(tmp->m_number, enemy);
+	}
+	
+	//一番近いアタックポイントのアドレスを返す
+	return tmp;
+}
+
+EnemyAttackPoint::AttackPoint* EnemyAttackPoint::ReGetNearAttackPoint(Enemy* enemy, AttackPoint* atpoint)
+{
+	//確認処理
+	if (atpoint->m_useEnemy == enemy)
+	{
+		ReleaseAttackPoint(atpoint->m_number, enemy);
+
+		//距離比較用の変数
+		float distance = 10000.0f;	//	最初は極端に大きい値にしておく
+
+		//一番近いアタックポイントのアドレスを入れておくポインタ
+		AttackPoint* tmp = nullptr;
+
+		//アタックポイントの配列を回す
+		for (AttackPoint& attackPoint : m_AttackPointList)
+		{
+			//アタックポイントが使用中なら処理を飛ばす
+			if (attackPoint.m_use == true)
+			{
+				continue;
+			}
+
+			//アタックポイントとの距離を求める
+			float compareDistance = (attackPoint.m_position - enemy->m_position).Length();
+
+			//保持しているアタックポイントとの距離より、今回出したアタックポイントとの距離の方が小さければ
+			if (distance > compareDistance)
+			{
+				//保持しているアタックポイントとの距離を、今回出したアタックポイントとの距離に変更し
+				distance = compareDistance;
+				//そのアタックポイントのアドレスを保存する
+				tmp = &attackPoint;
+			}
+		}
+
+		if (tmp != nullptr)
+		{
+			UseAttackPoint(tmp->m_number, enemy);
+		}
+
+		//一番近いアタックポイントのアドレスを返す
+		return tmp;
+	}
+}
+
 bool EnemyAttackPoint::IsUsableAttackPoint()
 {
 	//アックポイント使用数が一定数より少なければ
