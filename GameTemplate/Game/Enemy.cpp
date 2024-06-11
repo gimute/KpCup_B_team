@@ -6,8 +6,8 @@
 #include "Bullet.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
+//#include "sound/SoundEngine.h"
+//#include "sound/SoundSource.h"
 
 #define enemyspeed 150.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -88,10 +88,11 @@ bool Enemy::Start()
 	m_rotation.Apply(m_forward);
 
 	//音を読み込む
-	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
-	
+	//g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
+	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/m_atEnemy.wav");
+	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/m_hpEnemy.wav");
 	//BGM
-	m_bgm = NewGO<SoundSource>(0);
+	//m_bgm = NewGO<SoundSource>(0);
 	//m_footBgm->Init(5);
 	//m_footBgm->Play(true);
 	//m_footBgm->SetVolume(3.0f);
@@ -532,6 +533,12 @@ void Enemy::Collision()
 			
 				//HPを1減らす。
 				m_hp -= 1;
+				//効果音を再生する
+				SoundSource* m_hpPlayer = NewGO<SoundSource>(0);
+				m_hpPlayer = NewGO<SoundSource>(0);
+				m_hpPlayer->Init(10);
+				m_hpPlayer->Play(false);
+
 				m_game->m_EnemyHpUiList[m_Vectornum]->DecreaseHP(1);
 				//m_mutekitimer = mutekitime;
 				//HPが0になったら。
@@ -690,6 +697,12 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_bullet->Setrotation(rot);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Enemy);
+
+		//効果音を再生する
+		SoundSource* m_atEnemy = NewGO<SoundSource>(0);
+		m_atEnemy->Init(9);
+		m_atEnemy->Play(false);
+		m_atEnemy->SetVolume(2.0f);
 	}
 	else if (wcscmp(eventName, L"C_shot_end") == 0)
 	{
