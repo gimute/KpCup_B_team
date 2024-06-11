@@ -42,7 +42,6 @@ public:
 	void Move();
 	void Rolling();						//回避処理
 	void ManageState();					//ステート遷移処理
-	void TimeAdjustment();				//時間計変数加減処理
 	//アニメーションイベント
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 	//void PlayAnimation();
@@ -80,7 +79,6 @@ public:
 	bool shot= false;
 	Vector3 m_rollingVec = Vector3::Zero;					//回避方向
 	Vector3 m_rollingSpeed = Vector3::Zero;					//回避スピード
-	float m_rollingCoolDown = 0.0f;							//回避クールダウン
 	float rollingCoolDownTime = 0.5;						//回避クールダウン時間
 	float m_muteki_timer = 0.0f;							//無敵タイマー
 	float m_reset_timer = 0.0f;								//リセットタイマー
