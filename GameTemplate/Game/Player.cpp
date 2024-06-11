@@ -4,6 +4,9 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "HpUi.h"
+#include "sound/SoundSource.h"
+#include "sound/SoundEngine.h"
+
 
 Player::Player()
 {
@@ -61,6 +64,11 @@ bool Player::Start()
 
 	//m_enemy = FindGO<Enemy>("enemy");
 	m_game = FindGO<Game>("game");
+
+	//音を読み込む
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
+	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
+
 	return true;
 }
 
@@ -222,10 +230,13 @@ void Player::Collision()
 			{
 				//HPを１減らす
 				m_game->m_hpui->DecreaseHP(25);
+				//効果音を再生する
+				SoundSource* m_hpEnemy = NewGO<SoundSource>(0);
+				m_hpEnemy->Init(8);
+				m_hpEnemy->Play(false);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
 				//被ダメージステートに遷移する。
-				//m_playerstate = enPlayerState_ReceiveDamage;
 			}
 		}
 	}
@@ -389,6 +400,10 @@ void Player::ProcessCommonStateTransition()
 		if (g_pad[0]->IsTrigger(enButtonB))
 		{
 			m_playerstate = enPlayerState_Attack;
+			SoundSource* m_atPlayer = NewGO<SoundSource>(0);
+			m_atPlayer = NewGO<SoundSource>(0);
+			m_atPlayer->Init(7);
+			m_atPlayer->Play(false);
 			return;
 		}
 		m_playerstate = enPlayerState_PostureWalk;
