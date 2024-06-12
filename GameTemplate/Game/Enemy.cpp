@@ -9,7 +9,7 @@
 //#include "sound/SoundEngine.h"
 //#include "sound/SoundSource.h"
 
-#define enemyspeed 150.0f                               //移動速度の数値
+#define enemyspeed 170.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
 #define enemyattack 300.0f * 300.0f						//攻撃可能範囲
 
@@ -340,7 +340,8 @@ void Enemy::ProcessAttackStateTransition()
 		//アタックポイントを解放して
 		ReleaseAttackPoint();
 		// ステートを遷移する
-		ProcessCommonStateTransition();
+		m_enemystate = enEnemyState_Chase;
+		//ProcessCommonStateTransition();
 	}
 }
 
@@ -609,7 +610,9 @@ void Enemy::Collision()
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;
 				}
-			
+
+				//
+				AroundEnemyTransitionToChase();
 		}
 	}
 }
@@ -650,11 +653,11 @@ bool Enemy::WallCheck(const Vector3 position)
 	//壁と衝突した時
 	if (callback.isHit == true)
 	{
-		return false;
+		return true;
 	}
 
 
-	return true;
+	return false;
 }
 ///////////////////////////////////////////////////////////////////////
 
@@ -679,8 +682,8 @@ bool Enemy::SearchPlayer()
 		//角度(θ)が90°(視野角)より小さければ。
 		if (angle <= (Math::PI / 180.0f) * 90.0f)
 		{
-			//プレイヤーとエネミーの間に壁があるか
-			if (WallCheck(m_player->GetPosition()))
+			//プレイヤーとエネミーの間に壁があるか調べる
+			if (WallCheck(m_player->GetPosition()) == false)
 			{
 				//プレイヤーを見つけた！
 				return true;
@@ -721,15 +724,17 @@ const bool Enemy::SearchAttackDistance() const
 void Enemy::ProcessCommonStateTransition()
 {
 	//プレイヤーが視界内に居るか
-	//if (SearchPlayer() || AroundStateCheckChase())
 	if (SearchPlayer())
 	{
-		//居たら追跡ステートに。
+		//周囲の
+		AroundEnemyTransitionToChase();
+
+		//追跡ステートに
 		m_enemystate = enEnemyState_Chase;
 	}
 	else
 	{
-		//居なければ待機ステートに。
+		//居なければ待機ステートに
 		m_enemystate = enEnemyState_Idle;
 	}
 }
@@ -839,9 +844,34 @@ bool Enemy::AroundStateCheckChase()
 	return false;
 }
 
+void Enemy::AroundEnemyTransitionToChase()
+{
+	for (int i = 0; i < m_game->m_EnemyList.size(); i++)
+	{
+		m_game->m_EnemyList[i]->TransitionToChaseTest(this);
+	}
+}
+
+void Enemy::TransitionToChaseTest(Enemy* enemy)
+{
+	//ステートがidle
+	if (m_enemystate == enEnemyState_Idle)
+	{
+		Vector3 diff = m_position - enemy->m_position;
+		//伝播元との距離が一定以上かつ、伝播元が自分ではない
+		if (diff.Length() <= 600.0f && this != enemy)
+		{
+			//伝播元と自分の間に壁がない
+			if (WallCheck(enemy->m_position) == false)
+			{
+				//ステートをchaseに
+				m_enemystate = enEnemyState_Chase;
+			}
+		}
+	}
+}
+
 void Enemy::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
-
-	
 }

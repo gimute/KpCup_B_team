@@ -81,13 +81,18 @@ public:
 	//所持しているアタックポイントを解放する
 	void ReleaseAttackPoint();
 
-	//自分の座標から指定された座標までに壁がないか調べる関数
-	//あった場合false、なかった場合tureが返される
+	//自分の座標から指定された座標までに壁があるか調べる関数
+	//あった場合ture、なかった場合falseが返される
 	bool WallCheck(const Vector3 position);
 
 	//自身の近くの敵がチェイス状態に入ったらtrueを返す
 	bool AroundStateCheckChase();
 
+	//周囲のエネミーにchase状態を伝播させる
+	void AroundEnemyTransitionToChase();
+	//AroundEnemyTransitionToChase関数で呼び出す
+	//伝播条件を満たしたエネミーのステートをchaseにする関数
+	void TransitionToChaseTest(Enemy* enemy);
 
 	///////////////////////////////////////////////////////////
 	//初期設定系統
