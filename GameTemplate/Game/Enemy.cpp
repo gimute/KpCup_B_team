@@ -546,6 +546,9 @@ void Enemy::Collision()
 					//被ダメージ前のステートを記憶
 					m_oldEnemyState = m_enemystate;
 
+					//プレイヤーにエネミーのインスタンスを送信
+					m_player->InLastAttackEnemyInstance(this);
+
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;
 				}
@@ -661,7 +664,8 @@ const bool Enemy::SearchAttackDistance() const
 void Enemy::ProcessCommonStateTransition()
 {
 	//プレイヤーが視界内に居るか
-	if (SearchPlayer()||AroundStateCheckChase())
+	//if (SearchPlayer()||AroundStateCheckChase())
+	if (SearchPlayer())
 	{
 		//居たら追跡ステートに。
 		m_enemystate = enEnemyState_Chase;

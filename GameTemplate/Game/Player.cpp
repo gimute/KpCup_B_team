@@ -76,6 +76,17 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+
+	//時間処理(仮)
+	if (m_LAEnemyRetentionTime > 0.0f)
+	{
+		m_LAEnemyRetentionTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		m_lastAttackEnemy = nullptr;
+	}
+
 	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
@@ -467,7 +478,7 @@ void Player::ProcessRollingStateTransition()
 {
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
-		m_rollingVec = Vector3::Zero;
+		RollingEndRot();
 		ProcessCommonStateTransition();
 	}
 }
@@ -487,6 +498,28 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	{
 		AttackRotation();
 	}
+}
+
+void Player::RollingEndRot()
+{
+
+	if (m_lastAttackEnemy != nullptr)
+	{
+		Vector3 LAEnemyVec = m_lastAttackEnemy->m_position;
+
+		Vector3 FinalVec = LAEnemyVec - m_position;
+
+		Quaternion rot;
+		rot.SetRotation(Vector3::AxisZ, FinalVec);
+		m_modelRender.SetRotation(rot);
+		m_rotation = rot;
+		m_forward = Vector3::AxisZ;
+		rot.Apply(m_forward);
+
+		m_lastAttackEnemy = nullptr;
+	}
+
+	m_rollingVec = Vector3::Zero;
 }
 
 void Player::Render(RenderContext& rc)
