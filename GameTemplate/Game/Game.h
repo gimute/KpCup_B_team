@@ -76,6 +76,8 @@ public:
 	void GameStateTransition();
 	//他のクラスから呼ぶためのゲームクリア処理。
 	void GameClearProcess();
+
+	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
 	//エネミーを全員倒したかのフラグを返す
 	bool GetEnemyAllKillFlag()
 	{

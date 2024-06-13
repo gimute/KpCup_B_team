@@ -196,6 +196,20 @@ void Game::Delete_EnemyVec(const int num)
 	m_EnemyQua--;
 }
 
+bool Game::ExistsEnemyListPtr(Enemy* enemy_ptr)
+{
+	for (int i = 0; i < m_EnemyList.size(); i++)
+	{
+		Enemy* enemyList_ptr = m_EnemyList[i];
+		if (enemyList_ptr == enemy_ptr)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 Vector3 Game::GetEnemyListPos(int num)
 {
 	if (m_EnemyList.empty())

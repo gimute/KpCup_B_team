@@ -546,8 +546,8 @@ void Enemy::Collision()
 					//被ダメージ前のステートを記憶
 					m_oldEnemyState = m_enemystate;
 
-					//プレイヤーにエネミーのインスタンスを送信
-					m_player->InLastAttackEnemyInstance(this);
+					////プレイヤーにエネミーのインスタンスを送信
+					//m_player->InLastAttackEnemyInstance(this);
 
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;

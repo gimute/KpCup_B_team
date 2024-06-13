@@ -254,10 +254,10 @@ void Player::AttackRotation()
 			Vector3 diffA = pos - m_position;
 			if (diffA.Length() <= MinVec.Length()){
 				MinVec = diffA;
+				InLastAttackEnemyInstance(m_game->GetEnemyListInstance(ListnumA));
 			}
 		}
 	}
-
 
 	if (shot == false)
 	{
@@ -503,7 +503,7 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 void Player::RollingEndRot()
 {
 
-	if (m_lastAttackEnemy != nullptr)
+	if (m_game->ExistsEnemyListPtr(m_lastAttackEnemy))
 	{
 		Vector3 LAEnemyVec = m_lastAttackEnemy->m_position;
 
@@ -521,6 +521,8 @@ void Player::RollingEndRot()
 
 	m_rollingVec = Vector3::Zero;
 }
+
+
 
 void Player::Render(RenderContext& rc)
 {
