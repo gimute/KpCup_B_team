@@ -31,6 +31,28 @@ Game::Game()
 
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
+
+	//HPがピンチな時の画面エフェクト画像の設定
+	SpriteInitData initData;
+	//DDSファイル（画像データ）のファイルパスを指定する
+	//HPがピンチな時の画面エフェクトの画像データを指定する
+	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
+	//Sprite表示用のシェーダーのファイルパスを指定する
+	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
+	initData.m_expandConstantBuffer = &m_alpha;
+	initData.m_expandConstantBufferSize += sizeof(float);
+	//スプライトの幅と高さを指定する
+	initData.m_width = static_cast<UINT>(1920);
+	initData.m_height = static_cast<UINT>(1080);
+	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
+	//
+	m_pncSpriteRender.Init(initData);
+	m_pncSpriteRender.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
+	m_pncSpriteRender.Update();
+	
+	//HPがピンチな時の画面エフェクトを読み込む
+	//m_pncSpriteRender.Init("Assets/sprite/LowHpEffect.DDS",1920,1080);
+	//m_pncSpriteRender.SetMulColor(Vector4())
 	//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -40,7 +62,7 @@ Game::Game()
 	m_background = NewGO<BackGround>(0, "background");
 	
 	//ゲームタイマー表示
-	m_gametimer = NewGO<GameTimer>(0, "gametimer");
+	m_gametimer = NewGO<GameTimer>(1, "gametimer");
 
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
@@ -74,16 +96,19 @@ Game::Game()
 	test = NewGO<EventCamera>(0,"camera");
 
 	//HPUIを作る
-	m_hpui = NewGO<HpUi>(0, "UI");
+	m_hpui = NewGO<HpUi>(1, "UI");
 	//危険信号表示Ui
-	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
+	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
 	//ゲーム中のBGMを読み込む
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
 	//ゲーム中のBGMを再生する
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
+	//HPがピンチの時のBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
+	m_hpLowBgm = NewGO<SoundSource>(11);
 }
 
 Game::~Game()
@@ -105,6 +130,11 @@ void Game::NotifyGameClear()
 
 void Game::Update()
 {
+	//アルファチャンネルの調整
+	AlphaCalc();
+	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
+	m_pncSpriteRender.Update();
+
 	DisplayTime();
 
 	GameStateTransition();
@@ -146,6 +176,27 @@ void Game::Update()
 		m_enemyAllKillFlag = true;
 	}
 
+	//プレイヤーのHPが25以下なら
+	if (m_hpui->GetNowHP() <= 25.0f)
+	{
+		//HPがピンチな時のエフェクト
+		m_pncDraw = true;
+
+		if (m_hpLowBgm->IsPlaying() == false)
+		{
+			m_hpLowBgm->Init(11);
+			m_hpLowBgm->Play(true);
+			m_hpLowBgm->SetVolume(3.0f);
+			m_gameBgm->SetVolume(0.5f);
+		}
+		
+	}
+	else
+	{
+		m_pncDraw = false;
+		m_gameBgm->SetVolume(1.0f);
+		//m_hpLowBgm->Play(false);
+	}
 	
 
 	
@@ -153,6 +204,7 @@ void Game::Update()
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
+	//m_pncSpriteRender.Update();
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
@@ -168,21 +220,28 @@ void Game::Update()
 	}
 }
 
+//アルファチャンネルの調整
+void Game::AlphaCalc()
+{
+	if (m_alpha >= 0.6f) {
+		m_alphaCalcBool = false;
+	}
+	if (m_alphaCalcBool)
+	{
+		m_alpha += 0.02f;
+		return;
+	}
+	m_alpha -= 0.01f;
+	if (m_alpha <= 0.1f)
+	{
+		m_alphaCalcBool = true;
+	}
+}
+
 //制限時間表示
 void Game::DisplayTime()
 {
-	m_gametimer = FindGO<GameTimer>("gametimer");
-	wchar_t wcsbuf[256];
-	//制限時間を表示
-	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_gametimer->m_timer), int(m_gametimer->m_minit));
-	//表示するテキストを設定
-	m_fontrender.SetText(wcsbuf);
-	//フォントの位置を設定
-	m_fontrender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
-	//フォントの大きさを設定
-	m_fontrender.SetScale(2.0f);
-	//フォントの色を設定
-	m_fontrender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+	m_gametimer->FontSet();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -361,9 +420,11 @@ void Game::EventUiDelete(bool mode)
 
 void Game::Render(RenderContext& rc)
 {
-	if (m_TempDelGameTimer == true)
-	{
-		m_fontrender.Draw(rc);
-	}
 	m_preSpriteRender.Draw(rc);
+
+	if (m_pncDraw == true)
+	{
+		m_pncSpriteRender.Draw(rc);
+	}
+	
 }
