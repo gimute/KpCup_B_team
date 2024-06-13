@@ -417,6 +417,8 @@ void Enemy::ProcessReceiveDamageStateTransition()
 		//待機ステート以外なら
 		else
 		{
+
+			m_shotBool = false;
 			//元のステートに戻す
 			m_enemystate = m_oldEnemyState;
 		}
