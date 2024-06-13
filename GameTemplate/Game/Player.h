@@ -38,6 +38,7 @@ public:
 	void Rotation();
 	void Collision();
 	void AttackRotation();
+	void RollingEndRot();
 	bool AngleCheck(const Vector3& position);
 	void Move();
 	void Rolling();						//回避処理
@@ -56,6 +57,12 @@ public:
 	{
 		return m_position;
 	}
+	//最後に攻撃したエネミーのインスタンスを取得
+	void InLastAttackEnemyInstance(Enemy* enemyInstance)
+	{
+		m_lastAttackEnemy = enemyInstance;
+		m_LAEnemyRetentionTime = 2.0f;
+	}
 
 //メンバ変数
 	ModelRender m_modelRender;
@@ -67,6 +74,7 @@ public:
 	Vector3 m_scale = Vector3::One;			//大きさ
 	Player* m_player = nullptr;
 	Enemy* m_enemy = nullptr;
+	Enemy* m_lastAttackEnemy = nullptr;
 	AnimationClip m_animationclips[enAnimationClip_Num];	//アニメーションクリップ
 	EnPlayerState m_playerstate = enPlayerState_Idle;
 	Bullet* m_bullet = nullptr;
@@ -82,6 +90,7 @@ public:
 	float rollingCoolDownTime = 0.5;						//回避クールダウン時間
 	float m_muteki_timer = 0.0f;							//無敵タイマー
 	float m_reset_timer = 0.0f;								//リセットタイマー
+	float m_LAEnemyRetentionTime = 0.0f;
 
 private:
 
