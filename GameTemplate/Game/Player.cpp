@@ -4,6 +4,9 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "HpUi.h"
+#include "sound/SoundSource.h"
+#include "sound/SoundEngine.h"
+
 
 Player::Player()
 {
@@ -61,6 +64,11 @@ bool Player::Start()
 
 	//m_enemy = FindGO<Enemy>("enemy");
 	m_game = FindGO<Game>("game");
+
+	//音を読み込む
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
+	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
+
 	return true;
 }
 
@@ -126,13 +134,13 @@ void Player::Move()
 	if (m_playerstate == enPlayerState_Walk||m_playerstate == enPlayerState_Idle)
 	{
 		//   X e B b N ̓  ͗ʂ 120.0f    Z B
-		right *= stickL.x * 200.0f;
-		forward *= stickL.y * 200.0f;
+		right *= stickL.x * 400.0f;
+		forward *= stickL.y * 400.0f;
 	}
 	else if(m_playerstate == enPlayerState_PostureWalk || m_playerstate == enPlayerState_Attack)
 	{
-		right *= stickL.x * 70.0f;
-		forward *= stickL.y * 70.0f;
+		right *= stickL.x * 140.0f;
+		forward *= stickL.y * 140.0f;
 	}
 	else
 	{
@@ -143,13 +151,9 @@ void Player::Move()
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
 
+	//座標を移動
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-	Vector3 modelPosition = m_position;
-	//ちょっとだけモデルの座標を挙げる。
-	modelPosition.y += 2.5f;
-	m_modelRender.SetPosition(modelPosition);
-	//キャラクターコントローラーを使って座標を移動させる。
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
+
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
 	m_charaCon.SetPosition(m_position);
@@ -234,10 +238,13 @@ void Player::Collision()
 			{
 				//HPを減らす
 				m_game->m_hpui->DecreaseHP(25);
+				//効果音を再生する
+				SoundSource* m_hpEnemy = NewGO<SoundSource>(0);
+				m_hpEnemy->Init(8);
+				m_hpEnemy->Play(false);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
 				//被ダメージステートに遷移する。
-				//m_playerstate = enPlayerState_ReceiveDamage;
 			}
 		}
 	}
@@ -435,6 +442,10 @@ void Player::ProcessCommonStateTransition()
 		if (g_pad[0]->IsTrigger(enButtonB))
 		{
 			m_playerstate = enPlayerState_Attack;
+			SoundSource* m_atPlayer = NewGO<SoundSource>(0);
+			m_atPlayer = NewGO<SoundSource>(0);
+			m_atPlayer->Init(7);
+			m_atPlayer->Play(false);
 			return;
 		}
 		m_playerstate = enPlayerState_PostureWalk;

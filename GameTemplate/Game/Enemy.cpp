@@ -6,10 +6,10 @@
 #include "Bullet.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
-#include "sound/SoundEngine.h"
-#include "sound/SoundSource.h"
+//#include "sound/SoundEngine.h"
+//#include "sound/SoundSource.h"
 
-#define enemyspeed 150.0f                               //移動速度の数値
+#define enemyspeed 170.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
 #define enemyattack 300.0f * 300.0f						//攻撃可能範囲
 
@@ -35,15 +35,17 @@ bool Enemy::Start()
 	//
 
 	//アニメーション読み込み
-	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
+	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");					//待機
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");
+	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");					//走り
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");
+	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");				//射撃
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");
+	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");		//構え
 	m_animationclips[enAnimationClip_ShotStandby].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
+	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");			//構え歩き
+	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
+	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");		//被ダメージ
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
 	//モデル読み込み
@@ -88,10 +90,11 @@ bool Enemy::Start()
 	m_rotation.Apply(m_forward);
 
 	//音を読み込む
-	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
-	
+	//g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
+	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/m_atEnemy.wav");
+	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/m_hpEnemy.wav");
 	//BGM
-	m_bgm = NewGO<SoundSource>(0);
+	//m_bgm = NewGO<SoundSource>(0);
 	//m_footBgm->Init(5);
 	//m_footBgm->Play(true);
 	//m_footBgm->SetVolume(3.0f);
@@ -125,7 +128,7 @@ void Enemy::Update()
 		break;
 
 	case enEnemyState_Stand:
-
+		Stand();
 		break;
 
 	case enEnemyState_ReceiveDamage:
@@ -177,6 +180,11 @@ void Enemy::PlayAnimation()
 			m_modelRender.SetAnimationSpeed(1.0f);
 			m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		}
+		else if (m_gunmove == true)
+		{
+			m_modelRender.SetAnimationSpeed(1.0f);
+			m_modelRender.PlayAnimation(enAnimationClip_PostureWalk, 0.1f);
+		}
 		else
 		{
 			m_modelRender.SetAnimationSpeed(1.0f);
@@ -184,8 +192,16 @@ void Enemy::PlayAnimation()
 		}
 		break;
 	case enEnemyState_Stand:
-		m_modelRender.SetAnimationSpeed(1.0f);
-		m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
+		if (m_gunmove == true)
+		{
+			m_modelRender.SetAnimationSpeed(1.0f);
+			m_modelRender.PlayAnimation(enAnimationClip_PostureWalk, 0.1f);
+		}
+		else
+		{
+			m_modelRender.SetAnimationSpeed(1.0f);
+			m_modelRender.PlayAnimation(enAnimationClip_ShotStandby, 0.1f);
+		}
 		break;
 	case enEnemyState_ReceiveDamage:
 		m_modelRender.SetAnimationSpeed(4.0f);
@@ -225,7 +241,7 @@ void Enemy::ProcessChaseStateTransition()
 	Vector3 diff = m_player->m_position - m_position;
 
 	//プレイヤーとの距離が一定以上なら
-	if (diff.Length() >= 500.0f)
+	if (diff.Length() >= 700.0f)
 	{
 		//追跡タイマーを進める
 		m_chaseTimer += g_gameTime->GetFrameDeltaTime();
@@ -235,8 +251,13 @@ void Enemy::ProcessChaseStateTransition()
 		{
 			//状況に応じてステートを遷移
 			ProcessCommonStateTransition();
+			m_chaseTimer = 0.0f;
 			return;
 		}
+	}
+	else
+	{
+		m_chaseTimer = 0.0f;
 	}
 
 	//利用可能なアタックポイントを探す
@@ -283,19 +304,6 @@ void Enemy::ProcessChaseStateTransition()
 				return;
 			}	
 		}
-		// プレイヤーが近くに居ない場合
-		else
-		{
-			//チェイスタイマーを進める(値を減らす)
-			m_chaseTimer -= g_gameTime->GetFrameDeltaTime();
-			//タイマーが0以下なら
-			if (m_chaseTimer <= 0)
-			{
-				// ステートを遷移する
-				ProcessCommonStateTransition();
-			}
-			return;
-		}
 	}
 }
 
@@ -306,7 +314,7 @@ void Enemy::ProcessAttackStateTransition()
 	if (m_AttackPoint == nullptr)
 	{
 		//利用可能なアタックポイント取得
-		m_AttackPoint = m_game->GetEnemyAttackPointObject()->GetNearAttackPoint(m_position);
+		m_AttackPoint = m_game->GetEnemyAttackPointObject()->GetNearAttackPoint(m_position,this);
 
 		//アタックポイントを取得できなかったら
 		if (m_AttackPoint == nullptr)
@@ -315,30 +323,25 @@ void Enemy::ProcessAttackStateTransition()
 			m_enemystate = enEnemyState_Chase;
 			return;
 		}
-		//取得できていたら
-		else
-		{
-			//アタックポイントを使用中にする
-			m_game->GetEnemyAttackPointObject()->UseAttackPoint(m_AttackPoint->m_number, this);
-		}
+		////取得できていたら
+		//else
+		//{
+		//	//アタックポイントを使用中にする
+		//	//m_game->GetEnemyAttackPointObject()->UseAttackPoint(m_AttackPoint->m_number, this);
+		//}
 	}
 	
 	//エネミーからアタックポイントに向かうベクトルを求める
 	Vector3 diff = m_AttackPoint->m_position - m_position;
 
-	//アタックポイントとの距離が一定以上なら
-	if (diff.Length() >= 80.0f)
-	{
-		//アタックポイント解放し
-		ReleaseAttackPoint();
-		//追跡ステートにする
-		m_enemystate = enEnemyState_Chase;
-	}
 	//プレイヤーが一定以上離れたら
 	if ((m_player->m_position - m_position).Length() >= 400.0f)
 	{
+		//アタックポイントを解放して
+		ReleaseAttackPoint();
 		// ステートを遷移する
-		ProcessCommonStateTransition();
+		m_enemystate = enEnemyState_Chase;
+		//ProcessCommonStateTransition();
 	}
 }
 
@@ -486,6 +489,58 @@ void Enemy::Attack()
 	{
 		m_enemyAttackStep = en_stanceStep;
 	}
+
+	//アタックポイントが確保で来ていたら
+	if (m_AttackPoint != nullptr)
+	{
+		//アタックポイントまでのベクトルを求める
+		Vector3 diff = m_AttackPoint->m_position - m_position;
+
+		//アタックポイントとの距離が一定以上かつ、射撃フラグがfalseなら
+		if (diff.Length() >= 80.0f && m_shotBool == false)
+		{
+			m_AttackPoint = m_game->GetEnemyAttackPointObject()->ReGetNearAttackPoint(this, m_AttackPoint);
+
+			diff = m_AttackPoint->m_position - m_position;
+			//アタックポイントに向かって移動
+			diff.Normalize();
+
+			//銃を構えながらの移動なので少し移動速度を落とす
+			m_movespeed = diff * enemyspeed * 0.7f;
+
+			m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+			m_modelRender.SetPosition(m_position);
+
+			//モーションを構え歩きにするためのフラグをtrueにする
+			m_gunmove = true;
+		}
+		else
+		{
+			m_gunmove = false;
+		}
+	}
+}
+
+void Enemy::Stand()
+{
+	//エネミーからプレイヤーに向かうベクトル
+	Vector3 diff = m_player->m_position - m_position;
+
+	//プレイヤーとの距離が近い時
+	if (diff.Length() <= 100.0f)
+	{
+		m_movespeed = m_forward * -1 * enemyspeed * 0.7f;
+
+		m_position = m_charaCon.Execute(m_movespeed, g_gameTime->GetFrameDeltaTime());
+		m_modelRender.SetPosition(m_position);
+
+		//モーションを構え歩きにするためのフラグをtrueにする
+		m_gunmove = true;
+	}
+	else
+	{
+		m_gunmove = false;
+	}
 }
 
 void Enemy::Collision()
@@ -533,6 +588,12 @@ void Enemy::Collision()
 			
 				//HPを1減らす。
 				m_hp -= 1;
+				//効果音を再生する
+				SoundSource* m_hpPlayer = NewGO<SoundSource>(0);
+				m_hpPlayer = NewGO<SoundSource>(0);
+				m_hpPlayer->Init(10);
+				m_hpPlayer->Play(false);
+
 				m_game->m_EnemyHpUiList[m_Vectornum]->DecreaseHP(1);
 				//m_mutekitimer = mutekitime;
 				//HPが0になったら。
@@ -552,7 +613,9 @@ void Enemy::Collision()
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;
 				}
-			
+
+				//
+				AroundEnemyTransitionToChase();
 		}
 	}
 }
@@ -593,11 +656,11 @@ bool Enemy::WallCheck(const Vector3 position)
 	//壁と衝突した時
 	if (callback.isHit == true)
 	{
-		return false;
+		return true;
 	}
 
 
-	return true;
+	return false;
 }
 ///////////////////////////////////////////////////////////////////////
 
@@ -622,8 +685,8 @@ bool Enemy::SearchPlayer()
 		//角度(θ)が90°(視野角)より小さければ。
 		if (angle <= (Math::PI / 180.0f) * 90.0f)
 		{
-			//プレイヤーとエネミーの間に壁があるか
-			if (WallCheck(m_player->GetPosition()))
+			//プレイヤーとエネミーの間に壁があるか調べる
+			if (WallCheck(m_player->GetPosition()) == false)
 			{
 				//プレイヤーを見つけた！
 				return true;
@@ -664,15 +727,17 @@ const bool Enemy::SearchAttackDistance() const
 void Enemy::ProcessCommonStateTransition()
 {
 	//プレイヤーが視界内に居るか
-	//if (SearchPlayer()||AroundStateCheckChase())
 	if (SearchPlayer())
 	{
-		//居たら追跡ステートに。
+		//周囲の
+		AroundEnemyTransitionToChase();
+
+		//追跡ステートに
 		m_enemystate = enEnemyState_Chase;
 	}
 	else
 	{
-		//居なければ待機ステートに。
+		//居なければ待機ステートに
 		m_enemystate = enEnemyState_Idle;
 	}
 }
@@ -695,6 +760,12 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_bullet->Setrotation(rot);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Enemy);
+
+		//効果音を再生する
+		SoundSource* m_atEnemy = NewGO<SoundSource>(0);
+		m_atEnemy->Init(9);
+		m_atEnemy->Play(false);
+		m_atEnemy->SetVolume(2.0f);
 	}
 	else if (wcscmp(eventName, L"C_shot_end") == 0)
 	{
@@ -776,9 +847,34 @@ bool Enemy::AroundStateCheckChase()
 	return false;
 }
 
+void Enemy::AroundEnemyTransitionToChase()
+{
+	for (int i = 0; i < m_game->m_EnemyList.size(); i++)
+	{
+		m_game->m_EnemyList[i]->TransitionToChaseTest(this);
+	}
+}
+
+void Enemy::TransitionToChaseTest(Enemy* enemy)
+{
+	//ステートがidle
+	if (m_enemystate == enEnemyState_Idle)
+	{
+		Vector3 diff = m_position - enemy->m_position;
+		//伝播元との距離が一定以上かつ、伝播元が自分ではない
+		if (diff.Length() <= 600.0f && this != enemy)
+		{
+			//伝播元と自分の間に壁がない
+			if (WallCheck(enemy->m_position) == false)
+			{
+				//ステートをchaseに
+				m_enemystate = enEnemyState_Chase;
+			}
+		}
+	}
+}
+
 void Enemy::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
-
-	
 }
