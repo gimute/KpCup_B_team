@@ -46,6 +46,7 @@ public:
 	void DisplayTime();
 	//ゲームクリアを通知する
 	void NotifyGameClear();
+	void NotifyGameOver();
 	void Render(RenderContext& rc);
 	void Delete_EnemyVec(const int num);
 
@@ -90,6 +91,11 @@ public:
 	Enemy* GetEnemyListInstance(int Listnum)
 	{
 		return m_EnemyList[Listnum];
+	}
+
+	EnGameState GetGmaeState()
+	{
+		return m_gameState;
 	}
 
 	//メンバ変数
