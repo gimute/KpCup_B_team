@@ -67,6 +67,7 @@ bool Player::Start()
 	//音を読み込む
 	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
 	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
+	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/m_rolling.wav");
 
 	return true;
 }
@@ -431,6 +432,10 @@ void Player::ProcessCommonStateTransition()
 		/*m_rollingVec = m_forward;*/
 		//プレイヤーステートを回避にする
 		m_playerstate = enPlayerState_Rolling;
+		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
+		m_roPlayer = NewGO<SoundSource>(0);
+		m_roPlayer->Init(12);
+		m_roPlayer->Play(false);
 		return;
 	}
 
