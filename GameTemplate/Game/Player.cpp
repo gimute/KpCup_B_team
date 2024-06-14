@@ -38,6 +38,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/proto_player/knockdown.tka");
+	m_animationclips[enAnimationClip_knockdown].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -74,6 +76,58 @@ bool Player::Start()
 
 void Player::Update()
 {
+	//ステートがイベントの時
+	if (m_playerstate == enPlayerState_Event)
+	{
+		Vector3 posToTar = m_eventInfos[m_eventInfoNum].m_targetPos - m_position;
+		posToTar.y = 0.0f;
+		if (posToTar.Length() >= 10.0f)
+		{
+			posToTar.Normalize();
+			posToTar *= 250.0f;
+			m_position = m_charaCon.Execute(posToTar, g_gameTime->GetFrameDeltaTime());
+			//m_position += posToTar * 200.0f;
+		}
+		else
+		{
+			if (m_eventInfos[m_eventInfoNum].m_waitTime <= m_eventTimer)
+			{
+				if (m_eventInfos[m_eventInfoNum].m_eventState == m_eventInfos[m_eventInfoNum + 1].m_eventState)
+				{
+					m_eventInfoNum++;
+					m_eventTimer = 0.0f;
+				}
+				else
+				{
+					m_playerstate = enPlayerState_Idle;
+					m_eventTimer = 0.0f;
+					return;
+				}
+			}
+			else
+			{
+				m_eventTimer += g_gameTime->GetFrameDeltaTime();
+			}
+		}
+
+		if (fabsf(posToTar.x) >= 0.001f || fabsf(posToTar.z) >= 0.001f)
+		{
+			//キャラクターの方向を変える。
+			m_rotation.SetRotationYFromDirectionXZ(posToTar);
+			//絵描きさんに回転を教える。
+			m_modelRender.SetRotation(m_rotation);
+		}
+
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(m_eventInfos[m_eventInfoNum].m_motion, 0.1f);
+		m_charaCon.SetPosition(m_position);
+		m_modelRender.SetPosition(m_position);
+		m_modelRender.Update();
+
+		//通常の処理は実行せず返す
+		return;
+	}
+
 	//移動処理。
 	Move();
 	//回転処理。
@@ -84,6 +138,19 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+
+	if (m_playerstate == enPlayerState_KnockDown)
+	{
+		m_gameoverWaitTimer += g_gameTime->GetFrameDeltaTime();
+		if (m_gameoverWaitTimer >= 2.0f)
+		{
+			if (m_game->GetGmaeState() == Game::enIdle)
+			{
+				m_game->NotifyGameOver();
+			}
+			
+		}
+	}
 
 	//時間処理(仮)
 	if (m_LAEnemyRetentionTime > 0.0f)
@@ -216,8 +283,8 @@ void Player::Collision()
 		tmp.y += 30.0f;
 		m_collisionObject->SetPosition(tmp);
 
-		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
-		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
+		//被ダメージステート、ローリングステート、ダウンステート時は当たり判定処理をしない
+		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling || m_playerstate == enPlayerState_KnockDown)
 		{
 			return;
 		}
@@ -237,7 +304,11 @@ void Player::Collision()
 				m_hpEnemy->Play(false);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
-				//被ダメージステートに遷移する。
+
+				if (m_game->m_hpui->GetNowHP() <= 0)
+				{
+					m_playerstate = enPlayerState_KnockDown;
+				}
 			}
 		}
 	}
@@ -332,6 +403,26 @@ bool Player::AngleCheck(const Vector3& position)
 	return true;
 }
 
+void Player::SetEvent(EnEvent eventnum)
+{
+	m_playerstate = enPlayerState_Event;
+
+	for (int i = 0; i < sizeof(m_eventInfos) / sizeof(EventInfo); i++)
+	{
+		if (m_eventInfos[i].m_eventState == eventnum)
+		{
+			m_eventInfoNum = i;
+
+			m_position = m_eventInfos[i].m_targetPos;
+
+			m_charaCon.SetPosition(m_position);
+			m_modelRender.SetPosition(m_position);
+
+			break;
+		}
+	}
+}
+
 void Player::ManageState()
 {
 	switch (m_playerstate)
@@ -353,6 +444,8 @@ void Player::ManageState()
 		break;
 	case Player::enPlayerState_ReceiveDamage:
 		ProcessReceiveDamageStateTransition();
+		break;
+	default:
 		break;
 	}
 }
@@ -396,6 +489,9 @@ void Player::PlayAnimation()
 		m_modelRender.SetAnimationSpeed(3.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
+	case Player::enPlayerState_KnockDown:
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_knockdown, 0.1f);
 	}
 }
 
@@ -433,7 +529,6 @@ void Player::ProcessCommonStateTransition()
 		//プレイヤーステートを回避にする
 		m_playerstate = enPlayerState_Rolling;
 		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
-		m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer->Init(12);
 		m_roPlayer->Play(false);
 		return;
@@ -445,7 +540,6 @@ void Player::ProcessCommonStateTransition()
 		{
 			m_playerstate = enPlayerState_Attack;
 			SoundSource* m_atPlayer = NewGO<SoundSource>(0);
-			m_atPlayer = NewGO<SoundSource>(0);
 			m_atPlayer->Init(7);
 			m_atPlayer->Play(false);
 			return;
@@ -541,7 +635,25 @@ void Player::Render(RenderContext& rc)
 {
 	if (m_game->m_TempDelPlayer == false)
 	{
-		//モデルの描画。
-		m_modelRender.Draw(rc);
+		//無敵時間中出なければ
+		if (m_muteki_timer <= 0.0f)
+		{
+			//モデルの描画。
+			m_modelRender.Draw(rc);
+		}	
+		else
+		{
+			//無敵時間中は
+			//モデルの表示非表示を毎フレーム切り替えて点滅
+			if (m_mutekiModelDraw)
+			{
+				m_modelRender.Draw(rc);
+				m_mutekiModelDraw = false;
+			}
+			else
+			{
+				m_mutekiModelDraw = true;
+			}
+		}
 	}
 }

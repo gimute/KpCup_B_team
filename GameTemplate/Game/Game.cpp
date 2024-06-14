@@ -113,8 +113,11 @@ Game::Game()
 
 Game::~Game()
 {
-	m_gametimer->m_game = nullptr;
-
+	if (m_gameState == enGameClear)
+	{
+		m_gametimer->m_game = nullptr;
+	}
+	
 	DeleteGO(m_background);	
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
@@ -136,6 +139,17 @@ void Game::NotifyGameClear()
 	m_load->StartFadeOut();
 }
 
+void Game::NotifyGameOver()
+{
+	m_gameState = enGameOver;
+	m_load->StartFadeOut();
+	DeleteGO(m_gametimer);
+  
+  m_hpEffect = true;
+	m_hpLowBgm->Stop();
+	m_gameBgm->SetVolume(1.0f);
+}
+
 void Game::Update()
 {
 	//アルファチャンネルの調整
@@ -143,17 +157,19 @@ void Game::Update()
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
 
-	DisplayTime();
+	
 
 	GameStateTransition();
 
 	switch (m_gameState)
 	{
 	case enIdle:
-		//現状特別な処理は無し
+		DisplayTime();
 		break;
 
 	case enGameClear:
+		//ゲームクリア中はUI非表示
+		EventUiDelete(true);
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
@@ -167,6 +183,17 @@ void Game::Update()
 
 	case enGameOver:
 		if (!m_load->IsFade()) {
+
+			//エネミー削除処理
+			for (auto& enemyhpui : m_EnemyHpUiList)
+			{
+				DeleteGO(enemyhpui);
+			}
+
+			for (auto& enemy : m_EnemyList)
+			{
+				DeleteGO(enemy);
+			}
 			//自身を削除する。
 			DeleteGO(this);
 			//ゲームオーバーのオブジェクトをつくる。
@@ -355,36 +382,24 @@ void Game::GameStateTransition()
 			{
 				DeleteGO(enemy);
 			}
+
 			m_hpEffect = true;
 			if (m_hpLowBgmBool) {
 				m_hpLowBgm->Stop();
 			}
 			m_gameBgm->SetVolume(1.0f);
-			test->StartScene(EventCamera::en_Scene2_MapUp1);
+
+			test->StartScene(EventCamera::en_Scene_GameClear);
+
 			m_EventAfterState = enGameClear;
-			m_TempDelPlayer = true;
+			m_player->SetEvent(Player::enGameClear);
 			return;
 		}
 
 		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
-			//エネミー削除処理
-			for (auto& enemyhpui : m_EnemyHpUiList)
-			{
-				DeleteGO(enemyhpui);
-			}
-
-			for (auto& enemy : m_EnemyList)
-			{
-				DeleteGO(enemy);
-			}
-			m_hpEffect = true;
-			m_hpLowBgm->Stop();
-			m_gameBgm->SetVolume(1.0f);
-			test->StartScene(EventCamera::en_Scene2_MapUp1);
-			m_EventAfterState = enGameOver;
-
+      
 			return;
 		}
 		m_hpEffect = false;
