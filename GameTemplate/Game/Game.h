@@ -69,6 +69,8 @@ public:
 	void GameStateTransition();
 	//他のクラスから呼ぶためのゲームクリア処理。
 	void GameClearProcess();
+	//スローモージョンスタート
+	void SlowStart(float SlowTime);
 
 	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
 	//エネミーを全員倒したかのフラグを返す
@@ -140,6 +142,7 @@ private:
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
+	float m_slowTime = 0.0f;			//スローモーション時間
 
 	SoundSource* m_gameBgm;
 	SoundSource* m_hpLowBgm;
