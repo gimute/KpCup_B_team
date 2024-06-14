@@ -611,7 +611,22 @@ void Player::Render(RenderContext& rc)
 {
 	if (m_game->m_TempDelPlayer == false)
 	{
-		//モデルの描画。
-		m_modelRender.Draw(rc);
+		if (m_muteki_timer <= 0.0f)
+		{
+			//モデルの描画。
+			m_modelRender.Draw(rc);
+		}	
+		else
+		{
+			if (m_mutekiModelDraw)
+			{
+				m_modelRender.Draw(rc);
+				m_mutekiModelDraw = false;
+			}
+			else
+			{
+				m_mutekiModelDraw = true;
+			}
+		}
 	}
 }

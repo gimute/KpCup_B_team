@@ -118,5 +118,6 @@ private:
 	int m_eventInfoNum = 0;
 	float m_eventTimer = 0.0f;
 
+	bool m_mutekiModelDraw = false;
 };
 
