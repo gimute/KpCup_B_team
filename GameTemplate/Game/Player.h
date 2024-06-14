@@ -121,5 +121,6 @@ private:
 	float m_eventTimer = 0.0f;
 
 	float m_gameoverWaitTimer = 0.0f;
+	bool m_mutekiModelDraw = false;
 };
 
