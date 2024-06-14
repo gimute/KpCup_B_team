@@ -17,12 +17,15 @@ EnemyCamPos::~EnemyCamPos()
 
 }
 
-float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
+void EnemyCamPos::Init()
 {
 	m_game = FindGO<Game>("game");
 	m_camera = FindGO<GameCamera>("gamecamera");
 	m_player = FindGO<Player>("player");
+}
 
+float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
+{
 	//Enemy‚ÌÀ•W‚ðŽæ“¾
 	Vector3 enemypos = enemy->m_position;
 	int Listnum = enemy->m_Vectornum;

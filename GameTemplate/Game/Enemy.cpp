@@ -6,8 +6,6 @@
 #include "Bullet.h"
 #include "EnemyAttackPoint.h"
 #include "EnemyCamPos.h"
-//#include "sound/SoundEngine.h"
-//#include "sound/SoundSource.h"
 
 #define enemyspeed 170.0f                               //移動速度の数値
 #define enemyserch 500.0f * 500.0f						//追跡可能範囲
@@ -93,11 +91,6 @@ bool Enemy::Start()
 	//g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
 	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/m_atEnemy.wav");
 	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/m_hpEnemy.wav");
-	//BGM
-	//m_bgm = NewGO<SoundSource>(0);
-	//m_footBgm->Init(5);
-	//m_footBgm->Play(true);
-	//m_footBgm->SetVolume(3.0f);
 
 	return true;
 }
@@ -117,9 +110,6 @@ void Enemy::Update()
 	case enEnemyState_Chase:
 		//追跡処理
 		Chase();
-		/*SoundSource* se = NewGO<SoundSource>(0);
-		se->Init(5);
-		se->Play(false);*/
 		break;
 
 	case enEnemyState_Attack:
@@ -139,11 +129,6 @@ void Enemy::Update()
 	//回転処理
 	Rotation();
 	
-	if (m_enemystate != enEnemyState_Attack)
-	{
-		m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
-	}
-	
 	//アニメーション
 	PlayAnimation();
 
@@ -162,7 +147,6 @@ void Enemy::Update()
 
 void Enemy::PlayAnimation()
 {
-	//m_modelRender.SetAnimationSpeed(1.0f);
 	switch (m_enemystate)
 	{
 		//待機
@@ -287,22 +271,6 @@ void Enemy::ProcessChaseStateTransition()
 			m_enemystate = enEnemyState_Attack;
 			m_shotBool = false;
 			m_attackTimer = m_game->GetEnemyCamPosInstance()->EnemyCamPosConfirmation(this);
-
-			// プレイヤーが攻撃範囲内に居たら、
-			if (SearchAttackDistance() == true)
-			{
-				// ステートを攻撃にする。
-				m_enemystate = enEnemyState_Attack;
-				m_chaseTimer = 3.0f;
-				return;
-			}
-			// 攻撃範囲内で無ければ
-			else
-			{
-				// 追跡ステートのまま返す。
-				m_chaseTimer = 3.0f;
-				return;
-			}	
 		}
 	}
 }
@@ -323,12 +291,6 @@ void Enemy::ProcessAttackStateTransition()
 			m_enemystate = enEnemyState_Chase;
 			return;
 		}
-		////取得できていたら
-		//else
-		//{
-		//	//アタックポイントを使用中にする
-		//	//m_game->GetEnemyAttackPointObject()->UseAttackPoint(m_AttackPoint->m_number, this);
-		//}
 	}
 	
 	//エネミーからアタックポイントに向かうベクトルを求める
@@ -453,6 +415,7 @@ void Enemy::Rotation()
 		m_forward = Vector3::AxisZ;
 		m_rotation.Apply(m_forward);
 		break;
+
 	case Enemy::enEnemyState_Attack:
 		//プレイヤーのいる方向に向かせる
 		//モデルの正面方向(z軸方向に伸びる単位ベクトル)から、プレイヤーに向かうベクトル方向に回転させるクオータニオンを作成。
@@ -545,28 +508,16 @@ void Enemy::Stand()
 
 void Enemy::Collision()
 {
-	Vector3 tmp = m_position;
-	tmp.y += 30.0f;
-	m_collisionObject->SetPosition(tmp);
-
 	//被ダメージステートの時は当たり判定処理をしない
 	if (m_enemystate == enEnemyState_ReceiveDamage)
 	{
 		return;
 	}
-	//被ダメージ、あるいはダウンステートの時は。
-//当たり判定処理はしない。
-	/*if (m_enemystate == enEnemyState_ReceiveDamage ||
-		m_enemystate == enEnemyState_Down)
-	{
-		return;
-	}*/
-	//無敵時間中は処理しない
-	/*if (m_mutekitimer > 0)
-	{
-		m_mutekitimer -= g_gameTime->GetFrameDeltaTime();
-		return;
-	}*/
+
+	Vector3 tmp = m_position;
+	tmp.y += 30.0f;
+	m_collisionObject->SetPosition(tmp);
+
 	//プレイヤーの攻撃用のコリジョンを取得する。
 	const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_attack");
 	//コリジョンの配列をfor文で回す。
@@ -574,18 +525,7 @@ void Enemy::Collision()
 	{
 		//コリジョンとキャラコンが衝突したら。
 		if (collision->IsHit(m_collisionObject))
-		{
-			//SoundSource* se = NewGO<SoundSource>(5);e
-			//se = NewGO<SoundSource>(5);
-			//se->Init(5);
-			//se->Play(false);
-			//if (m_sh > 0) {
-			//	m_sh--;
-			//	//被ダメージステートに遷移する。
-			//	m_enemystate = enEnemyState_ReceiveDamage;
-			//	return;
-			//}
-			
+		{	
 				//HPを1減らす。
 				m_hp -= 1;
 				//効果音を再生する
@@ -598,17 +538,11 @@ void Enemy::Collision()
 				//m_mutekitimer = mutekitime;
 				//HPが0になったら。
 				if (m_hp == 0) {
-					//ダウンステートに遷移する。
-					//m_enemystate = enEnemyState_Idle;
-					//m_enemyCount--;
 					DeleteGO(this);
 				}
 				else {
 					//被ダメージ前のステートを記憶
 					m_oldEnemyState = m_enemystate;
-
-					////プレイヤーにエネミーのインスタンスを送信
-					//m_player->InLastAttackEnemyInstance(this);
 
 					//被ダメージステートに遷移する。
 					m_enemystate = enEnemyState_ReceiveDamage;
@@ -773,13 +707,6 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 		m_enemyAttackStep = en_noneStep;
 		m_shotBool = false;
 	}
-	else if(wcscmp(eventName, L"soundStart") == 0)
-	{
-		//SoundSource* se = NewGO<SoundSource>(0);
-		//se->Init(5);
-		//se->Play(false);
-		//se->SetVolume(0.3f);
-	}
 }
 
 void Enemy::ReleaseAttackPoint()
@@ -794,57 +721,6 @@ void Enemy::ReleaseAttackPoint()
 	m_game->GetEnemyAttackPointObject()->ReleaseAttackPoint(m_AttackPoint->m_number, this);
 	//アタックポイントへのポインタも解放
 	m_AttackPoint = nullptr;
-}
-
-bool Enemy::AroundStateCheckChase()
-{
-	if (m_enemystate == enEnemyState_Chase)
-	{
-		return true;
-	}
-
-	for (int i = 0; i < m_game->m_EnemyList.size(); i++)
-	{
-		if (i == m_Vectornum)
-		{
-			continue;
-		}
-
-		Vector3 EnemyPos = m_game->GetEnemyListPos(i);
-
-		Vector3 Enemylength = EnemyPos - m_position;
-
-
-		if (Enemylength.Length() <= 500.0f)
-		{
-			btTransform start, end;
-
-			start.setIdentity();
-			end.setIdentity();
-
-			start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
-
-			end.setOrigin(btVector3(EnemyPos.x, EnemyPos.y + 70.0f, EnemyPos.z));
-
-			SweepResultWall callback;
-			//制作したコライダーを始点から終点まで動かして壁に接触したか判定
-			PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
-			//壁と衝突した時
-			if (callback.isHit == true)
-			{
-				return false;
-			}
-
-			if (m_game->GetEnemyListInstance(i)->m_enemystate
-				== enEnemyState_Chase)
-			{
-				return true;
-			}
-		}
-
-	}
-
-	return false;
 }
 
 void Enemy::AroundEnemyTransitionToChase()

@@ -97,6 +97,12 @@ Game::~Game()
 	DeleteGO(m_player);
 }
 
+bool Game::Start()
+{
+	m_enemyCamPos.Init();
+	return true;
+}
+
 void Game::NotifyGameClear()
 {
 	m_isWaitFadeout = true;
@@ -131,8 +137,6 @@ void Game::Update()
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
-			//プレイヤーのHPのUIを削除
-			//DeleteGO(m_hpui);
 			//ゲームオーバーのオブジェクトをつくる。
 			NewGO<GameOver>(0, "gameover");
 		}

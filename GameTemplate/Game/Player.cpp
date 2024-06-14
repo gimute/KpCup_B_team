@@ -62,7 +62,6 @@ bool Player::Start()
 
 	m_sphereCollider.Create(1.0f);
 
-	//m_enemy = FindGO<Enemy>("enemy");
 	m_game = FindGO<Game>("game");
 
 	//音を読み込む
@@ -95,7 +94,6 @@ void Player::Update()
 		m_lastAttackEnemy = nullptr;
 	}
 
-	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
 	//モデルの更新。
 	m_modelRender.Update();
 
@@ -187,6 +185,7 @@ void Player::Rolling()
 
 void Player::Rotation()
 {
+	//特定のステートの時は回転処理をしない
 	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk
 		||m_playerstate == enPlayerState_Rolling)
 	{
@@ -209,19 +208,12 @@ void Player::Rotation()
 
 void Player::Collision()
 {
-	if (m_muteki_timer >= 0.0f)
-	{
-		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
-	}
-
-	Vector3 tmp = m_position;
-	tmp.y += 30.0f;
-	m_collisionObject->SetPosition(tmp);
-
 	//無敵時間が０秒の時
 	if (m_muteki_timer <= 0.0f)
 	{
-		
+		Vector3 tmp = m_position;
+		tmp.y += 30.0f;
+		m_collisionObject->SetPosition(tmp);
 
 		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
 		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
@@ -248,7 +240,13 @@ void Player::Collision()
 			}
 		}
 	}
+	else
+	{
+		//無敵時間を進める
+		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
+	}
 }
+
 void Player::AttackRotation()
 {
 	m_forward = Vector3::AxisZ;
@@ -438,7 +436,6 @@ void Player::ProcessCommonStateTransition()
 
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{
-		//m_playerstate = enPlayerState_Idle;
 		if (g_pad[0]->IsTrigger(enButtonB))
 		{
 			m_playerstate = enPlayerState_Attack;

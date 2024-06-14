@@ -85,9 +85,6 @@ public:
 	//あった場合ture、なかった場合falseが返される
 	bool WallCheck(const Vector3 position);
 
-	//自身の近くの敵がチェイス状態に入ったらtrueを返す
-	bool AroundStateCheckChase();
-
 	//周囲のエネミーにchase状態を伝播させる
 	void AroundEnemyTransitionToChase();
 	//AroundEnemyTransitionToChase関数で呼び出す
@@ -123,15 +120,7 @@ public:
 	float m_attackTimer = 0.0f;
 	float attackTime = 3.0f;
 	bool m_shotBool = false;
-	/// <summary>
-	/// 攻撃遅延ステートセット
-	/// </summary>
-	/// <param name="statenum"></param>
-	//void SetEnemyAttackState(const EnEnemyAttackSpeed& enemystate)
-	//{
-	//	m_enemyAttackSpeed = enemystate;
-	//	return;
-	//}
+
 private:
 	EnEnemyState m_oldEnemyState;          //被弾時に被ダメージステートから元のステートに戻るために、記憶しておく変数
 	EnemyAttackPoint::AttackPoint* m_AttackPoint = nullptr;		//アタックポイント構造体のポインタ

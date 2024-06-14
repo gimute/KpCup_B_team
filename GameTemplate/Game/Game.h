@@ -6,8 +6,6 @@
 #include "Enemy.h"
 #include "sound/SoundSource.h"
 
-//エネミーアタックポイントの数
-//#define ENEMY_ATTACK_POINT_NUM 15
 
 ///////////////////////////////
 class Player;
@@ -37,17 +35,9 @@ public:
 		enEvent
 	};
 
-	//エネミーの攻撃可能ポイント
-	//このポイントを確保できているエネミーのみ攻撃可能にする
-	//struct EnemyAttackPoint
-	//{
-	//	Vector3 m_position;			//アタックポイントの座標
-	//	int m_number;				//アタックポイントの要素番号
-	//	bool m_use = false;			//使用中か
-	//};
-
 	Game();
 	~Game();
+	bool Start();
 
 	void Update();
 	//制限時間
