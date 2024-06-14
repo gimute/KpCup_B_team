@@ -532,7 +532,6 @@ void Enemy::Collision()
 				m_hp -= 1;
 				//効果音を再生する
 				SoundSource* m_hpPlayer = NewGO<SoundSource>(0);
-				m_hpPlayer = NewGO<SoundSource>(0);
 				m_hpPlayer->Init(10);
 				m_hpPlayer->Play(false);
 

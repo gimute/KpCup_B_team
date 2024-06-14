@@ -503,7 +503,6 @@ void Player::ProcessCommonStateTransition()
 		//プレイヤーステートを回避にする
 		m_playerstate = enPlayerState_Rolling;
 		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
-		m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer->Init(12);
 		m_roPlayer->Play(false);
 		return;
@@ -515,7 +514,6 @@ void Player::ProcessCommonStateTransition()
 		{
 			m_playerstate = enPlayerState_Attack;
 			SoundSource* m_atPlayer = NewGO<SoundSource>(0);
-			m_atPlayer = NewGO<SoundSource>(0);
 			m_atPlayer->Init(7);
 			m_atPlayer->Play(false);
 			return;
