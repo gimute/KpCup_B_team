@@ -33,7 +33,7 @@ public:
 
 	//近くにある使用可能なアタックポイントのアドレスを取得する関数
 	AttackPoint* GetNearAttackPoint(Vector3 position);
-	//アタックポイントを使用中にする機能付き
+	//取得したアタックポイントを使用中にする機能付き
 	AttackPoint* GetNearAttackPoint(Vector3 position, Enemy* enemy);
 
 	//より近いアタックポイントを取得しなおす関数
