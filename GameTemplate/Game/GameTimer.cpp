@@ -63,12 +63,6 @@ void GameTimer::FontSet()
 	m_fontRender.SetScale(2.0f);
 	//フォントの色を設定
 	m_fontRender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
-
-		//wchar_t wcsbuf[256];
-		//swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_timer), int(m_minit));
-
-		////表示するテキストを設定。
-		//m_fontRender.SetText(wcsbuf);
 }
 
 void GameTimer::Render(RenderContext& rc)

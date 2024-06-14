@@ -144,6 +144,10 @@ void Game::NotifyGameOver()
 	m_gameState = enGameOver;
 	m_load->StartFadeOut();
 	DeleteGO(m_gametimer);
+  
+  m_hpEffect = true;
+	m_hpLowBgm->Stop();
+	m_gameBgm->SetVolume(1.0f);
 }
 
 void Game::Update()
@@ -211,14 +215,14 @@ void Game::Update()
 		//HPがピンチな時のエフェクト
 		m_pncDraw = true;
 
-		if (m_hpLowBgm->IsPlaying() == false)
+		if (m_hpLowBgm->IsPlaying() == false && m_EventAfterState == enIdle)
 		{
 			m_hpLowBgm->Init(11);
 			m_hpLowBgm->Play(true);
 			m_hpLowBgm->SetVolume(3.0f);
 			m_gameBgm->SetVolume(0.5f);
+			m_hpLowBgmBool = true;
 		}
-		
 	}
 	else
 	{
@@ -252,6 +256,10 @@ void Game::Update()
 //アルファチャンネルの調整
 void Game::AlphaCalc()
 {
+	if (m_hpEffect)
+	{
+		m_alpha = 0.0f;
+	}
 	if (m_alpha >= 0.6f) {
 		m_alphaCalcBool = false;
 	}
@@ -375,7 +383,14 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
+			m_hpEffect = true;
+			if (m_hpLowBgmBool) {
+				m_hpLowBgm->Stop();
+			}
+			m_gameBgm->SetVolume(1.0f);
+
 			test->StartScene(EventCamera::en_Scene_GameClear);
+
 			m_EventAfterState = enGameClear;
 			m_player->SetEvent(Player::enGameClear);
 			return;
@@ -384,20 +399,10 @@ void Game::GameStateTransition()
 		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
-			
-
-			////フェードアウトを開始
-			//m_load->StartFadeOut();
-			////ステートをゲームオーバーに
-			//m_gameState = enGameOver;
-
-			//DeleteGO(m_gametimer);
-
-			//test->StartScene(EventCamera::en_Scene2_MapUp1);
-			//m_EventAfterState = enGameOver;
-
+      
 			return;
 		}
+		m_hpEffect = false;
 	}
 	
 	if (m_gameState == enEvent)

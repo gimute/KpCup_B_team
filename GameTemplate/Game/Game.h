@@ -138,6 +138,8 @@ private:
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
 	bool m_alphaCalcBool;
 	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
+	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
+	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 };
 
