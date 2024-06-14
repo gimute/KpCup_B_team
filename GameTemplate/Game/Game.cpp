@@ -124,6 +124,7 @@ Game::~Game()
 	DeleteGO(m_signalRailUi);
 	DeleteGO(door1);
 	DeleteGO(m_gameBgm);
+	DeleteGO(m_hpLowBgm);
 	DeleteGO(m_player);
 }
 
@@ -144,9 +145,7 @@ void Game::NotifyGameOver()
 	m_gameState = enGameOver;
 	m_load->StartFadeOut();
 	DeleteGO(m_gametimer);
-  
-  m_hpEffect = true;
-	m_hpLowBgm->Stop();
+
 	m_gameBgm->SetVolume(1.0f);
 }
 
@@ -170,6 +169,9 @@ void Game::Update()
 	case enGameClear:
 		//ゲームクリア中はUI非表示
 		EventUiDelete(true);
+
+		m_hpLowBgm->Stop();
+
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
@@ -215,7 +217,7 @@ void Game::Update()
 		//HPがピンチな時のエフェクト
 		m_pncDraw = true;
 
-		if (m_hpLowBgm->IsPlaying() == false && m_EventAfterState == enIdle)
+		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
 		{
 			m_hpLowBgm->Init(11);
 			m_hpLowBgm->Play(true);
@@ -228,7 +230,6 @@ void Game::Update()
 	{
 		m_pncDraw = false;
 		m_gameBgm->SetVolume(1.0f);
-		//m_hpLowBgm->Play(false);
 	}
 	
 
@@ -384,9 +385,6 @@ void Game::GameStateTransition()
 			}
 
 			m_hpEffect = true;
-			if (m_hpLowBgmBool) {
-				m_hpLowBgm->Stop();
-			}
 			m_gameBgm->SetVolume(1.0f);
 
 			test->StartScene(EventCamera::en_Scene_GameClear);
@@ -399,7 +397,7 @@ void Game::GameStateTransition()
 		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
-      
+			m_hpLowBgm->Stop();
 			return;
 		}
 		m_hpEffect = false;
@@ -407,6 +405,11 @@ void Game::GameStateTransition()
 	
 	if (m_gameState == enEvent)
 	{
+		if (m_hpLowBgm->IsPlaying())
+		{
+			m_hpLowBgm->Stop();
+		}
+
 		//イベントシーンが終了したら
 		if (test->IsEvent() == false)
 		{

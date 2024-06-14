@@ -111,8 +111,7 @@ public:
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
-	SoundSource* m_gameBgm;
-	SoundSource* m_hpLowBgm;
+	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
@@ -141,5 +140,8 @@ private:
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
+
+	SoundSource* m_gameBgm;
+	SoundSource* m_hpLowBgm;
 };
 
