@@ -609,7 +609,25 @@ void Player::Render(RenderContext& rc)
 {
 	if (m_game->m_TempDelPlayer == false)
 	{
-		//モデルの描画。
-		m_modelRender.Draw(rc);
+		//無敵時間中出なければ
+		if (m_muteki_timer <= 0.0f)
+		{
+			//モデルの描画。
+			m_modelRender.Draw(rc);
+		}	
+		else
+		{
+			//無敵時間中は
+			//モデルの表示非表示を毎フレーム切り替えて点滅
+			if (m_mutekiModelDraw)
+			{
+				m_modelRender.Draw(rc);
+				m_mutekiModelDraw = false;
+			}
+			else
+			{
+				m_mutekiModelDraw = true;
+			}
+		}
 	}
 }
