@@ -26,8 +26,23 @@ public:
 		enPlayerState_PostureWalk,		//構え歩き。
 		enPlayerState_Attack,			//攻撃
 		enPlayerState_Rolling,
-		enPlayerState_ReceiveDamage		//被ダメージ
+		enPlayerState_ReceiveDamage,		//被ダメージ
+		enPlayerState_Event				//イベントシーン中
 	};
+
+	enum EnEvent {
+		enGameClear,
+		enNone
+	};
+
+	struct EventInfo
+	{
+		EnEvent m_eventState = enNone;						//イベントの種類
+		Vector3 m_targetPos;								//目標地点
+		EnAnimationClip m_motion = enAnimationClip_Idle;	//再生するモーション
+		float m_waitTime = 0.0f;							//目的地に着いた後の待機時間
+	};
+
 
 	Player();
 	~Player();
@@ -64,6 +79,9 @@ public:
 		m_LAEnemyRetentionTime = 2.0f;
 	}
 
+	//イベント設定
+	void SetEvent(EnEvent eventnum);
+
 //メンバ変数
 	ModelRender m_modelRender;
 	Vector3 m_position;										//座標
@@ -92,7 +110,13 @@ public:
 	float m_LAEnemyRetentionTime = 0.0f;
 
 private:
-
+	EventInfo m_eventInfos[3] = {
+		{enGameClear,{150.0f,0.0f,1230.0f},enAnimationClip_Idle,1.0},
+		{enGameClear,{1200.0f,0.0f,1230.0f},enAnimationClip_Walk,0.0f},
+		{enNone,{0.0f,0.0f,0.0f},enAnimationClip_Idle,0.0f}
+	};
+	int m_eventInfoNum = 0;
+	float m_eventTimer = 0.0f;
 
 };
 
