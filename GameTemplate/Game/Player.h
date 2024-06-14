@@ -17,6 +17,7 @@ public:
 		enAnimationClip_PostureIdle,	//構え立ち
 		enAnimationClip_Rolling,		//ローリング
 		enAnimationClip_Damage,			//被ダメージモーション
+		enAnimationClip_knockdown,
 		enAnimationClip_Num				//アニメーション数
 	};
 	//プレイヤーステート
@@ -27,6 +28,7 @@ public:
 		enPlayerState_Attack,			//攻撃
 		enPlayerState_Rolling,
 		enPlayerState_ReceiveDamage,		//被ダメージ
+		enPlayerState_KnockDown,
 		enPlayerState_Event				//イベントシーン中
 	};
 
@@ -118,5 +120,6 @@ private:
 	int m_eventInfoNum = 0;
 	float m_eventTimer = 0.0f;
 
+	float m_gameoverWaitTimer = 0.0f;
 };
 

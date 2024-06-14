@@ -38,6 +38,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/proto_player/knockdown.tka");
+	m_animationclips[enAnimationClip_knockdown].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -74,6 +76,7 @@ bool Player::Start()
 
 void Player::Update()
 {
+	//ステートがイベントの時
 	if (m_playerstate == enPlayerState_Event)
 	{
 		Vector3 posToTar = m_eventInfos[m_eventInfoNum].m_targetPos - m_position;
@@ -121,6 +124,7 @@ void Player::Update()
 		m_modelRender.SetPosition(m_position);
 		m_modelRender.Update();
 
+		//通常の処理は実行せず返す
 		return;
 	}
 
@@ -134,6 +138,19 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+
+	if (m_playerstate == enPlayerState_KnockDown)
+	{
+		m_gameoverWaitTimer += g_gameTime->GetFrameDeltaTime();
+		if (m_gameoverWaitTimer >= 2.0f)
+		{
+			if (m_game->GetGmaeState() == Game::enIdle)
+			{
+				m_game->NotifyGameOver();
+			}
+			
+		}
+	}
 
 	//時間処理(仮)
 	if (m_LAEnemyRetentionTime > 0.0f)
@@ -266,8 +283,8 @@ void Player::Collision()
 		tmp.y += 30.0f;
 		m_collisionObject->SetPosition(tmp);
 
-		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
-		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
+		//被ダメージステート、ローリングステート、ダウンステート時は当たり判定処理をしない
+		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling || m_playerstate == enPlayerState_KnockDown)
 		{
 			return;
 		}
@@ -287,7 +304,11 @@ void Player::Collision()
 				m_hpEnemy->Play(false);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
-				//被ダメージステートに遷移する。
+
+				if (m_game->m_hpui->GetNowHP() <= 0)
+				{
+					m_playerstate = enPlayerState_KnockDown;
+				}
 			}
 		}
 	}
@@ -424,6 +445,8 @@ void Player::ManageState()
 	case Player::enPlayerState_ReceiveDamage:
 		ProcessReceiveDamageStateTransition();
 		break;
+	default:
+		break;
 	}
 }
 
@@ -466,6 +489,9 @@ void Player::PlayAnimation()
 		m_modelRender.SetAnimationSpeed(3.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
+	case Player::enPlayerState_KnockDown:
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_knockdown, 0.1f);
 	}
 }
 
