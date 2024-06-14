@@ -59,6 +59,15 @@ bool Player::Start()
 	////コリジョンオブジェクトが自動で削除されないようにする。
 	m_collisionObject->SetIsEnableAutoDelete(false);
 
+	//コリジョンオブジェクトを作成する。
+	m_justRollingCollisionObject = NewGO<CollisionObject>(0);
+	//球状のコリジョンを作成する。
+	Vector3 tmp;
+	tmp = m_position;
+	tmp.y += 30.0f;
+	m_justRollingCollisionObject->CreateSphere(tmp, Quaternion::Identity, 45.0f * m_scale.z);
+	m_justRollingCollisionObject->SetName("player_justrolling");
+	m_justRollingCollisionObject->SetIsEnableAutoDelete(false);
 
 	m_sphereCollider.Create(1.0f);
 
@@ -97,19 +106,15 @@ void Player::Update()
 
 	if (m_justRollingTime > 0.0f)
 	{
-		Vector3 tmp;
-		tmp = m_position;
-		tmp.y += 30.0f;
-		m_justRollingCollisionObject->SetPosition(tmp);
 		m_justRollingTime -= g_gameTime->GetFrameDeltaTime();
 	}
 	else
 	{
-		if (m_justRollingCollisionObject != nullptr)
-		{
-			DeleteGO(m_justRollingCollisionObject);
-			m_justRollingCollisionObject = nullptr;
-		}
+		Vector3 tmp;
+		tmp = m_position;
+		tmp.y += 30.0f;
+		m_justRollingCollisionObject->SetPosition(tmp);
+		m_justRollingCol = false;
 	}
 
 	//モデルの更新。
@@ -241,7 +246,7 @@ void Player::Collision()
 		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
 		if (m_playerstate == enPlayerState_Rolling)
 		{
-			if (m_justRollingCollisionObject == nullptr)
+			if (!m_justRollingCol)
 			{
 				return;
 			}
@@ -444,11 +449,6 @@ void Player::ProcessCommonStateTransition()
 	//Aボタンが押されたら
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
-		if (m_justRollingCollisionObject != nullptr)
-		{
-			DeleteGO(m_collisionObject);
-			m_justRollingCollisionObject = nullptr;
-		}
 
 		float lStick_x = g_pad[0]->GetLStickXF();
 		float lStick_y = g_pad[0]->GetLStickYF();
@@ -479,16 +479,7 @@ void Player::ProcessCommonStateTransition()
 		//プレイヤーステートを回避にする
 		m_playerstate = enPlayerState_Rolling;
 		m_justRollingTime = 0.3f;
-		//コリジョンオブジェクトを作成する。
-		m_justRollingCollisionObject = NewGO<CollisionObject>(0);
-		//球状のコリジョンを作成する。
-		Vector3 tmp;
-		tmp = m_position;
-		tmp.y += 30.0f;
-		m_justRollingCollisionObject->CreateSphere(tmp, Quaternion::Identity, 45.0f * m_scale.z);
-		m_justRollingCollisionObject->SetName("player_justrolling");
-		m_justRollingCollisionObject->SetIsEnableAutoDelete(false);
-
+		m_justRollingCol = true;
 		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer->Init(12);

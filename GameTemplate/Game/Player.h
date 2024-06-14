@@ -92,6 +92,7 @@ public:
 	float m_reset_timer = 0.0f;								//リセットタイマー
 	float m_LAEnemyRetentionTime = 0.0f;
 	float m_justRollingTime = 0.0f;
+	bool m_justRollingCol = false;
 private:
 
 
