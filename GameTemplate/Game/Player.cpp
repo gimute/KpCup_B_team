@@ -238,12 +238,12 @@ void Player::Collision()
 		tmp.y += 30.0f;
 		m_collisionObject->SetPosition(tmp);
 
+		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
 		if (m_playerstate == enPlayerState_ReceiveDamage)
 		{
 			return;
 		}
 
-		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
 		if (m_playerstate == enPlayerState_Rolling)
 		{
 			if (!m_justRollingCol)
@@ -260,7 +260,7 @@ void Player::Collision()
 				//コリジョンとキャラコンが衝突したら。
 				if (collision->IsHit(m_justRollingCollisionObject))
 				{
-					m_game->SlowStart(2.0f);
+					m_game->SlowStart(1.0f);
 				}
 			}
 
