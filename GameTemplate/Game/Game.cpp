@@ -203,8 +203,14 @@ void Game::Update()
 	}
 	
 
-	
-	
+	if (m_slowTime > 0.0f)
+	{
+		m_slowTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		g_gameTime->IsSlowMotion(false);
+	}
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
@@ -216,7 +222,6 @@ void Game::Update()
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		test->StartScene(EventCamera::en_Scene3_MapUp2);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLeft))
 	{
@@ -434,6 +439,12 @@ void Game::EventUiDelete(bool mode)
 
 		m_TempDelSignalUi = true;
 	}
+}
+
+void Game::SlowStart(float slowTime)
+{
+	g_gameTime->IsSlowMotion(true);
+	m_slowTime = slowTime;
 }
 
 void Game::Render(RenderContext& rc)

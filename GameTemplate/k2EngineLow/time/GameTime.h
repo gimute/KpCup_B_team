@@ -56,6 +56,11 @@ namespace nsK2EngineLow {
 				return m_fixedFrameDeltaTime;
 			}
 			
+			if (m_isSlowMotion)
+			{
+				return m_frameDeltaTime / 2;
+			}
+
 			return m_frameDeltaTime;
 		}
 
@@ -100,6 +105,11 @@ namespace nsK2EngineLow {
 			m_sw.Stop();
 			PushFrameDeltaTime(static_cast<float>(m_sw.GetElapsed()));
 		}
+
+		void IsSlowMotion(bool isSlow)
+		{
+			m_isSlowMotion = isSlow;
+		}
 	private:
 		friend class K2EngineLow;
 		Stopwatch m_sw;
@@ -107,5 +117,7 @@ namespace nsK2EngineLow {
 		float		m_frameDeltaTime = 1.0f / 60.0f;	// 1フレームの経過時間。
 		bool		m_isFixedFrameDeltaTime = false;		// 1フレームの経過時間を固定化する。
 		float		m_fixedFrameDeltaTime = 1.0f / 60.0f;	// 固定経過時間。
+
+		bool m_isSlowMotion = false;
 	};
 }

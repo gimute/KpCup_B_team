@@ -69,6 +69,7 @@ public:
 	Vector3 m_position;										//座標
 	CharacterController m_charaCon;							//キャラクターコントローラー
 	CollisionObject* m_collisionObject;						//コリジョンオブジェクト
+	CollisionObject* m_justRollingCollisionObject = nullptr;						//ジャスト回避用コリジョン
 	Vector3 m_moveSpeed;									//移動速度。
 	Quaternion m_rotation;									//クォータニオン。
 	Vector3 m_scale = Vector3::One;			//大きさ
@@ -90,7 +91,7 @@ public:
 	float m_muteki_timer = 0.0f;							//無敵タイマー
 	float m_reset_timer = 0.0f;								//リセットタイマー
 	float m_LAEnemyRetentionTime = 0.0f;
-
+	float m_justRollingTime = 0.0f;
 private:
 
 

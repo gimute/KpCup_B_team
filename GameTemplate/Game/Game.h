@@ -68,6 +68,8 @@ public:
 	void GameStateTransition();
 	//他のクラスから呼ぶためのゲームクリア処理。
 	void GameClearProcess();
+	//スローモージョンスタート
+	void SlowStart(float SlowTime);
 
 	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
 	//エネミーを全員倒したかのフラグを返す
@@ -133,5 +135,6 @@ private:
 	bool m_alphaCalcBool;
 	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
+	float m_slowTime = 0.0f;			//スローモーション時間
 };
 

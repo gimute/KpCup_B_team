@@ -95,6 +95,23 @@ void Player::Update()
 		m_lastAttackEnemy = nullptr;
 	}
 
+	if (m_justRollingTime > 0.0f)
+	{
+		Vector3 tmp;
+		tmp = m_position;
+		tmp.y += 30.0f;
+		m_justRollingCollisionObject->SetPosition(tmp);
+		m_justRollingTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		if (m_justRollingCollisionObject != nullptr)
+		{
+			DeleteGO(m_justRollingCollisionObject);
+			m_justRollingCollisionObject = nullptr;
+		}
+	}
+
 	//モデルの更新。
 	m_modelRender.Update();
 
@@ -216,9 +233,32 @@ void Player::Collision()
 		tmp.y += 30.0f;
 		m_collisionObject->SetPosition(tmp);
 
-		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
-		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
+		if (m_playerstate == enPlayerState_ReceiveDamage)
 		{
+			return;
+		}
+
+		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
+		if (m_playerstate == enPlayerState_Rolling)
+		{
+			if (m_justRollingCollisionObject == nullptr)
+			{
+				return;
+			}
+
+			//プレイヤーの攻撃用のコリジョンを取得する。
+			const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_attack");
+
+			//コリジョンの配列をfor文で回す。
+			for (auto collision : collisions)
+			{
+				//コリジョンとキャラコンが衝突したら。
+				if (collision->IsHit(m_justRollingCollisionObject))
+				{
+					m_game->SlowStart(2.0f);
+				}
+			}
+
 			return;
 		}
 		//プレイヤーの攻撃用のコリジョンを取得する。
@@ -404,6 +444,12 @@ void Player::ProcessCommonStateTransition()
 	//Aボタンが押されたら
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
+		if (m_justRollingCollisionObject != nullptr)
+		{
+			DeleteGO(m_collisionObject);
+			m_justRollingCollisionObject = nullptr;
+		}
+
 		float lStick_x = g_pad[0]->GetLStickXF();
 		float lStick_y = g_pad[0]->GetLStickYF();
 		if ((lStick_x <= 0.0f && lStick_x >= 0.0f)
@@ -432,6 +478,17 @@ void Player::ProcessCommonStateTransition()
 		/*m_rollingVec = m_forward;*/
 		//プレイヤーステートを回避にする
 		m_playerstate = enPlayerState_Rolling;
+		m_justRollingTime = 0.3f;
+		//コリジョンオブジェクトを作成する。
+		m_justRollingCollisionObject = NewGO<CollisionObject>(0);
+		//球状のコリジョンを作成する。
+		Vector3 tmp;
+		tmp = m_position;
+		tmp.y += 30.0f;
+		m_justRollingCollisionObject->CreateSphere(tmp, Quaternion::Identity, 45.0f * m_scale.z);
+		m_justRollingCollisionObject->SetName("player_justrolling");
+		m_justRollingCollisionObject->SetIsEnableAutoDelete(false);
+
 		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer->Init(12);
