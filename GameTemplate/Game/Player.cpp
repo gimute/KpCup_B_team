@@ -74,6 +74,56 @@ bool Player::Start()
 
 void Player::Update()
 {
+	if (m_playerstate == enPlayerState_Event)
+	{
+		Vector3 posToTar = m_eventInfos[m_eventInfoNum].m_targetPos - m_position;
+		posToTar.y = 0.0f;
+		if (posToTar.Length() >= 10.0f)
+		{
+			posToTar.Normalize();
+			posToTar *= 250.0f;
+			m_position = m_charaCon.Execute(posToTar, g_gameTime->GetFrameDeltaTime());
+			//m_position += posToTar * 200.0f;
+		}
+		else
+		{
+			if (m_eventInfos[m_eventInfoNum].m_waitTime <= m_eventTimer)
+			{
+				if (m_eventInfos[m_eventInfoNum].m_eventState == m_eventInfos[m_eventInfoNum + 1].m_eventState)
+				{
+					m_eventInfoNum++;
+					m_eventTimer = 0.0f;
+				}
+				else
+				{
+					m_playerstate = enPlayerState_Idle;
+					m_eventTimer = 0.0f;
+					return;
+				}
+			}
+			else
+			{
+				m_eventTimer += g_gameTime->GetFrameDeltaTime();
+			}
+		}
+
+		if (fabsf(posToTar.x) >= 0.001f || fabsf(posToTar.z) >= 0.001f)
+		{
+			//キャラクターの方向を変える。
+			m_rotation.SetRotationYFromDirectionXZ(posToTar);
+			//絵描きさんに回転を教える。
+			m_modelRender.SetRotation(m_rotation);
+		}
+
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(m_eventInfos[m_eventInfoNum].m_motion, 0.1f);
+		m_charaCon.SetPosition(m_position);
+		m_modelRender.SetPosition(m_position);
+		m_modelRender.Update();
+
+		return;
+	}
+
 	//移動処理。
 	Move();
 	//回転処理。
@@ -330,6 +380,26 @@ bool Player::AngleCheck(const Vector3& position)
 	
 
 	return true;
+}
+
+void Player::SetEvent(EnEvent eventnum)
+{
+	m_playerstate = enPlayerState_Event;
+
+	for (int i = 0; i < sizeof(m_eventInfos) / sizeof(EventInfo); i++)
+	{
+		if (m_eventInfos[i].m_eventState == eventnum)
+		{
+			m_eventInfoNum = i;
+
+			m_position = m_eventInfos[i].m_targetPos;
+
+			m_charaCon.SetPosition(m_position);
+			m_modelRender.SetPosition(m_position);
+
+			break;
+		}
+	}
 }
 
 void Player::ManageState()

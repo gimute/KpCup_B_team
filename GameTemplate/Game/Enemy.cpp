@@ -529,7 +529,7 @@ void Enemy::Collision()
 		if (collision->IsHit(m_collisionObject))
 		{	
 				//HPを1減らす。
-				m_hp -= 1;
+				m_hp -= 4;
 				//効果音を再生する
 				SoundSource* m_hpPlayer = NewGO<SoundSource>(0);
 				m_hpPlayer = NewGO<SoundSource>(0);

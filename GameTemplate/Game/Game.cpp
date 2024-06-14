@@ -154,6 +154,8 @@ void Game::Update()
 		break;
 
 	case enGameClear:
+		//ゲームクリア中はUI非表示
+		EventUiDelete(true);
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
@@ -352,9 +354,9 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
-			test->StartScene(EventCamera::en_Scene2_MapUp1);
+			test->StartScene(EventCamera::en_Scene_GameClear);
 			m_EventAfterState = enGameClear;
-			m_TempDelPlayer = true;
+			m_player->SetEvent(Player::enGameClear);
 			return;
 		}
 
