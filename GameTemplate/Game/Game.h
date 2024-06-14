@@ -50,6 +50,8 @@ public:
 	~Game();
 
 	void Update();
+	//
+	void AlphaCalc();
 	//制限時間
 	void DisplayTime();
 	//ゲームクリアを通知する
@@ -108,13 +110,13 @@ public:
 	GameClear* m_gameclear;
 	GameTimer* m_gametimer;
 	SpriteRender m_spriterender; //スプライトレンダー。
-	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	SoundSource* m_gameBgm;
+	SoundSource* m_hpLowBgm;
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
@@ -133,9 +135,13 @@ private:
 	LevelRender m_levelRender;
 
 	PreSpriteRender m_preSpriteRender;
+	SpriteRender m_pncSpriteRender;
 	EnGameState m_gameState = enIdle;
 	EnGameState m_EventAfterState;	//イベントシーン終了後に移行するステート
 
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
+	bool m_alphaCalcBool;
+	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
+	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 };
 
