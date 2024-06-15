@@ -170,7 +170,7 @@ void Game::Update()
 		//ゲームクリア中はUI非表示
 		EventUiDelete(true);
 
-		m_hpLowBgm->Stop();
+		//m_hpLowBgm->Stop();
 
 		if (!m_load->IsFade()) {
 			//自身を削除する。
