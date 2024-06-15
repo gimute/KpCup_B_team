@@ -8,6 +8,24 @@
 #include "sound/SoundEngine.h"
 
 
+class LanchSlowMotion : public IGameObject
+{
+	float m_timer = 0;
+	Game* m_game;
+public:
+	void Initialize(Game* game)
+	{
+		m_game = game;
+	}
+	void Update()
+	{
+		m_timer += g_gameTime->GetFrameDeltaTime();
+		if (m_timer > 0.05f) {
+			m_game->SlowStart(0.05f);
+			DeleteGO(this);
+		}
+	}
+};
 Player::Player()
 {
 
@@ -242,6 +260,9 @@ void Player::Move()
 	//座標を移動
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
+	//壁に突っ込んだ時に浮かび上がる現象が発生することがあるので、y座標を0にする
+	m_position.y = 0.0f;
+
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
 	m_charaCon.SetPosition(m_position);
@@ -263,6 +284,9 @@ void Player::Rolling()
 	m_rollingSpeed.y = 0.0f;
 
 	m_position = m_charaCon.Execute(m_rollingSpeed, g_gameTime->GetFrameDeltaTime());
+
+	//壁に突っ込んだ時に浮かび上がる現象が発生することがあるので、y座標を0にする
+	m_position.y = 0.0f;
 
 	Vector3 modelPosition = m_position;
 	//ちょっとだけモデルの座標を挙げる。
@@ -328,7 +352,9 @@ void Player::Collision()
 				//コリジョンとキャラコンが衝突したら。
 				if (collision->IsHit(m_justRollingCollisionObject))
 				{
-					m_game->SlowStart(0.4f);
+					auto hgoe = NewGO<LanchSlowMotion>(0, "LanchSlowMotion");
+					hgoe->Initialize(m_game);
+					//m_game->SlowStart(0.1f);
 				}
 			}
 
@@ -343,7 +369,7 @@ void Player::Collision()
 			if (collision->IsHit(m_collisionObject))
 			{
 				//HPを減らす
-				m_game->m_hpui->DecreaseHP(25);
+				m_game->m_hpui->DecreaseHP(15);
 				//効果音を再生する
 				SoundSource* m_hpEnemy = NewGO<SoundSource>(0);
 				m_hpEnemy->Init(8);
@@ -580,6 +606,8 @@ void Player::ProcessCommonStateTransition()
 		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
 		m_roPlayer->Init(12);
 		m_roPlayer->Play(false);
+		
+
 		return;
 	}
 
