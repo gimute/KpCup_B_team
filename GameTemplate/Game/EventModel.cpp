@@ -39,7 +39,7 @@ bool EventModel::Start()
 
 void EventModel::Update()
 {
-	testIter->second->m_modelRender.PlayAnimation(0,0.1f);
+	testIter->second->m_modelRender.PlayAnimation(1);
 
 	testIter->second->m_modelRender.SetPosition(0.0,0.0,0.0);
 

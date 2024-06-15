@@ -65,6 +65,8 @@ public:
 
 			//引数のbool型でループフラグを設定
 			m_animationclips[listNum].SetLoopFlag(loopFlag);
+
+			m_useAnimationclips++;
 		}
 		/// <summary>
 		/// モデルレンダーに登録を確定

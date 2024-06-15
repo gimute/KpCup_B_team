@@ -33,7 +33,7 @@ Game::Game()
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HPがピンチな時の画面エフェクト画像の設定
+	//HPがピンチな時の画面エフェクト画像
 	SpriteInitData initData;
 	//DDSファイル（画像データ）のファイルパスを指定する
 	//HPがピンチな時の画面エフェクトの画像データを指定する
@@ -213,7 +213,6 @@ void Game::Update()
 		//エネミー全滅フラグをtureにする
 		m_enemyAllKillFlag = true;
 	}
-
 	//プレイヤーのHPが25以下なら
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
