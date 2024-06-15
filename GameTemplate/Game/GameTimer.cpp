@@ -24,7 +24,7 @@ bool GameTimer::Start()
 	//フォントの位置を設定
 	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
 	//フォントの大きさを設定
-	m_fontRender.SetScale(2.0f);
+	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定。
 	m_fontRender.SetColor({ 255.0f,0.0f,0.0f,1.0f });
 	
@@ -60,7 +60,7 @@ void GameTimer::FontSet()
 	//フォントの位置を設定
 	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
 	//フォントの大きさを設定
-	m_fontRender.SetScale(2.0f);
+	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定
 	m_fontRender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
 }

@@ -50,9 +50,7 @@ Game::Game()
 	m_pncSpriteRender.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
 	m_pncSpriteRender.Update();
 	
-	//HPがピンチな時の画面エフェクトを読み込む
-	//m_pncSpriteRender.Init("Assets/sprite/LowHpEffect.DDS",1920,1080);
-	//m_pncSpriteRender.SetMulColor(Vector4())
+
 	//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -156,8 +154,6 @@ void Game::Update()
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
 
-	
-
 	GameStateTransition();
 
 	switch (m_gameState)
@@ -175,8 +171,6 @@ void Game::Update()
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
-			//プレイヤーのHPのUIを削除
-			//DeleteGO(m_hpui);
 			//ゲームクリアのオブジェクトをつくる。
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
 

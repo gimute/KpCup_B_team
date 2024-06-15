@@ -58,7 +58,7 @@ namespace nsK2EngineLow {
 			
 			if (m_isSlowMotion)
 			{
-				return m_frameDeltaTime / 2;
+				return m_frameDeltaTime / 4;
 			}
 
 			return m_frameDeltaTime;
