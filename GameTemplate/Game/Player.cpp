@@ -328,7 +328,7 @@ void Player::Collision()
 				//コリジョンとキャラコンが衝突したら。
 				if (collision->IsHit(m_justRollingCollisionObject))
 				{
-					m_game->SlowStart(1.0f);
+					m_game->SlowStart(0.4f);
 				}
 			}
 
