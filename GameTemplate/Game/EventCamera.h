@@ -16,6 +16,7 @@ public:
 		en_Scene1_Door,
 		en_Scene2_MapUp1,
 		en_Scene3_MapUp2,
+		en_Scene_GameClear,
 		en_SceneNum,
 		en_Scene_None
 	};
@@ -130,6 +131,7 @@ public:
 	/// レベルレンダー
 	/// </summary>
 	LevelRender m_camLevelRender;
+	LevelRender m_camLevelRender_GameClear;
 	/// <summary>
 	/// ゲームクラスのインスタンス格納用変数
 	/// </summary>

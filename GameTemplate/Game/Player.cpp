@@ -4,6 +4,9 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "HpUi.h"
+#include "sound/SoundSource.h"
+#include "sound/SoundEngine.h"
+
 
 Player::Player()
 {
@@ -35,6 +38,8 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/proto_player/knockdown.tka");
+	m_animationclips[enAnimationClip_knockdown].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
 
@@ -56,16 +61,82 @@ bool Player::Start()
 	////コリジョンオブジェクトが自動で削除されないようにする。
 	m_collisionObject->SetIsEnableAutoDelete(false);
 
+	//コリジョンオブジェクトを作成する。
+	m_justRollingCollisionObject = NewGO<CollisionObject>(0);
+	//球状のコリジョンを作成する。
+	Vector3 tmp;
+	tmp = m_position;
+	tmp.y += 30.0f;
+	m_justRollingCollisionObject->CreateSphere(tmp, Quaternion::Identity, 45.0f * m_scale.z);
+	m_justRollingCollisionObject->SetName("player_justrolling");
+	m_justRollingCollisionObject->SetIsEnableAutoDelete(false);
 
 	m_sphereCollider.Create(1.0f);
 
-	//m_enemy = FindGO<Enemy>("enemy");
 	m_game = FindGO<Game>("game");
+
+	//音を読み込む
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
+	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
+	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/m_rolling.wav");
+
 	return true;
 }
 
 void Player::Update()
 {
+	//ステートがイベントの時
+	if (m_playerstate == enPlayerState_Event)
+	{
+		Vector3 posToTar = m_eventInfos[m_eventInfoNum].m_targetPos - m_position;
+		posToTar.y = 0.0f;
+		if (posToTar.Length() >= 10.0f)
+		{
+			posToTar.Normalize();
+			posToTar *= 250.0f;
+			m_position = m_charaCon.Execute(posToTar, g_gameTime->GetFrameDeltaTime());
+			//m_position += posToTar * 200.0f;
+		}
+		else
+		{
+			if (m_eventInfos[m_eventInfoNum].m_waitTime <= m_eventTimer)
+			{
+				if (m_eventInfos[m_eventInfoNum].m_eventState == m_eventInfos[m_eventInfoNum + 1].m_eventState)
+				{
+					m_eventInfoNum++;
+					m_eventTimer = 0.0f;
+				}
+				else
+				{
+					m_playerstate = enPlayerState_Idle;
+					m_eventTimer = 0.0f;
+					return;
+				}
+			}
+			else
+			{
+				m_eventTimer += g_gameTime->GetFrameDeltaTime();
+			}
+		}
+
+		if (fabsf(posToTar.x) >= 0.001f || fabsf(posToTar.z) >= 0.001f)
+		{
+			//キャラクターの方向を変える。
+			m_rotation.SetRotationYFromDirectionXZ(posToTar);
+			//絵描きさんに回転を教える。
+			m_modelRender.SetRotation(m_rotation);
+		}
+
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(m_eventInfos[m_eventInfoNum].m_motion, 0.1f);
+		m_charaCon.SetPosition(m_position);
+		m_modelRender.SetPosition(m_position);
+		m_modelRender.Update();
+
+		//通常の処理は実行せず返す
+		return;
+	}
+
 	//移動処理。
 	Move();
 	//回転処理。
@@ -76,9 +147,43 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
-	//タイマー変数加減処理
-	TimeAdjustment();
-	//m_modelRender.SetPosition(30.0f, 0.0f, 0.0f);
+
+	if (m_playerstate == enPlayerState_KnockDown)
+	{
+		m_gameoverWaitTimer += g_gameTime->GetFrameDeltaTime();
+		if (m_gameoverWaitTimer >= 2.0f)
+		{
+			if (m_game->GetGmaeState() == Game::enIdle)
+			{
+				m_game->NotifyGameOver();
+			}
+			
+		}
+	}
+
+	//時間処理(仮)
+	if (m_LAEnemyRetentionTime > 0.0f)
+	{
+		m_LAEnemyRetentionTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		m_lastAttackEnemy = nullptr;
+	}
+
+	if (m_justRollingTime > 0.0f)
+	{
+		m_justRollingTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		Vector3 tmp;
+		tmp = m_position;
+		tmp.y += 30.0f;
+		m_justRollingCollisionObject->SetPosition(tmp);
+		m_justRollingCol = false;
+	}
+
 	//モデルの更新。
 	m_modelRender.Update();
 
@@ -117,13 +222,13 @@ void Player::Move()
 	if (m_playerstate == enPlayerState_Walk||m_playerstate == enPlayerState_Idle)
 	{
 		//   X e B b N ̓  ͗ʂ 120.0f    Z B
-		right *= stickL.x * 200.0f;
-		forward *= stickL.y * 200.0f;
+		right *= stickL.x * 400.0f;
+		forward *= stickL.y * 400.0f;
 	}
 	else if(m_playerstate == enPlayerState_PostureWalk || m_playerstate == enPlayerState_Attack)
 	{
-		right *= stickL.x * 70.0f;
-		forward *= stickL.y * 70.0f;
+		right *= stickL.x * 140.0f;
+		forward *= stickL.y * 140.0f;
 	}
 	else
 	{
@@ -134,13 +239,9 @@ void Player::Move()
 	//移動速度にスティックの入力量を加算する。
 	m_moveSpeed += right + forward;
 
+	//座標を移動
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
-	Vector3 modelPosition = m_position;
-	//ちょっとだけモデルの座標を挙げる。
-	modelPosition.y += 2.5f;
-	m_modelRender.SetPosition(modelPosition);
-	//キャラクターコントローラーを使って座標を移動させる。
-	m_position = m_charaCon.Execute(m_moveSpeed, 1.0f / 60.0f);
+
 	//座標を設定。
 	m_modelRender.SetPosition(m_position);
 	m_charaCon.SetPosition(m_position);
@@ -167,10 +268,14 @@ void Player::Rolling()
 	//ちょっとだけモデルの座標を挙げる。
 	modelPosition.y += 2.5f;
 	m_modelRender.SetPosition(modelPosition);
+
+	m_forward = Vector3::AxisZ;
+	m_rotation.Apply(m_forward);
 }
 
 void Player::Rotation()
 {
+	//特定のステートの時は回転処理をしない
 	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk
 		||m_playerstate == enPlayerState_Rolling)
 	{
@@ -193,23 +298,40 @@ void Player::Rotation()
 
 void Player::Collision()
 {
-	if (m_muteki_timer >= 0.0f)
-	{
-		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
-	}
-
-	Vector3 tmp = m_position;
-	tmp.y += 30.0f;
-	m_collisionObject->SetPosition(tmp);
-
 	//無敵時間が０秒の時
 	if (m_muteki_timer <= 0.0f)
 	{
-		
+		Vector3 tmp = m_position;
+		tmp.y += 30.0f;
+		m_collisionObject->SetPosition(tmp);
+
 
 		//被ダメージステートまたはローリングステート時は当たり判定処理をしない
-		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_Rolling)
+		if (m_playerstate == enPlayerState_ReceiveDamage || m_playerstate == enPlayerState_KnockDown)
 		{
+			return;
+		}
+
+		if (m_playerstate == enPlayerState_Rolling)
+		{
+			if (!m_justRollingCol)
+			{
+				return;
+			}
+
+			//プレイヤーの攻撃用のコリジョンを取得する。
+			const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_attack");
+
+			//コリジョンの配列をfor文で回す。
+			for (auto collision : collisions)
+			{
+				//コリジョンとキャラコンが衝突したら。
+				if (collision->IsHit(m_justRollingCollisionObject))
+				{
+					m_game->SlowStart(1.0f);
+				}
+			}
+
 			return;
 		}
 		//プレイヤーの攻撃用のコリジョンを取得する。
@@ -220,16 +342,29 @@ void Player::Collision()
 			//コリジョンとキャラコンが衝突したら。
 			if (collision->IsHit(m_collisionObject))
 			{
-				//HPを１減らす
+				//HPを減らす
 				m_game->m_hpui->DecreaseHP(25);
+				//効果音を再生する
+				SoundSource* m_hpEnemy = NewGO<SoundSource>(0);
+				m_hpEnemy->Init(8);
+				m_hpEnemy->Play(false);
 				//ダメージ受けたとき、無敵状態のタイマー。
 				m_muteki_timer = 3.0f;
-				//被ダメージステートに遷移する。
-				//m_playerstate = enPlayerState_ReceiveDamage;
+
+				if (m_game->m_hpui->GetNowHP() <= 0)
+				{
+					m_playerstate = enPlayerState_KnockDown;
+				}
 			}
 		}
 	}
+	else
+	{
+		//無敵時間を進める
+		m_muteki_timer -= g_gameTime->GetFrameDeltaTime();
+	}
 }
+
 void Player::AttackRotation()
 {
 	m_forward = Vector3::AxisZ;
@@ -242,10 +377,10 @@ void Player::AttackRotation()
 			Vector3 diffA = pos - m_position;
 			if (diffA.Length() <= MinVec.Length()){
 				MinVec = diffA;
+				InLastAttackEnemyInstance(m_game->GetEnemyListInstance(ListnumA));
 			}
 		}
 	}
-
 
 	if (shot == false)
 	{
@@ -314,6 +449,26 @@ bool Player::AngleCheck(const Vector3& position)
 	return true;
 }
 
+void Player::SetEvent(EnEvent eventnum)
+{
+	m_playerstate = enPlayerState_Event;
+
+	for (int i = 0; i < sizeof(m_eventInfos) / sizeof(EventInfo); i++)
+	{
+		if (m_eventInfos[i].m_eventState == eventnum)
+		{
+			m_eventInfoNum = i;
+
+			m_position = m_eventInfos[i].m_targetPos;
+
+			m_charaCon.SetPosition(m_position);
+			m_modelRender.SetPosition(m_position);
+
+			break;
+		}
+	}
+}
+
 void Player::ManageState()
 {
 	switch (m_playerstate)
@@ -335,6 +490,8 @@ void Player::ManageState()
 		break;
 	case Player::enPlayerState_ReceiveDamage:
 		ProcessReceiveDamageStateTransition();
+		break;
+	default:
 		break;
 	}
 }
@@ -378,29 +535,65 @@ void Player::PlayAnimation()
 		m_modelRender.SetAnimationSpeed(3.0f);
 		m_modelRender.PlayAnimation(enAnimationClip_Damage, 0.1f);
 		break;
+	case Player::enPlayerState_KnockDown:
+		m_modelRender.SetAnimationSpeed(1.0f);
+		m_modelRender.PlayAnimation(enAnimationClip_knockdown, 0.1f);
 	}
 }
 
 void Player::ProcessCommonStateTransition()
 {
-	if (g_pad[0]->IsPress(enButtonRB1))
+	//Aボタンが押されたら
+	if (g_pad[0]->IsTrigger(enButtonA))
 	{
-		//m_playerstate = enPlayerState_Idle;
-		if (g_pad[0]->IsTrigger(enButtonB))
+
+		float lStick_x = g_pad[0]->GetLStickXF();
+		float lStick_y = g_pad[0]->GetLStickYF();
+		if ((lStick_x <= 0.0f && lStick_x >= 0.0f)
+			&& (lStick_y <= 0.0f && lStick_y >= 0.0f))
 		{
-			m_playerstate = enPlayerState_Attack;
-			return;
+			m_rollingVec = m_forward;
 		}
-		m_playerstate = enPlayerState_PostureWalk;
+		else
+		{
+			//左スティックの入力量を受け取る。
+			//カメラの前方方向と右方向を取得。
+			Vector3 cameraForward = g_camera3D->GetForward();
+			Vector3 cameraRight = g_camera3D->GetRight();
+			//XZ平面での前方方向、右方向に変換する。
+			cameraForward.y = 0.0f;
+			cameraForward.Normalize();
+			cameraRight.y = 0.0f;
+			cameraRight.Normalize();
+			m_rollingVec += cameraForward * lStick_y * 200.0f;	//奥方向への移動速度を加算。
+			m_rollingVec += cameraRight * lStick_x * 200.0f;		//右方向への移動速度を加算。
+			//キャラクターの方向を変える。
+			m_rotation.SetRotationYFromDirectionXZ(m_rollingVec);
+		}
+		//絵描きさんに回転を教える。
+		m_modelRender.SetRotation(m_rotation);
+		/*m_rollingVec = m_forward;*/
+		//プレイヤーステートを回避にする
+		m_playerstate = enPlayerState_Rolling;
+		m_justRollingTime = 0.3f;
+		m_justRollingCol = true;
+		SoundSource* m_roPlayer = NewGO<SoundSource>(0);
+		m_roPlayer->Init(12);
+		m_roPlayer->Play(false);
 		return;
 	}
 
-	//Aボタンが押されたら
-	if (g_pad[0]->IsTrigger(enButtonA) && m_rollingCoolDown <= 0.0f)
+	if (g_pad[0]->IsPress(enButtonRB1))
 	{
-		m_rollingVec = m_forward;
-		//プレイヤーステートを回避にする
-		m_playerstate = enPlayerState_Rolling;
+		if (g_pad[0]->IsTrigger(enButtonB))
+		{
+			m_playerstate = enPlayerState_Attack;
+			SoundSource* m_atPlayer = NewGO<SoundSource>(0);
+			m_atPlayer->Init(7);
+			m_atPlayer->Play(false);
+			return;
+		}
+		m_playerstate = enPlayerState_PostureWalk;
 		return;
 	}
 
@@ -441,8 +634,7 @@ void Player::ProcessRollingStateTransition()
 {
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
-		m_rollingVec = Vector3::Zero;
-		m_rollingCoolDown = rollingCoolDownTime;
+		RollingEndRot();
 		ProcessCommonStateTransition();
 	}
 }
@@ -464,19 +656,53 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	}
 }
 
-void Player::TimeAdjustment()
+void Player::RollingEndRot()
 {
-	if (m_rollingCoolDown > 0.0f)
+
+	if (m_game->ExistsEnemyListPtr(m_lastAttackEnemy))
 	{
-		m_rollingCoolDown -= g_gameTime->GetFrameDeltaTime();
+		Vector3 LAEnemyVec = m_lastAttackEnemy->m_position;
+
+		Vector3 FinalVec = LAEnemyVec - m_position;
+
+		Quaternion rot;
+		rot.SetRotation(Vector3::AxisZ, FinalVec);
+		m_modelRender.SetRotation(rot);
+		m_rotation = rot;
+		m_forward = Vector3::AxisZ;
+		rot.Apply(m_forward);
+
+		m_lastAttackEnemy = nullptr;
 	}
+
+	m_rollingVec = Vector3::Zero;
 }
+
+
 
 void Player::Render(RenderContext& rc)
 {
 	if (m_game->m_TempDelPlayer == false)
 	{
-		//モデルの描画。
-		m_modelRender.Draw(rc);
+		//無敵時間中出なければ
+		if (m_muteki_timer <= 0.0f)
+		{
+			//モデルの描画。
+			m_modelRender.Draw(rc);
+		}	
+		else
+		{
+			//無敵時間中は
+			//モデルの表示非表示を毎フレーム切り替えて点滅
+			if (m_mutekiModelDraw)
+			{
+				m_modelRender.Draw(rc);
+				m_mutekiModelDraw = false;
+			}
+			else
+			{
+				m_mutekiModelDraw = true;
+			}
+		}
 	}
 }

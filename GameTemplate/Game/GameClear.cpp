@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Load.h"
 #include "GameTimer.h"
+#include "sound/SoundEngine.h"
 
 GameClear::GameClear()
 {
@@ -12,7 +13,10 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
+	//ゲームタイマーを削除する
 	DeleteGO(m_gametimer);
+	//ゲームクリアのBGMを削除する
+	DeleteGO(m_clearBgm);
 }
 
 bool GameClear::Start()
@@ -26,6 +30,12 @@ bool GameClear::Start()
 	m_spriterender_moya.SetPosition(Vector3{ 400.0f,-280.0f,0.0f });
 	m_spriterender_moya.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_spriterender_moya.Update();
+	//ゲームクリアのBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/m_clear.wav");
+	//ゲームクリアのBGMを再生する
+	m_clearBgm = NewGO<SoundSource>(3);
+	m_clearBgm->Init(3);
+	m_clearBgm->Play(true);
 
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -38,6 +48,7 @@ void GameClear::Update()
 {
 	if (m_isWaitFadeout) {
 		if (!m_load->IsFade()) {
+
 				//タイトルのオブジェクトを作成
 				NewGO<Title>(0, "title");
 				//自身を削除する。
@@ -101,7 +112,7 @@ void GameClear::DisplayTime()
 	//フォントの大きさを設定
 	m_fontRender.SetScale(2.0f);
 	//フォントの色を設定
-	m_fontRender.SetColor({ 0.0f,1.0f,0.0f,1.0f});
+	m_fontRender.SetColor({ 1.0f,0.843f,0.0f,1.0f});
 	
 	//表示するテキストを設定
 	m_fontRender_tensen.SetText(L"..................................");

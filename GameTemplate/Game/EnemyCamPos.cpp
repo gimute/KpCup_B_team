@@ -17,12 +17,15 @@ EnemyCamPos::~EnemyCamPos()
 
 }
 
-float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
+void EnemyCamPos::Init()
 {
 	m_game = FindGO<Game>("game");
 	m_camera = FindGO<GameCamera>("gamecamera");
 	m_player = FindGO<Player>("player");
+}
 
+float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
+{
 	//Enemy‚ÌÀ•W‚ðŽæ“¾
 	Vector3 enemypos = enemy->m_position;
 	int Listnum = enemy->m_Vectornum;
@@ -55,11 +58,11 @@ float EnemyCamPos::EnemyCamPosConfirmation(Enemy* enemy)
 
 	if (enemy->m_enemyAttackSpeed == Enemy::en_FrequencyHigh)
 	{
-		return 3.0f;
+		return 1.0f;
 	}
 	else
 	{
-		return 10.0f;
+		return 5.0f;
 	}
 }
 

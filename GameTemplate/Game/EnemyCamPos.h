@@ -36,6 +36,10 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~EnemyCamPos();
+
+	//初期化処理
+	void Init();
+
 	/// <summary>
 	/// カメラとエネミーの位置を確認し
 	/// 位置と距離によってEnemyの攻撃頻度を

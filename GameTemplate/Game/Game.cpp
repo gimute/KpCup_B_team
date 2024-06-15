@@ -24,6 +24,7 @@
 #include "Door.h"
 #include "EventCamera.h"
 #include "EventModel.h"
+#include "sound/SoundEngine.h"
 ///////////////////////////////
 
 Game::Game()
@@ -31,6 +32,28 @@ Game::Game()
 
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
+
+	//HPがピンチな時の画面エフェクト画像の設定
+	SpriteInitData initData;
+	//DDSファイル（画像データ）のファイルパスを指定する
+	//HPがピンチな時の画面エフェクトの画像データを指定する
+	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
+	//Sprite表示用のシェーダーのファイルパスを指定する
+	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
+	initData.m_expandConstantBuffer = &m_alpha;
+	initData.m_expandConstantBufferSize += sizeof(float);
+	//スプライトの幅と高さを指定する
+	initData.m_width = static_cast<UINT>(1920);
+	initData.m_height = static_cast<UINT>(1080);
+	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
+	//
+	m_pncSpriteRender.Init(initData);
+	m_pncSpriteRender.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
+	m_pncSpriteRender.Update();
+	
+	//HPがピンチな時の画面エフェクトを読み込む
+	//m_pncSpriteRender.Init("Assets/sprite/LowHpEffect.DDS",1920,1080);
+	//m_pncSpriteRender.SetMulColor(Vector4())
 	//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
@@ -40,9 +63,9 @@ Game::Game()
 	m_background = NewGO<BackGround>(0, "background");
 	
 	//ゲームタイマー表示
-	m_gametimer = NewGO<GameTimer>(0, "gametimer");
+	m_gametimer = NewGO<GameTimer>(1, "gametimer");
 
-	m_levelRender.Init("Assets/levelData/map1level.tkl", [&](LevelObjectData_Render& objData)
+	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
@@ -76,20 +99,42 @@ Game::Game()
 	test2 = NewGO<EventModel>(0, "camera");
 
 	//HPUIを作る
-	m_hpui = NewGO<HpUi>(0, "UI");
+	m_hpui = NewGO<HpUi>(1, "UI");
 	//危険信号表示Ui
-	m_signalRailUi = NewGO<SignalRailUi>(0, "signalUi");
+	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
+	//ゲーム中のBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
+	//ゲーム中のBGMを再生する
+	m_gameBgm = NewGO<SoundSource>(1);
+	m_gameBgm->Init(1);
+	m_gameBgm->Play(true);
+	//HPがピンチの時のBGMを読み込む
+	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
+
+	m_hpLowBgm = NewGO<SoundSource>(11);
 }
 
 Game::~Game()
 {
+	if (m_gameState == enGameClear)
+	{
+		m_gametimer->m_game = nullptr;
+	}
+	
 	DeleteGO(m_background);	
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
 	DeleteGO(m_signalRailUi);
 	DeleteGO(door1);
-
+	DeleteGO(m_gameBgm);
+	DeleteGO(m_hpLowBgm);
 	DeleteGO(m_player);
+}
+
+bool Game::Start()
+{
+	m_enemyCamPos.Init();
+	return true;
 }
 
 void Game::NotifyGameClear()
@@ -98,19 +143,38 @@ void Game::NotifyGameClear()
 	m_load->StartFadeOut();
 }
 
+void Game::NotifyGameOver()
+{
+	m_gameState = enGameOver;
+	m_load->StartFadeOut();
+	DeleteGO(m_gametimer);
+
+	m_gameBgm->SetVolume(1.0f);
+}
+
 void Game::Update()
 {
-	DisplayTime();
+	//アルファチャンネルの調整
+	AlphaCalc();
+	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
+	m_pncSpriteRender.Update();
+
+	
 
 	GameStateTransition();
 
 	switch (m_gameState)
 	{
 	case enIdle:
-		//現状特別な処理は無し
+		DisplayTime();
 		break;
 
 	case enGameClear:
+		//ゲームクリア中はUI非表示
+		EventUiDelete(true);
+
+		m_hpLowBgm->Stop();
+
 		if (!m_load->IsFade()) {
 			//自身を削除する。
 			DeleteGO(this);
@@ -118,15 +182,25 @@ void Game::Update()
 			//DeleteGO(m_hpui);
 			//ゲームクリアのオブジェクトをつくる。
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
+
 		}
 		break;
 
 	case enGameOver:
 		if (!m_load->IsFade()) {
+
+			//エネミー削除処理
+			for (auto& enemyhpui : m_EnemyHpUiList)
+			{
+				DeleteGO(enemyhpui);
+			}
+
+			for (auto& enemy : m_EnemyList)
+			{
+				DeleteGO(enemy);
+			}
 			//自身を削除する。
 			DeleteGO(this);
-			//プレイヤーのHPのUIを削除
-			//DeleteGO(m_hpui);
 			//ゲームオーバーのオブジェクトをつくる。
 			NewGO<GameOver>(0, "gameover");
 		}
@@ -140,13 +214,40 @@ void Game::Update()
 		m_enemyAllKillFlag = true;
 	}
 
+	//プレイヤーのHPが25以下なら
+	if (m_hpui->GetNowHP() <= 25.0f)
+	{
+		//HPがピンチな時のエフェクト
+		m_pncDraw = true;
+
+		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
+		{
+			m_hpLowBgm->Init(11);
+			m_hpLowBgm->Play(true);
+			m_hpLowBgm->SetVolume(3.0f);
+			m_gameBgm->SetVolume(0.5f);
+			m_hpLowBgmBool = true;
+		}
+	}
+	else
+	{
+		m_pncDraw = false;
+		m_gameBgm->SetVolume(1.0f);
+	}
 	
 
-	
-	
+	if (m_slowTime > 0.0f)
+	{
+		m_slowTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else
+	{
+		g_gameTime->IsSlowMotion(false);
+	}
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
+	//m_pncSpriteRender.Update();
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
@@ -154,7 +255,6 @@ void Game::Update()
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		test->StartScene(EventCamera::en_Scene3_MapUp2);
 	}
 	if (g_pad[0]->IsTrigger(enButtonLeft))
 	{
@@ -162,21 +262,32 @@ void Game::Update()
 	}
 }
 
+//アルファチャンネルの調整
+void Game::AlphaCalc()
+{
+	if (m_hpEffect)
+	{
+		m_alpha = 0.0f;
+	}
+	if (m_alpha >= 0.6f) {
+		m_alphaCalcBool = false;
+	}
+	if (m_alphaCalcBool)
+	{
+		m_alpha += 0.02f;
+		return;
+	}
+	m_alpha -= 0.01f;
+	if (m_alpha <= 0.1f)
+	{
+		m_alphaCalcBool = true;
+	}
+}
+
 //制限時間表示
 void Game::DisplayTime()
 {
-	m_gametimer = FindGO<GameTimer>("gametimer");
-	wchar_t wcsbuf[256];
-	//制限時間を表示
-	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_gametimer->m_timer), int(m_gametimer->m_minit));
-	//表示するテキストを設定
-	m_fontrender.SetText(wcsbuf);
-	//フォントの位置を設定
-	m_fontrender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
-	//フォントの大きさを設定
-	m_fontrender.SetScale(2.0f);
-	//フォントの色を設定
-	m_fontrender.SetColor({ 1.0f,0.0f,0.0f,1.0f });
+	m_gametimer->FontSet();
 }
 
 void Game::Delete_EnemyVec(const int num)
@@ -188,6 +299,20 @@ void Game::Delete_EnemyVec(const int num)
 		m_EnemyHpUiList[VecNow]->m_Vectornum -= 1;
 	}
 	m_EnemyQua--;
+}
+
+bool Game::ExistsEnemyListPtr(Enemy* enemy_ptr)
+{
+	for (int i = 0; i < m_EnemyList.size(); i++)
+	{
+		Enemy* enemyList_ptr = m_EnemyList[i];
+		if (enemyList_ptr == enemy_ptr)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 Vector3 Game::GetEnemyListPos(int num)
@@ -267,35 +392,32 @@ void Game::GameStateTransition()
 				DeleteGO(enemy);
 			}
 
-			test->StartScene(EventCamera::en_Scene2_MapUp1);
+			m_hpEffect = true;
+			m_gameBgm->SetVolume(1.0f);
+
+			test->StartScene(EventCamera::en_Scene_GameClear);
+
 			m_EventAfterState = enGameClear;
-			m_TempDelPlayer = true;
+			m_player->SetEvent(Player::enGameClear);
 			return;
 		}
 
 		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
-			//エネミー削除処理
-			for (auto& enemyhpui : m_EnemyHpUiList)
-			{
-				DeleteGO(enemyhpui);
-			}
-
-			for (auto& enemy : m_EnemyList)
-			{
-				DeleteGO(enemy);
-			}
-
-			test->StartScene(EventCamera::en_Scene2_MapUp1);
-			m_EventAfterState = enGameOver;
-
+			m_hpLowBgm->Stop();
 			return;
 		}
+		m_hpEffect = false;
 	}
 	
 	if (m_gameState == enEvent)
 	{
+		if (m_hpLowBgm->IsPlaying())
+		{
+			m_hpLowBgm->Stop();
+		}
+
 		//イベントシーンが終了したら
 		if (test->IsEvent() == false)
 		{
@@ -353,11 +475,19 @@ void Game::EventUiDelete(bool mode)
 	}
 }
 
+void Game::SlowStart(float slowTime)
+{
+	g_gameTime->IsSlowMotion(true);
+	m_slowTime = slowTime;
+}
+
 void Game::Render(RenderContext& rc)
 {
-	if (m_TempDelGameTimer == true)
-	{
-		m_fontrender.Draw(rc);
-	}
 	m_preSpriteRender.Draw(rc);
+
+	if (m_pncDraw == true)
+	{
+		m_pncSpriteRender.Draw(rc);
+	}
+	
 }

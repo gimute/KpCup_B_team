@@ -4,9 +4,8 @@
 #include "EnemyCamPos.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "sound/SoundSource.h"
 
-//エネミーアタックポイントの数
-//#define ENEMY_ATTACK_POINT_NUM 15
 
 ///////////////////////////////
 class Player;
@@ -37,23 +36,18 @@ public:
 		enEvent
 	};
 
-	//エネミーの攻撃可能ポイント
-	//このポイントを確保できているエネミーのみ攻撃可能にする
-	//struct EnemyAttackPoint
-	//{
-	//	Vector3 m_position;			//アタックポイントの座標
-	//	int m_number;				//アタックポイントの要素番号
-	//	bool m_use = false;			//使用中か
-	//};
-
 	Game();
 	~Game();
+	bool Start();
 
 	void Update();
+	//
+	void AlphaCalc();
 	//制限時間
 	void DisplayTime();
 	//ゲームクリアを通知する
 	void NotifyGameClear();
+	void NotifyGameOver();
 	void Render(RenderContext& rc);
 	void Delete_EnemyVec(const int num);
 
@@ -76,6 +70,10 @@ public:
 	void GameStateTransition();
 	//他のクラスから呼ぶためのゲームクリア処理。
 	void GameClearProcess();
+	//スローモージョンスタート
+	void SlowStart(float SlowTime);
+
+	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
 	//エネミーを全員倒したかのフラグを返す
 	bool GetEnemyAllKillFlag()
 	{
@@ -98,6 +96,11 @@ public:
 		return m_EnemyList[Listnum];
 	}
 
+	EnGameState GetGmaeState()
+	{
+		return m_gameState;
+	}
+
 	//メンバ変数
 	Player* m_player;
 	Enemy* m_enemy;
@@ -106,12 +109,12 @@ public:
 	GameClear* m_gameclear;
 	GameTimer* m_gametimer;
 	SpriteRender m_spriterender; //スプライトレンダー。
-	FontRender m_fontrender;	//フォントレンダー。
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
+	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
@@ -131,9 +134,19 @@ private:
 	LevelRender m_levelRender;
 
 	PreSpriteRender m_preSpriteRender;
+	SpriteRender m_pncSpriteRender;
 	EnGameState m_gameState = enIdle;
 	EnGameState m_EventAfterState;	//イベントシーン終了後に移行するステート
 
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
+	bool m_alphaCalcBool;
+	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
+	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
+	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
+	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
+	float m_slowTime = 0.0f;			//スローモーション時間
+
+	SoundSource* m_gameBgm;
+	SoundSource* m_hpLowBgm;
 };
 

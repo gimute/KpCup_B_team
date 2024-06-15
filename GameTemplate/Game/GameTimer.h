@@ -14,7 +14,7 @@ public:
 	//ƒ^ƒCƒ€Œo‰ßˆ—
 	void IncreaseTimer();
 	//
-	void FontDraw();
+	void FontSet();
 	//•`‰æˆ—
 	void Render(RenderContext& rc);
 

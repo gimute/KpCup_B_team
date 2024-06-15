@@ -1,4 +1,5 @@
 #pragma once
+#include "sound/SoundSource.h"
 
 class Load;
 // タイトル。
@@ -26,5 +27,12 @@ public:
 	float m_alpha = 0.1f;
 	bool m_alphaCalcBool;
 	FontRender m_f;
+
+	//タイトルのBGM
+	SoundSource* m_titleBgm;
+	//ゲームのBGM
+	SoundSource* m_gameBgm;
+	//
+	bool m_gameStart = false;
 };
 

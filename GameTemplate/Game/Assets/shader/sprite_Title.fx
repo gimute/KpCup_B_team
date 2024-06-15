@@ -37,7 +37,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 {
     float4 colorTex = colorTexture.Sample(Sampler, In.uv);
 	
-    colorTex.a = alphaAdd;
+    colorTex.a *= alphaAdd;
 	
     return colorTex * mulColor;
 }

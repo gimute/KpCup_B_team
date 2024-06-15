@@ -126,5 +126,26 @@ public:
 		m_enemyConnectNum = num;
 		return;
 	}
+	
+	//使用中にする
+	void IsUse()
+	{
+		m_isUse = true;
+	}
+
+	//未使用にする
+	void IsUnUse()
+	{
+		m_isUse = false;
+	}
+
+	//使用中かどうか取得する
+	bool GetIsUse()
+	{
+		return m_isUse;
+	}
+
+	private:
+	bool m_isUse = false;	//使用中か
 };
 

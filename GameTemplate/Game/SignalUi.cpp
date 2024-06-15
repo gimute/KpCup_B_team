@@ -13,7 +13,7 @@ SignalUi::SignalUi()
 
 SignalUi::~SignalUi()
 {
-	m_signalRailUi->DeleteSignalList(m_VecNum);
+	
 }
 
 bool SignalUi::Start()
@@ -53,17 +53,19 @@ bool SignalUi::Start()
 
 	m_player = FindGO<Player>("player");
 
-	m_VecNum = m_signalRailUi->m_signalQua;
-	m_signalRailUi->m_signalQua++;
-	m_signalRailUi->m_signalUiList.push_back(this);
+	//m_VecNum = m_signalRailUi->m_signalQua;
+	//m_signalRailUi->m_signalQua++;
+	//m_signalRailUi->m_signalUiList.push_back(this);
 
 	return true;
 }
 
 void SignalUi::Update()
 {
-	//íœˆ—
-	DeleteSignal();
+	if (!m_isUse)
+	{
+		return;
+	}
 	//‰ñ“]ˆ—
 	Rotation();
 	//ƒAƒ‹ƒtƒ@’l‚ÌŒvŽZˆ—
@@ -71,6 +73,9 @@ void SignalUi::Update()
 	//•`‰æˆ—
 	m_DangerSignalUi.Update();
 	m_CautionSignalUi.Update();
+
+	//íœˆ—
+	DeleteSignal();
 }
 
 void SignalUi::Rotation()
@@ -109,7 +114,8 @@ void SignalUi::DeleteSignal()
 		|| m_game->m_EnemyList[m_enemyConnectNum]->m_enemyAttackStep == Enemy::en_noneStep
 		|| m_game->m_EnemyList[m_enemyConnectNum]->m_enemystate != Enemy::enEnemyState_Attack)
 	{
-		DeleteGO(this);
+		//DeleteGO(this);
+		m_signalRailUi->DeleteSignalList(m_VecNum);
 	}
 }
 
@@ -150,6 +156,11 @@ bool SignalUi::EnemyAttackStep()
 
 void SignalUi::Render(RenderContext& rc)
 {
+	if (!m_isUse)
+	{
+		return;
+	}
+
 	if (EnemyAttackStep())
 	{
 		m_CautionSignalUi.Draw(rc);

@@ -58,6 +58,21 @@ bool EventCamera::Start()
 	});
 	////↑レベルレンダーで移動経路などを取得する処理↑////
 
+	m_camLevelRender_GameClear.Init("Assets/levelData/eventCamGameClear.tkl", [&](LevelObjectData_Render& objData)
+		{
+			if (objData.ForwardMatchName(L"GameClear_ScenePos") == true)
+			{
+				SetSceneCamAndTarPos(objData.position, objData.number
+					, EnEventScene::en_Scene_GameClear, ListUpdateMode::en_ModePosition);
+				return true;
+			}
+			else if (objData.ForwardMatchName(L"GameClear_SceneTar") == true)
+			{
+				SetSceneCamAndTarPos(objData.position, objData.number
+					, EnEventScene::en_Scene_GameClear, ListUpdateMode::en_ModeTarget);
+			}
+		});
+
 	//ゲームクラスのインスタンスを取得
 	m_game = FindGO<Game>("game");
 
