@@ -56,7 +56,7 @@ public:
 	void Collision();
 	void AttackRotation();
 	void RollingEndRot();
-	bool AngleCheck(const Vector3& position);
+	bool AngleCheck(const Vector3 forward,  const Vector3& position);
 	void Move();
 	void Rolling();						//回避処理
 	void ManageState();					//ステート遷移処理
@@ -114,6 +114,8 @@ public:
 	float m_LAEnemyRetentionTime = 0.0f;
 	float m_justRollingTime = 0.0f;
 	bool m_justRollingCol = false;
+	float m_rollingCorrectionTime = 0.0f;
+
 private:
 	EventInfo m_eventInfos[3] = {
 		{enGameClear,{150.0f,0.0f,1230.0f},enAnimationClip_Idle,1.0},
