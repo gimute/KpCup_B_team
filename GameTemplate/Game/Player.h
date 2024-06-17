@@ -56,7 +56,7 @@ public:
 	void Collision();
 	void AttackRotation();
 	void RollingEndRot();
-	bool AngleCheck(const Vector3& position);
+	bool AngleCheck(const Vector3 forward,  const Vector3& position);
 	void Move();
 	void Rolling();						//回避処理
 	void ManageState();					//ステート遷移処理
