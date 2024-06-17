@@ -101,6 +101,7 @@ public:
 	Bullet* m_bullet = nullptr;
 	Vector3 m_forward = Vector3::AxisZ;						//プレイヤーの移動用正面ベクトル。
 	Vector3 m_up = Vector3::AxisY;
+	SoundSource* m_gunStance = nullptr;
 	int m_speed = 0;
 	Game* m_game = nullptr;									//ゲーム
 	SphereCollider m_sphereCollider;						//コリダー
