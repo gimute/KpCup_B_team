@@ -113,6 +113,8 @@ public:
 	float m_LAEnemyRetentionTime = 0.0f;
 	float m_justRollingTime = 0.0f;
 	bool m_justRollingCol = false;
+	float m_rollingCorrectionTime = 0.0f;
+
 private:
 	EventInfo m_eventInfos[3] = {
 		{enGameClear,{150.0f,0.0f,1230.0f},enAnimationClip_Idle,1.0},

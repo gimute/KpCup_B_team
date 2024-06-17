@@ -202,6 +202,15 @@ void Player::Update()
 		m_justRollingCol = false;
 	}
 
+	if (m_rollingCorrectionTime >= 0.1f)
+	{
+		m_rollingCorrectionTime -= g_gameTime->GetFrameDeltaTime();
+		if (g_pad[0]->IsPress(enButtonRB1))
+		{
+			RollingEndRot();
+		}
+	}
+
 	//モデルの更新。
 	m_modelRender.Update();
 
@@ -572,6 +581,7 @@ void Player::ProcessCommonStateTransition()
 	//Aボタンが押されたら
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
+		m_rollingCorrectionTime = 0.0f;
 
 		float lStick_x = g_pad[0]->GetLStickXF();
 		float lStick_y = g_pad[0]->GetLStickYF();
@@ -714,6 +724,7 @@ void Player::ProcessRollingStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		RollingEndRot();
+		m_rollingCorrectionTime = 0.3f;
 		ProcessCommonStateTransition();
 	}
 }
