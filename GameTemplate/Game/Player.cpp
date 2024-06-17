@@ -97,7 +97,9 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
 	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
 	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/m_rolling.wav");
+	g_soundEngine->ResistWaveFileBank(13,"Assets/sound/m_gunStance.wav");
 
+	//m_gunStance = NewGO<SoundSource>(13);
 	return true;
 }
 
@@ -622,6 +624,15 @@ void Player::ProcessCommonStateTransition()
 			return;
 		}
 		m_playerstate = enPlayerState_PostureWalk;
+		
+		if (g_pad[0]->IsTrigger(enButtonRB1))
+		{
+			//銃を構えた時の効果音を流す
+			SoundSource* m_gunStance = NewGO<SoundSource>(0);
+			m_gunStance->Init(13);
+			m_gunStance->Play(false);
+		}
+
 		return;
 	}
 
