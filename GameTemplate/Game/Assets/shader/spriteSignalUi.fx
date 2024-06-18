@@ -49,7 +49,7 @@ float4 PSMain( PSInput In ) : SV_Target0
 	
 	if(signalAddTex1.r >= 0.5)
     {
-        finalColor.g += 1.0f;
+        finalColor.a += 1.0f;
         finalColor.a = alphaAdd;
     }
 	

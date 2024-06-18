@@ -6,7 +6,7 @@
 
 namespace {
 	//Aの位置
-	const Vector3 n_position_A{ -440.0f,350.0f,0.0f };
+	const Vector3 n_position_A{ -450.0f,342.5f,0.0f };
 	//BとCの位置
 	const Vector3 n_position_BC{ -765.0f,350.0f,0.0f };
 	//BとCの基点
@@ -18,9 +18,9 @@ namespace {
 bool HpUi::Start()
 {
 	//画像設定
-	m_hpUI_A.Init("Assets/modelData/ui_hp/UI_A.DDS", 670.0f, 90.0f);
-	m_hpUI_B.Init("Assets/modelData/ui_hp/UI_B.DDS", 630.0f, 60.0f);
-	m_hpUI_C.Init("Assets/modelData/ui_hp/UI_C.DDS", 630.0f, 60.0f);
+	m_hpUI_A.Init("Assets/modelData/ui_hp/UIV2_A.DDS", 630.0f, 75.0f);
+	m_hpUI_B.Init("Assets/modelData/ui_hp/UIV2_B.DDS", 630.0f, 60.0f);
+	m_hpUI_C.Init("Assets/modelData/ui_hp/UIV2_C.DDS", 630.0f, 60.0f);
 	//位置設定
 	m_hpUI_A.SetPosition(n_position_A);
 	m_hpUI_B.SetPosition(n_position_BC);
@@ -149,8 +149,8 @@ void HpUi::Render(RenderContext& rc)
 		//HPUIの描画処理を先に
 		m_hpUI_A.Draw(rc);
 		//バーの描画処理を後に
-		m_hpUI_B.Draw(rc);
-		//透過バーの描画処理を一番後に
 		m_hpUI_C.Draw(rc);
+		//透過バーの描画処理を一番後に
+		m_hpUI_B.Draw(rc);
 	}
 }

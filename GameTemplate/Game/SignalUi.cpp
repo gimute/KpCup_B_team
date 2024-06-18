@@ -18,7 +18,7 @@ SignalUi::~SignalUi()
 
 bool SignalUi::Start()
 {
-	m_CautionSignalUi.Init("Assets/modelData/ui_signal/signal_Ui_C_1.DDS",400.0f,400.0f);
+	m_CautionSignalUi.Init("Assets/modelData/ui_signal/signal_UiV2_B_1.DDS",400.0f,400.0f);
 
 	Vector3 pos = { 0.0f,-130.0f,0.0f };
 
@@ -26,9 +26,9 @@ bool SignalUi::Start()
 
 	SpriteInitData initDataDangerSigUi;
 
-	initDataDangerSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_Ui_B_1.DDS";
+	initDataDangerSigUi.m_ddsFilePath[0] = "Assets/modelData/ui_signal/signal_UiV2_C_1.DDS";
 
-	m_dangerSignalTexture1.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_Ui_B_2.DDS");
+	m_dangerSignalTexture1.InitFromDDSFile(L"Assets/modelData/ui_signal/signal_UiV2_B_2.DDS");
 	initDataDangerSigUi.m_expandShaderResoruceView[0] = &m_dangerSignalTexture1;
 
 	initDataDangerSigUi.m_fxFilePath = "Assets/shader/spriteSignalUi.fx";
