@@ -179,16 +179,6 @@ void Player::Update()
 		}
 	}
 
-	//時間処理(仮)
-	if (m_LAEnemyRetentionTime > 0.0f)
-	{
-		m_LAEnemyRetentionTime -= g_gameTime->GetFrameDeltaTime();
-	}
-	else
-	{
-		m_lastAttackEnemy = nullptr;
-	}
-
 	if (m_justRollingTime > 0.0f)
 	{
 		m_justRollingTime -= g_gameTime->GetFrameDeltaTime();
@@ -406,13 +396,15 @@ void Player::AttackRotation()
 	m_rotation.Apply(m_forward);
 	Vector3 MinVec = m_forward * 500.0f;
 
+	bool EnemySearch = false;
+
 	for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
 		Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
 		if (AngleCheck(m_forward,pos)) {
 			Vector3 diffA = pos - m_position;
 			if (diffA.Length() <= MinVec.Length()){
 				MinVec = diffA;
-				InLastAttackEnemyInstance(m_game->GetEnemyListInstance(ListnumA));
+				EnemySearch = true;
 			}
 		}
 	}
@@ -421,9 +413,16 @@ void Player::AttackRotation()
 	{
 		m_bullet = NewGO<Bullet>(0, "bullet");
 		Quaternion rot;
-		rot.SetRotation(Vector3::AxisZ, MinVec);
-		m_bullet->SetMoveDirection(m_forward);
+		if (EnemySearch)
+		{
+			rot.SetRotation(Vector3::AxisZ, MinVec);
+		}
+		else
+		{
+			rot.SetRotation(Vector3::AxisZ,m_forward);
+		}
 		m_bullet->Setrotation(rot);
+		m_bullet->SetMoveDirection(m_forward);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Player);
 		shot = true;
@@ -457,7 +456,7 @@ bool Player::AngleCheck(const Vector3 froward ,const Vector3& position)
 
 	diff.Normalize();
 	float angle = acosf(diff.Dot(froward));
-	if (Math::PI * 0.06f <= fabsf(angle))
+	if (Math::PI * 0.07f <= fabsf(angle))
 	{
 		return false;
 	}
