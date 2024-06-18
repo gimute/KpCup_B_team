@@ -8,7 +8,26 @@ class EventModel : public IGameObject
 {
 public:
 	struct SceneSettingInfo {
-
+		/// <summary>
+		/// 座標
+		/// </summary>
+		Vector3 m_position = Vector3::Zero;
+		/// <summary>
+		/// イージング割合
+		/// </summary>
+		float m_easingRatio = 0.0f;
+		/// <summary>
+		/// この地点からつぎの地点にイージングしたいのであればtrue
+		/// </summary>
+		bool isEasing = false;
+		/// <summary>
+		/// この地点のイージングが終了しているかどうか
+		/// </summary>
+		bool isEasingEnd = false;
+		/// <summary>
+		/// 切り替え条件の付与
+		/// </summary>
+		bool isSwitchingCon = false;
 	};
 	/// <summary>
 	/// 1シーンで使用するモデル、アニメーションの構造体

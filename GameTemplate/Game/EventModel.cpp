@@ -18,18 +18,6 @@ bool EventModel::Start()
 	////↓レベルレンダーで移動経路などを取得する処理↓////
 	////↑レベルレンダーで移動経路などを取得する処理↑////
 	
-	////↓モデルレンダーにそのシーンで使うアニメーションを登録する処理↓////
-	
-	//↓登録例
-	SceneModel* testModel1 = new SceneModel(2, "Assets/modelData/player/EventTest/proto_player2.tkm");
-	testModel1->RegistrationAnimation(0, "Assets/modelData/player/EventTest/idle.tka", true);
-	testModel1->RegistrationAnimation(1, "Assets/modelData/player/EventTest/run.tka", true);
-	testModel1->RegistrationConfirmed();
-	m_sceneModelList.insert({ 0,testModel1 });
-
-	testIter = m_sceneModelList.begin();
-
-	////↑モデルレンダーにそのシーンで使うアニメーションを登録する処理↑////
 
 	//イベントカメラのインスタンスを取得
 	m_eventCamPtr = FindGO<EventCamera>("camera");
@@ -54,7 +42,16 @@ void EventModel::Update()
 
 void EventModel::RegistrationSceneModel()
 {
-	
+	////↓モデルレンダーにそのシーンで使うアニメーションを登録する処理↓////
+
+	//↓登録例
+	SceneModel* testModel1 = new SceneModel(2, "Assets/modelData/player/EventTest/proto_player2.tkm");
+	testModel1->RegistrationAnimation(0, "Assets/modelData/player/EventTest/idle.tka", true);
+	testModel1->RegistrationAnimation(1, "Assets/modelData/player/EventTest/run.tka", true);
+	testModel1->RegistrationConfirmed();
+	m_sceneModelList.insert({ 0,testModel1 });
+
+	////↑モデルレンダーにそのシーンで使うアニメーションを登録する処理↑////
 }
 
 void EventModel::Render(RenderContext& rc)
