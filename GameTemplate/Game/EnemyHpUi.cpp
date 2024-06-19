@@ -22,9 +22,9 @@ namespace {
 bool EnemyHpUi::Start()
 {
 	//画像設定
-	m_hpUI_A.Init("Assets/modelData/ui_hp/Enemy_UI_A.DDS", 100.0f, 15.0f);
-	m_hpUI_B.Init("Assets/modelData/ui_hp/Enemy_UI_B.DDS", 100.0f, 10.0f);
-	m_hpUI_C.Init("Assets/modelData/ui_hp/Enemy_UI_C.DDS", 100.0f, 10.0f);
+	m_hpUI_A.Init("Assets/modelData/ui_hp/Enemy_UIV2_A.DDS", 100.0f, 15.0f);
+	m_hpUI_B.Init("Assets/modelData/ui_hp/Enemy_UIV2_B.DDS", 100.0f, 10.0f);
+	m_hpUI_C.Init("Assets/modelData/ui_hp/Enemy_UIV2_C.DDS", 100.0f, 10.0f);
 	//基点設定
 	m_hpUI_B.SetPivot(n_pivot_BC);
 	m_hpUI_C.SetPivot(n_pivot_BC);
@@ -207,8 +207,8 @@ void EnemyHpUi::Render(RenderContext& rc)
 		//HPUIの描画処理を先に
 		m_hpUI_A.Draw(rc);
 		//バーの描画処理を後に
-		m_hpUI_B.Draw(rc);
-		//透過バーの描画処理を一番後に
 		m_hpUI_C.Draw(rc);
+		//透過バーの描画処理を一番後に
+		m_hpUI_B.Draw(rc);
 	}
 }
