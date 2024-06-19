@@ -125,5 +125,8 @@ private:
 
 	float m_gameoverWaitTimer = 0.0f;
 	bool m_mutekiModelDraw = false;
+
+	SoundSource* m_playerWalk = nullptr;
+	SoundSource* m_playerStance = nullptr;
 };
 

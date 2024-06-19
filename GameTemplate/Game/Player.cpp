@@ -99,6 +99,13 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/m_rolling.wav");
 	g_soundEngine->ResistWaveFileBank(13,"Assets/sound/m_gunStance.wav");
 
+	m_playerWalk = NewGO<SoundSource>(0);
+	m_playerWalk->Init(5);
+
+	m_playerStance = NewGO<SoundSource>(0);
+	m_playerStance->Init(14);
+	
+
 	//m_gunStance = NewGO<SoundSource>(13);
 	return true;
 }
@@ -615,6 +622,33 @@ void Player::ProcessCommonStateTransition()
 
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{
+		//構えなしの足音が再生中なら
+		if (m_playerWalk->IsPlaying())
+		{
+			//構えなしの足音を停止させる
+			m_playerWalk->Stop();
+		}
+
+		if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
+		{
+			//構えありの足音が再生してなかったら
+			if (!m_playerStance->IsPlaying())
+			{
+				//構えありの足音を再生させる
+				m_playerStance->Play(true);
+			}
+		}
+
+		if (fabsf(m_moveSpeed.x) == 0.0f && fabsf(m_moveSpeed.z) == 0.0f)
+		{
+			//構えありの足音が再生中なら
+			if (m_playerStance->IsPlaying())
+			{
+				//構えありの足音を停止させる
+				m_playerStance->Stop();
+			}
+		}
+
 		if (g_pad[0]->IsTrigger(enButtonB))
 		{
 			m_playerstate = enPlayerState_Attack;
@@ -624,7 +658,7 @@ void Player::ProcessCommonStateTransition()
 			return;
 		}
 		m_playerstate = enPlayerState_PostureWalk;
-		
+		// 
 		if (g_pad[0]->IsTrigger(enButtonRB1))
 		{
 			//銃を構えた時の効果音を流す
@@ -635,17 +669,39 @@ void Player::ProcessCommonStateTransition()
 
 		return;
 	}
+	//構えありの足音が再生中なら
+	if (m_playerStance->IsPlaying())
+	{
+		//構えありの足音を停止させる
+		m_playerStance->Stop();
+	}
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f) {
+
 		//歩きステートにする
 		m_playerstate = enPlayerState_Walk;
+		// 足音が再生中じゃないなら
+		if (!m_playerWalk->IsPlaying())
+		{
+			//足音を再生する
+			m_playerWalk->Play(true);
+			//m_playerWalk->SetVolume(2.0f);
+		}
+		
 		return;
 	}
 	//xとzの移動速度が無かったら(スティックの入力が無かったら)。
 	else {
 		//待機ステートにする。
 		m_playerstate = enPlayerState_Idle;
+		// 足音が再生中なら
+		if (m_playerWalk->IsPlaying())
+		{
+			//足音を停止する
+			m_playerWalk->Stop();
+		}
+
 		return;
 	}
 }

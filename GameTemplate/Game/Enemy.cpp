@@ -88,9 +88,10 @@ bool Enemy::Start()
 	m_rotation.Apply(m_forward);
 
 	//音を読み込む
-	//g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/m_footSteps.wav");
 	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/m_atEnemy.wav");
 	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/m_hpEnemy.wav");
+	g_soundEngine->ResistWaveFileBank(14, "Assets/sound/m_footWalk.wav");
 
 	return true;
 }
