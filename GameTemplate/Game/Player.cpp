@@ -188,16 +188,6 @@ void Player::Update()
 		}
 	}
 
-	//時間処理(仮)
-	if (m_LAEnemyRetentionTime > 0.0f)
-	{
-		m_LAEnemyRetentionTime -= g_gameTime->GetFrameDeltaTime();
-	}
-	else
-	{
-		m_lastAttackEnemy = nullptr;
-	}
-
 	if (m_justRollingTime > 0.0f)
 	{
 		m_justRollingTime -= g_gameTime->GetFrameDeltaTime();
@@ -209,6 +199,15 @@ void Player::Update()
 		tmp.y += 30.0f;
 		m_justRollingCollisionObject->SetPosition(tmp);
 		m_justRollingCol = false;
+	}
+
+	if (m_rollingCorrectionTime >= 0.1f)
+	{
+		m_rollingCorrectionTime -= g_gameTime->GetFrameDeltaTime();
+		if (g_pad[0]->IsPress(enButtonRB1))
+		{
+			RollingEndRot();
+		}
 	}
 
 	//モデルの更新。
@@ -378,7 +377,7 @@ void Player::Collision()
 			if (collision->IsHit(m_collisionObject))
 			{
 				//HPを減らす
-				m_game->m_hpui->DecreaseHP(15);
+				m_game->m_hpui->DecreaseHP(10);
 				//効果音を再生する
 				SoundSource* m_hpEnemy = NewGO<SoundSource>(0);
 				m_hpEnemy->Init(8);
@@ -406,13 +405,15 @@ void Player::AttackRotation()
 	m_rotation.Apply(m_forward);
 	Vector3 MinVec = m_forward * 500.0f;
 
+	bool EnemySearch = false;
+
 	for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
 		Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
-		if (AngleCheck(pos)) {
+		if (AngleCheck(m_forward,pos)) {
 			Vector3 diffA = pos - m_position;
 			if (diffA.Length() <= MinVec.Length()){
 				MinVec = diffA;
-				InLastAttackEnemyInstance(m_game->GetEnemyListInstance(ListnumA));
+				EnemySearch = true;
 			}
 		}
 	}
@@ -421,9 +422,16 @@ void Player::AttackRotation()
 	{
 		m_bullet = NewGO<Bullet>(0, "bullet");
 		Quaternion rot;
-		rot.SetRotation(Vector3::AxisZ, MinVec);
-		m_bullet->SetMoveDirection(m_forward);
+		if (EnemySearch)
+		{
+			rot.SetRotation(Vector3::AxisZ, MinVec);
+		}
+		else
+		{
+			rot.SetRotation(Vector3::AxisZ,m_forward);
+		}
 		m_bullet->Setrotation(rot);
+		m_bullet->SetMoveDirection(m_forward);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Player);
 		shot = true;
@@ -449,15 +457,15 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 	}
 };
 
-bool Player::AngleCheck(const Vector3& position)
+bool Player::AngleCheck(const Vector3 froward ,const Vector3& position)
 {
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 	Vector3 diff = position - m_position;
 
 	diff.Normalize();
-	float angle = acosf(diff.Dot(m_forward));
-	if (Math::PI * 0.05f <= fabsf(angle))
+	float angle = acosf(diff.Dot(froward));
+	if (Math::PI * 0.07f <= fabsf(angle))
 	{
 		return false;
 	}
@@ -581,6 +589,7 @@ void Player::ProcessCommonStateTransition()
 	//Aボタンが押されたら
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
+		m_rollingCorrectionTime = 0.0f;
 
 		float lStick_x = g_pad[0]->GetLStickXF();
 		float lStick_y = g_pad[0]->GetLStickYF();
@@ -620,6 +629,56 @@ void Player::ProcessCommonStateTransition()
 		return;
 	}
 
+	if (g_pad[0]->IsTrigger(enButtonRB1))
+	{
+		//カメラの前方向と右方向のベクトルを持ってくる。
+		Vector3 forward = g_camera3D->GetForward();
+		Vector3 right = g_camera3D->GetRight();
+		//y方向には移動させない。
+		forward.y = 0.0f;
+		right.y = 0.0f;
+
+		forward.Normalize();
+		right.Normalize();
+
+		Vector3 stickL;
+		stickL.x = g_pad[0]->GetLStickXF();
+		stickL.z = g_pad[0]->GetLStickYF();
+
+		right *= stickL.x;;
+		forward *= stickL.z;
+
+		Vector3 stickXY;
+
+		stickXY += right + forward;
+
+		stickXY.Normalize();
+
+		Vector3 EnemyVec = stickXY * 500.0f;
+
+		bool existenceEnemy = false;
+
+		for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
+			Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
+			if (AngleCheck(stickXY, pos)) {
+				Vector3 diffA = pos - m_position;
+				if (diffA.Length() <= EnemyVec.Length()) {
+					EnemyVec = diffA;
+					existenceEnemy = true;
+				}
+			}
+		}
+
+		if (existenceEnemy)
+		{
+			Quaternion rot;
+			rot.SetRotation(Vector3::AxisZ, EnemyVec);
+			m_modelRender.SetRotation(rot);
+			m_rotation = rot;
+			m_forward = Vector3::AxisZ;
+			rot.Apply(m_forward);
+		}
+	}
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{
 		//構えなしの足音が再生中なら
@@ -730,6 +789,7 @@ void Player::ProcessRollingStateTransition()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		RollingEndRot();
+		m_rollingCorrectionTime = 0.3f;
 		ProcessCommonStateTransition();
 	}
 }
@@ -754,20 +814,52 @@ void Player::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 void Player::RollingEndRot()
 {
 
-	if (m_game->ExistsEnemyListPtr(m_lastAttackEnemy))
+	//カメラの前方向と右方向のベクトルを持ってくる。
+	Vector3 forward = g_camera3D->GetForward();
+	Vector3 right = g_camera3D->GetRight();
+	//y方向には移動させない。
+	forward.y = 0.0f;
+	right.y = 0.0f;
+
+	forward.Normalize();
+	right.Normalize();
+
+	Vector3 stickL;
+	stickL.x = g_pad[0]->GetLStickXF();
+	stickL.z = g_pad[0]->GetLStickYF();
+
+	right *= stickL.x;;
+	forward *= stickL.z;
+
+	Vector3 stickXY;
+
+	stickXY += right + forward;
+
+	stickXY.Normalize();
+
+	Vector3 EnemyVec = stickXY * 500.0f;
+
+	bool existenceEnemy = false;
+
+	for (int ListnumA = 0; ListnumA < m_game->m_EnemyList.size(); ListnumA++) {
+		Vector3 pos = m_game->m_EnemyList[ListnumA]->m_position;
+		if (AngleCheck(stickXY, pos)) {
+			Vector3 diffA = pos - m_position;
+			if (diffA.Length() <= EnemyVec.Length()) {
+				EnemyVec = diffA;
+				existenceEnemy = true;
+			}
+		}
+	}
+
+	if (existenceEnemy)
 	{
-		Vector3 LAEnemyVec = m_lastAttackEnemy->m_position;
-
-		Vector3 FinalVec = LAEnemyVec - m_position;
-
 		Quaternion rot;
-		rot.SetRotation(Vector3::AxisZ, FinalVec);
+		rot.SetRotation(Vector3::AxisZ, EnemyVec);
 		m_modelRender.SetRotation(rot);
 		m_rotation = rot;
 		m_forward = Vector3::AxisZ;
 		rot.Apply(m_forward);
-
-		m_lastAttackEnemy = nullptr;
 	}
 
 	m_rollingVec = Vector3::Zero;
