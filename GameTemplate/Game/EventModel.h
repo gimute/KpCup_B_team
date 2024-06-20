@@ -4,9 +4,15 @@
 
 class EventCamera;
 
+/// <summary>
+/// イベント時にモデルを動かす処理クラス
+/// </summary>
 class EventModel : public IGameObject
 {
 public:
+	/// <summary>
+	/// 動く位置座標の構造体
+	/// </summary>
 	struct SceneSettingInfo {
 		/// <summary>
 		/// 座標
@@ -28,6 +34,10 @@ public:
 		/// 切り替え条件の付与
 		/// </summary>
 		bool isSwitchingCon = false;
+		/// <summary>
+		/// 動かすモデルのナンバー
+		/// </summary>
+		int moveModelNumber = -1;
 	};
 	/// <summary>
 	/// 1シーンで使用するモデル、アニメーションの構造体
