@@ -38,6 +38,7 @@
     <ClCompile Include="SignalRailUi.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="EventCamera.cpp" />
+    <ClCompile Include="MapUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -71,5 +72,6 @@
     <ClInclude Include="SignalRailUi.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="EventCamera.h" />
+    <ClInclude Include="MapUi.h" />
   </ItemGroup>
 </Project>

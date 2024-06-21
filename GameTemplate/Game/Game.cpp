@@ -24,6 +24,7 @@
 #include "Door.h"
 #include "EventCamera.h"
 #include "sound/SoundEngine.h"
+#include "MapUi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -97,6 +98,8 @@ Game::Game()
 	m_hpui = NewGO<HpUi>(1, "UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
+	//mapuiテスト
+	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//ゲーム中のBGMを読み込む
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
 	//ゲーム中のBGMを再生する
