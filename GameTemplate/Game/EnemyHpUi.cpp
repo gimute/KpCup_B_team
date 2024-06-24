@@ -61,6 +61,26 @@ void EnemyHpUi::DeleteUi()
 	DeleteGO(this);
 }
 
+//WallCheckに使っている構造体、WallCheckの位置を動かすときは一緒に動かしてください
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//壁とぶつかっていなかったら
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//衝突したのは壁ではない
+			return 0.0f;
+		}
+
+		//壁とぶつかったらフラグをtrueにする
+		isHit = true;
+		return 0.0f;
+	}
+};
+
 void EnemyHpUi::DisplayDis()
 {
 	//プレイヤーの一を取得
@@ -71,7 +91,7 @@ void EnemyHpUi::DisplayDis()
 	//取得したプレイヤーの位置から取得したエネミーの位置まで伸びるベクトルを計算
 	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
 
-	if (diff.LengthSq() >= LimitedRange * LimitedRange)
+	if (diff.LengthSq() >= LimitedRange * LimitedRange && AngleCheck())
 	{
 		//表示しないようにする。
 		m_isImage = false;
@@ -81,6 +101,30 @@ void EnemyHpUi::DisplayDis()
 		//表示する
 		m_isImage = true;
 	}
+}
+
+bool EnemyHpUi::AngleCheck()
+{
+	Vector3 EnemyPosition = m_game->GetEnemyListPos(m_Vectornum);
+	Vector3 PlayerPosition = m_player->GetPosition();
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+	//始点はプレイヤーの座標
+	start.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
+	//終点はエネミーの座標
+	end.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
+
+	SweepResultWall callback;
+	//制作したコライダーを始点から終点まで動かして壁に接触したか判定
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+	//壁と衝突した時
+	if (callback.isHit == true)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void EnemyHpUi::PositionUpdate()

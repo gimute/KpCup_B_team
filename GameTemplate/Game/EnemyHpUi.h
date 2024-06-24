@@ -65,6 +65,11 @@ public:
 	/// </summary>
 	void AdjustmentTransparent();
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool AngleCheck();
+	/// <summary>
 	/// モデルレンダー
 	/// </summary>
 	/// <param name="rc"></param>
@@ -94,6 +99,10 @@ public:
 	/// プレイヤー
 	/// </summary>
 	Player* m_player = nullptr;
+	/// <summary>
+	/// コリダー
+	/// </summary>
+	SphereCollider m_sphereCollider;						
 	/////////////////////////////////////////変数
 	/// <summary>
 	/// 最大HP
