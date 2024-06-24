@@ -34,6 +34,8 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_collisionObject);
+	DeleteGO(m_playerWalk);
+	DeleteGO(m_playerStance);
 }
 
 bool Player::Start()
