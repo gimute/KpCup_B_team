@@ -155,8 +155,9 @@ void MapUi::CreateMapEnemyPoint(const CreateMapEnemyPoint_Mode mode)
 
 	if (oldEnemyNumber > nowenemynumber)
 	{
-		int deleteNumber = -1;
-		int forNumber = 0;
+
+		std::vector<int> deleteNumber;
+
 		for (const auto& ptr : m_mapUiEnemyPointList)
 		{
 			bool deadFlag = ptr.second->m_enemy->IsDead();
@@ -165,19 +166,17 @@ void MapUi::CreateMapEnemyPoint(const CreateMapEnemyPoint_Mode mode)
 			{
 				delete ptr.second;
 
-				deleteNumber = forNumber;
+				deleteNumber.push_back(ptr.first);
 			}
-			forNumber++;
 		}
 
-		if (deleteNumber != -1)
+		if (deleteNumber.size() > 0)
 		{
-			m_mapUiEnemyPointList.erase(deleteNumber);
+			for(const auto& ptr : deleteNumber)
+			{
+				m_mapUiEnemyPointList.erase(ptr);
+			}
 		}
-	}
-
-	if (oldEnemyNumber < nowenemynumber)
-	{
 	}
 
 }
@@ -188,16 +187,16 @@ void MapUi::EnemyPointDisplay()
 	Vector3 mapPos;
 
 	//現在のエネミーの数分for文を回す
-	for (int i = 0; i < nowenemynumber; i++)
+	for (const auto& ptr : m_mapUiEnemyPointList)
 	{
 		//配列に登録された構造体からエネミーの位置を取得
-		Vector3 enemyPos = m_mapUiEnemyPointList[i]->m_enemy->m_position;
+		Vector3 enemyPos = ptr.second->m_enemy->m_position;
 
 		WorldPositionConvertToMapPosition(playerPos, enemyPos, mapPos);
 		//スプライトに位置をセット
-		m_mapUiEnemyPointList[i]->m_mapUiEnemyPoint.SetPosition(mapPos);
+		ptr.second->m_mapUiEnemyPoint.SetPosition(mapPos);
 		//境界線判定を行う
-		m_mapUiEnemyPointList[i]->m_isDraw = IsMapLimited(m_mapUiEnemyPointList[i]
+		ptr.second->m_isDraw = IsMapLimited(ptr.second
 			->m_mapUiEnemyPoint.GetPosition());
 	}
 }
