@@ -360,6 +360,13 @@ namespace nsK2EngineLow {
 		/// <param name="worldPos">ワールド座標</param>
 		void CalcScreenPositionFromWorldPosition(Vector2& screenPos, const Vector3& worldPos) const;
 
+
+		void SetAspectOneFlag(bool flag)
+		{
+			m_aspectSetOneFlag = flag;
+			m_isDirty = true;
+		}
+
 	protected:
 		float		m_targetToPositionLen = 1.0f;			// 注視点と視点まで距離。
 		Vector3		m_position = { 0.0f, 0.0f, 1.0f };		// カメラ位置。
@@ -383,5 +390,7 @@ namespace nsK2EngineLow {
 		EnUpdateProjMatrixFunc m_updateProjMatrixFunc = enUpdateProjMatrixFunc_Perspective;	// プロジェクション行列の更新の仕方。
 		bool		m_isNeedUpdateProjectionMatrix = true;
 		bool		m_isDirty = false;						// ダーティフラグ。
+
+		bool m_aspectSetOneFlag = false;
 	};
 }

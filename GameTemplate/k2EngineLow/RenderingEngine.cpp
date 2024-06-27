@@ -108,6 +108,10 @@ namespace nsK2EngineLow {
         // 影描画用のライトカメラを作成する
         Camera lightCamera;
 
+        lightCamera.SetAspectOneFlag(true);
+
+        lightCamera.SetViewAngle(Math::DegToRad(80.0f));
+
         // カメラの位置を設定。これはライトの位置
         lightCamera.SetPosition(0, 2000, 0);
 

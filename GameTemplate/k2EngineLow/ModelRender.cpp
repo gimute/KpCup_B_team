@@ -66,6 +66,10 @@ namespace nsK2EngineLow {
 
 			Camera lightCamera;
 
+			lightCamera.SetAspectOneFlag(true);
+
+			lightCamera.SetViewAngle(Math::DegToRad(80.0f));
+
 			// カメラの位置を設定。これはライトの位置
 			lightCamera.SetPosition(0, 2000, 0);
 
@@ -127,6 +131,11 @@ namespace nsK2EngineLow {
 		}
 
 		initData.m_fxFilePath = "Assets/shader/sampleDrawShadowMap.fx";
+
+		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+		initData.m_vsEntryPointFunc = "VSMain";
+		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+		initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 
 		m_shadowModel.Init(initData);
 	}
