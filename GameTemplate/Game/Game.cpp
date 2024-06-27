@@ -25,6 +25,7 @@
 #include "EventCamera.h"
 #include "sound/SoundEngine.h"
 #include "MapUi.h"
+#include "RemainingBulletsUi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -96,6 +97,8 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(1, "UI");
+	//残弾管理用UIを作る
+	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
 	//mapuiテスト

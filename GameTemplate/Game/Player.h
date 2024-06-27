@@ -3,6 +3,7 @@ class Game;
 class Enemy;
 class Bullet;
 class Collision;
+class RemainingBulletsUi;
 class Player : public IGameObject
 {
 public:
@@ -107,6 +108,10 @@ public:
 	float m_justRollingTime = 0.0f;
 	bool m_justRollingCol = false;
 	float m_rollingCorrectionTime = 0.0f;
+	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
+	int m_remainingBullets = 17;
+	bool m_isReload = false;
+	float m_reloadTime = 0.0f;
 
 private:
 	EventInfo m_eventInfos[3] = {

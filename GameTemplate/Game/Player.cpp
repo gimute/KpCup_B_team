@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "HpUi.h"
+#include "RemainingBulletsUi.h"
 #include "sound/SoundSource.h"
 #include "sound/SoundEngine.h"
 
@@ -98,6 +99,10 @@ bool Player::Start()
 	g_soundEngine->ResistWaveFileBank(8, "Assets/sound/m_hpPlayer.wav");
 	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/m_rolling.wav");
 	g_soundEngine->ResistWaveFileBank(13,"Assets/sound/m_gunStance.wav");
+
+	//残弾管理Ui登録
+	m_remainingBulletsUi = FindGO<RemainingBulletsUi>("UI");
+	m_remainingBulletsUi->InitRemainingBulletNum(&m_remainingBullets);
 
 	//m_gunStance = NewGO<SoundSource>(13);
 	return true;
@@ -201,6 +206,17 @@ void Player::Update()
 		{
 			RollingEndRot();
 		}
+	}
+
+	if (m_reloadTime > 0.0)
+	{
+		m_reloadTime -= g_gameTime->GetFrameDeltaTime();
+	}
+	else if (m_isReload)
+	{
+		m_remainingBullets = 17;
+		m_remainingBulletsUi->IsReload(false);
+		m_isReload = false;
 	}
 
 	//モデルの更新。
@@ -413,6 +429,11 @@ void Player::AttackRotation()
 
 	if (shot == false)
 	{
+		if (m_remainingBullets <= 0)
+		{
+			return;
+		}
+
 		m_bullet = NewGO<Bullet>(0, "bullet");
 		Quaternion rot;
 		if (EnemySearch)
@@ -427,6 +448,7 @@ void Player::AttackRotation()
 		m_bullet->SetMoveDirection(m_forward);
 		m_bullet->SetPosition(m_position);
 		m_bullet->SetShotType(Bullet::en_Player);
+		m_remainingBullets--;
 		shot = true;
 	}	
 }
@@ -671,6 +693,12 @@ void Player::ProcessCommonStateTransition()
 			m_forward = Vector3::AxisZ;
 			rot.Apply(m_forward);
 		}
+	}
+	if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isReload)
+	{
+		m_remainingBulletsUi->IsReload(true);
+		m_isReload = true;
+		m_reloadTime = 3.0f;
 	}
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{

@@ -91,7 +91,7 @@ void EnemyHpUi::DisplayDis()
 	//取得したプレイヤーの位置から取得したエネミーの位置まで伸びるベクトルを計算
 	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
 
-	if (diff.LengthSq() >= LimitedRange * LimitedRange && AngleCheck())
+	if (diff.LengthSq() >= LimitedRange * LimitedRange)
 	{
 		//表示しないようにする。
 		m_isImage = false;
