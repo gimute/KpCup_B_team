@@ -71,13 +71,13 @@ namespace nsK2EngineLow {
 			lightCamera.SetViewAngle(Math::DegToRad(80.0f));
 
 			// カメラの位置を設定。これはライトの位置
-			lightCamera.SetPosition(0, 2000, 0);
+			lightCamera.SetPosition(-2000, 2000, 2000);
 
 			// カメラの注視点を設定。これがライトが照らしている場所
 			lightCamera.SetTarget(0, 0, 0);
 
 			// 上方向を設定。今回はライトが真下を向いているので、X方向を上にしている
-			lightCamera.SetUp(1, 0, 0);
+			//lightCamera.SetUp(1, 0, 0);
 
 			// ライトビュープロジェクション行列を計算している
 			lightCamera.Update();
