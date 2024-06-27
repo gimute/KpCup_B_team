@@ -26,7 +26,10 @@ bool BackGround::Start()
 	physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
 	//モデルを読み込む
-	m_floor.Init("Assets/modelData/Map/Map_floor.tkm");
+	m_floor.Init("Assets/modelData/Map/Map_floor.tkm", nullptr, 0, enModelUpAxisZ, false, true);
+
+	m_floor.SetShadowChasterFlag(false);
+
 	//座標を設定する。
 	m_floor.SetPosition(m_position);
 	//大きさを設定する。

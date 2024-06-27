@@ -1,11 +1,20 @@
 #pragma once
 
+#include "SceneLight.h"
+
 namespace nsK2EngineLow {
 	class ModelRender : public IRenderer
 	{
 	public:
 		ModelRender();
 		~ModelRender();
+
+		struct tsts
+		{
+		public:
+			Light m_light;
+			Matrix m_mt;
+		};
 
 		/// <summary>
 		/// 初期化処理
@@ -15,12 +24,28 @@ namespace nsK2EngineLow {
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		/// <param name="dithering">ディザリングフラグ、tureならディザリングを行う</param>
+		/// <param name="isRecieverShadow">影を落とすか決めるフラグ、tureなら影が落ちる</param>
 		void Init(
 			const char* tkmfilePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-			bool dithering = false
+			bool dithering = false,
+			bool isRecieveShadow = false
+		);
+
+		void InitNormalModel(
+			const char* tkmfilePath,
+			AnimationClip* animationClips = nullptr,
+			int numAnimationClips = 0,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool dithering = false,
+			bool isRecieveShadow = false
+		);
+
+		void InitShadowModel(
+			const char* tkmFilePath, 
+			EnModelUpAxis modelUpAxis
 		);
 
 		// スケルトンの初期化
@@ -97,6 +122,14 @@ namespace nsK2EngineLow {
 		//3Dモデルの描画処理
 		void OnRenderModel(RenderContext& rc) override;
 
+		//シャドウマップへの描画パスから呼ばれる処理
+		void OnRenderShadowMap(RenderContext& rc, const Matrix& lvpMatrix) override;
+
+		void SetShadowChasterFlag(bool flag)
+		{
+			m_isShadowChaster = flag;
+		}
+
 	private:
 		Model m_model;
 		Skeleton		m_skeleton;
@@ -109,6 +142,15 @@ namespace nsK2EngineLow {
 		Vector3 m_scale = Vector3::One;
 
 		float m_animationSpeed = 1.0f;			//アニメーションの再生スピード
+
+
+		//シャドウマップ関連
+
+		Model m_shadowModel;
+
+		tsts m_tsts;
+
+		bool m_isShadowChaster = true;		//影を落とすか管理するフラグ
 	};
 
 }

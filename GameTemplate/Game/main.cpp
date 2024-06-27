@@ -28,7 +28,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	//í«â¡ÉRÅ[Éh
 	RenderingEngine m_renderingEngine;
+	m_renderingEngine.Init();
 	g_renderingEngine = &m_renderingEngine;
+	
 
 	SceneLight m_sceneLight;
 	m_sceneLight.Init();
