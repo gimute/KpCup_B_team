@@ -20,6 +20,9 @@ bool BackGround::Start()
 	//大きさを設定する。
 	m_modelRender.SetScale(m_scale);
 
+	//影を落とさないように設定
+	m_modelRender.SetShadowChasterFlag(false);
+
 	//モデルを更新する。
 	m_modelRender.Update();
 	//静的物理オブジェクトを作成
@@ -28,6 +31,7 @@ bool BackGround::Start()
 	//モデルを読み込む
 	m_floor.Init("Assets/modelData/Map/Map_floor.tkm", nullptr, 0, enModelUpAxisZ, false, true);
 
+	//影を落とさないに用に設定
 	m_floor.SetShadowChasterFlag(false);
 
 	//座標を設定する。
