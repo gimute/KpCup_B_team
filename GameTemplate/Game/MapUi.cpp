@@ -259,14 +259,16 @@ bool MapUi::IsMapLimited(const Vector3 determineTargetPos)
 
 void MapUi::Render(RenderContext& rc)
 {
-	m_mapUiBase.Draw(rc);
-	m_mapUiFrame.Draw(rc);
-	for (const auto& ptr : m_mapUiEnemyPointList)
-	{
-		if (ptr.second->m_isDraw)
+	if (m_game->m_TempDelHpUi == true) {
+		m_mapUiBase.Draw(rc);
+		m_mapUiFrame.Draw(rc);
+		for (const auto& ptr : m_mapUiEnemyPointList)
 		{
-			ptr.second->m_mapUiEnemyPoint.Draw(rc);
+			if (ptr.second->m_isDraw)
+			{
+				ptr.second->m_mapUiEnemyPoint.Draw(rc);
+			}
 		}
+		m_mapUiPlayerPoint.Draw(rc);
 	}
-	m_mapUiPlayerPoint.Draw(rc);
 }

@@ -369,6 +369,9 @@ void Player::Collision()
 				//コリジョンとキャラコンが衝突したら。
 				if (collision->IsHit(m_justRollingCollisionObject))
 				{
+					m_remainingBulletsUi->IsReload(true);
+					m_isReload = true;
+					m_reloadTime = 0.5f;
 					auto hgoe = NewGO<LanchSlowMotion>(0, "LanchSlowMotion");
 					hgoe->Initialize(m_game);
 					//m_game->SlowStart(0.1f);
@@ -696,9 +699,12 @@ void Player::ProcessCommonStateTransition()
 	}
 	if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isReload)
 	{
-		m_remainingBulletsUi->IsReload(true);
-		m_isReload = true;
-		m_reloadTime = 3.0f;
+		if (!m_isReload || m_remainingBullets == 17)
+		{
+			m_remainingBulletsUi->IsReload(true);
+			m_isReload = true;
+			m_reloadTime = 3.0f;
+		}
 	}
 	if (g_pad[0]->IsPress(enButtonRB1))
 	{

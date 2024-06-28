@@ -1,4 +1,7 @@
 #pragma once
+
+class Game;
+
 class RemainingBulletsUi : public IGameObject
 {
 public:
@@ -14,12 +17,24 @@ public:
 		/// </summary>
 		float m_remainingBulletReloadUiWipeSize = 0.0f;
 		/// <summary>
+		/// フォントカラー
+		/// </summary>
+		float m_fontColor = 0.8f;
+		/// <summary>
 		/// 現在ワイプサイズ取得
 		/// </summary>
 		/// <returns></returns>
 		float GetWipeSize()
 		{
 			return m_remainingBulletReloadUiWipeSize;
+		}
+		/// <summary>
+		/// フォントカラー取得
+		/// </summary>
+		/// <returns></returns>
+		float GetFontColor()
+		{
+			return m_fontColor;
 		}
 	};
 	/////////////////////////////////////////関数
@@ -49,15 +64,15 @@ public:
 	/// </summary>
 	void WipeCalc();
 	/// <summary>
+	/// UIカラー計算
+	/// </summary>
+	void ColorCalc();
+	/// <summary>
 	/// 描画関数
 	/// </summary>
 	/// <param name="rc"></param>
 	void Render(RenderContext& rc);
 	/////////////////////////////////////////変数
-	/// <summary>
-	/// 残弾数
-	/// </summary>
-	int *m_RemainingBulletNumber;
 	/// <summary>
 	/// 最大残弾数
 	/// </summary>
@@ -70,6 +85,10 @@ public:
 	/// リロード状態かどうか
 	/// </summary>
 	bool m_isReload = false;
+	/// <summary>
+	/// フォントカラー変更に使用するBool
+	/// </summary>
+	bool m_isFontColor = false;
 	/////////////////////////////////////////スプライト
 	/// <summary>
 	///	残弾数ベーススプライト
@@ -87,6 +106,15 @@ public:
 	/// 残弾数スプライト
 	/// </summary>
 	FontRender m_RemainingBulletNumberUi;
+	/////////////////////////////////////////ポインタ変数
+	/// <summary>
+	/// 残弾数
+	/// </summary>
+	int* m_RemainingBulletNumber;
+	/// <summary>
+	/// ゲームのインスタンスを格納するポインタ変数
+	/// </summary>
+	Game* m_game = nullptr;
 	/////////////////////////////////////////メンバ関数
 	/// <summary>
 	/// 残弾アドレス登録

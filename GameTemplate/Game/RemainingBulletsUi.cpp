@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "RemainingBulletsUi.h"
+#include "Game.h"
 
 RemainingBulletsUi::RemainingBulletsUi()
 {
@@ -29,8 +30,8 @@ bool RemainingBulletsUi::Start()
 
 	spriteInitDataReloadUi.m_ddsFilePath[0] = "Assets/modelData/ui_remainingbullet/ui_reload.DDS";
 
-	//m_RemainingBulletReloadTexture.InitFromDDSFile(L"Assets/modelData/ui_remainingbullet/ui_reload.DDS");
-	//spriteInitDataReloadUi.m_expandShaderResoruceView[0] = &m_RemainingBulletReloadTexture;
+	m_RemainingBulletReloadTexture.InitFromDDSFile(L"Assets/modelData/ui_remainingbullet/ui_reload.DDS");
+	spriteInitDataReloadUi.m_expandShaderResoruceView[0] = &m_RemainingBulletReloadTexture;
 
 	spriteInitDataReloadUi.m_fxFilePath = "Assets/shader/remainingBulletsUi.fx";
 
@@ -53,6 +54,8 @@ bool RemainingBulletsUi::Start()
 
 	m_RemainingBulletNumberUi.SetColor(REMAINING_BULLET_UI_COLOR);
 
+	m_game = FindGO<Game>("game");
+
 	return true;
 }
 
@@ -62,6 +65,8 @@ void RemainingBulletsUi::Update()
 
 	WipeCalc();
 
+	ColorCalc();
+
 	m_RemainingBulletUi.Update();
 	m_RemainingBulletReloadUi.Update();
 
@@ -70,7 +75,7 @@ void RemainingBulletsUi::Update()
 
 void RemainingBulletsUi::RemainingBulletNumberUiUpdate()
 {
-	if (m_RemainingBulletNumber == nullptr)
+	if (m_RemainingBulletNumber == nullptr && this->IsDead())
 	{
 		return;
 	}
@@ -99,10 +104,39 @@ void RemainingBulletsUi::WipeCalc()
 	}
 }
 
+void RemainingBulletsUi::ColorCalc()
+{
+	if (!m_isReload)
+	{
+		return;
+		m_remainingBulletReloadUiWipeParam.m_fontColor = 0.8f;
+	}
+
+	if (m_remainingBulletReloadUiWipeParam.GetFontColor() >= 0.8f)
+	{
+		m_isFontColor = false;
+	}
+
+	if (m_isFontColor)
+	{
+		m_remainingBulletReloadUiWipeParam.m_fontColor += 0.04f;
+		return;
+	}
+
+	m_remainingBulletReloadUiWipeParam.m_fontColor -= 0.04f;
+
+	if (m_remainingBulletReloadUiWipeParam.GetFontColor() <= 0.4f)
+	{
+		m_isFontColor = true;
+	}
+}
+
 void RemainingBulletsUi::Render(RenderContext& rc)
 {
-	m_RemainingBulletUi.Draw(rc);
-	m_RemainingBulletNumberUi.Draw(rc);
-	m_RemainingBulletReloadUi.Draw(rc);
+	if (m_game->m_TempDelHpUi == true) {
+		m_RemainingBulletUi.Draw(rc);
+		m_RemainingBulletNumberUi.Draw(rc);
+		m_RemainingBulletReloadUi.Draw(rc);
+	}
 }
 

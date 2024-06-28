@@ -121,6 +121,7 @@ Game::~Game()
 	{
 		m_gametimer->m_game = nullptr;
 	}
+	DeleteGO(m_remainingBulletsUi);
 	DeleteGO(m_mapUi);
 	DeleteGO(m_background);	
 	DeleteGO(m_gamecamera);
