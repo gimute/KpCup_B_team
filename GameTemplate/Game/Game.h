@@ -24,6 +24,8 @@ class Title;
 class SignalRailUi;
 class Door;
 class EventCamera;
+class MapUi;
+class RemainingBulletsUi;
 //
 class Game : public IGameObject
 {
@@ -100,6 +102,11 @@ public:
 		return m_gameState;
 	}
 
+	int GetEnemyListSize()
+	{
+		return m_EnemyList.size();
+	}
+
 	//メンバ変数
 	Player* m_player;
 	Enemy* m_enemy;
@@ -113,11 +120,13 @@ public:
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
+	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
 	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
 	EventCamera* test = nullptr;
+	MapUi* m_mapUi = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
 

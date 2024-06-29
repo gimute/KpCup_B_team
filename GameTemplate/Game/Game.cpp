@@ -24,6 +24,8 @@
 #include "Door.h"
 #include "EventCamera.h"
 #include "sound/SoundEngine.h"
+#include "MapUi.h"
+#include "RemainingBulletsUi.h"
 ///////////////////////////////
 
 Game::Game()
@@ -95,8 +97,12 @@ Game::Game()
 
 	//HPUIを作る
 	m_hpui = NewGO<HpUi>(1, "UI");
+	//残弾管理用UIを作る
+	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
+	//mapuiテスト
+	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//ゲーム中のBGMを読み込む
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
 	//ゲーム中のBGMを再生する
@@ -115,7 +121,8 @@ Game::~Game()
 	{
 		m_gametimer->m_game = nullptr;
 	}
-	
+	DeleteGO(m_remainingBulletsUi);
+	DeleteGO(m_mapUi);
 	DeleteGO(m_background);	
 	DeleteGO(m_gamecamera);
 	DeleteGO(m_hpui);
