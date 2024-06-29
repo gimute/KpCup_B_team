@@ -48,7 +48,7 @@ bool BackGround::Start()
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 	physicsStaticObject.GetbtCollisionObject()->setUserIndex(enCollisionAttr_Wall);
-
+	physicsStaticObject.GetRigitBody();
 	return true;
 }
 
