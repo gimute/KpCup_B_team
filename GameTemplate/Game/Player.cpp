@@ -35,6 +35,8 @@ Player::Player()
 Player::~Player()
 {
 	DeleteGO(m_collisionObject);
+	DeleteGO(m_playerWalk);
+	DeleteGO(m_playerStance);
 }
 
 bool Player::Start()
@@ -405,6 +407,8 @@ void Player::Collision()
 
 				if (m_game->m_hpui->GetNowHP() <= 0)
 				{
+					DeleteGO(m_playerWalk);
+					DeleteGO(m_playerStance);
 					m_playerstate = enPlayerState_KnockDown;
 				}
 			}
