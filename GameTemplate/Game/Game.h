@@ -26,6 +26,7 @@ class Door;
 class EventCamera;
 class MapUi;
 class RemainingBulletsUi;
+class InformationUi;
 //
 class Game : public IGameObject
 {
@@ -121,6 +122,7 @@ public:
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
+	InformationUi* m_infoUi;
 	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
