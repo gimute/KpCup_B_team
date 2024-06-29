@@ -8,6 +8,8 @@ namespace nsK2EngineLow {
 		RenderingEngine();
 		~RenderingEngine();
 
+		void Init();
+
 		//描画オブジェクトを追加
 		void AddRenderObject(IRenderer* renderObject)
 		{
@@ -23,11 +25,22 @@ namespace nsK2EngineLow {
 		//事前2D描画
 		void PreRender2D(RenderContext& rc);
 
+		//シャドウマップ描画処理
+		void RenderShadowMap(RenderContext& rc);
+
 		//実行
 		void Execute(RenderContext& rc);
 
+
+		RenderTarget* GetShadowMapRenderTarget()
+		{
+			return &m_shadowMap;
+		}
+
 	private:
 		std::vector< IRenderer* > m_renderObjects;	// 描画オブジェクトのリスト。
+
+		RenderTarget m_shadowMap;
 	};
 }
 

@@ -10,7 +10,7 @@ namespace nsK2EngineLow {
 
     void SceneLight::Init()
     {
-        // ���z��
+        // 太陽光
         m_light.directionalLight[0].color.x = 1.0f;
         m_light.directionalLight[0].color.y = 1.0f;
         m_light.directionalLight[0].color.z = 1.0f;
@@ -27,14 +27,14 @@ namespace nsK2EngineLow {
         m_light.ambientLight.z = 0.3f;
         m_light.eyePos = g_camera3D->GetPosition();
 
-        // �S�Ẵ|�C���g���C�g�𖢎g�p�ɂ���
+        // 全てのポイントライトを未使用にする
         for (auto& pt : m_light.pointLights) {
             pt.UnUse();
             pt.SetAffectPowParam(1.0f);
         }
         m_light.numPointLight = 0;
 
-        // �S�ẴX�|�b�g���C�g�𖢎g�p�ɂ���B
+        // 全てのスポットライトを未使用にする。
         for (auto& sp : m_light.spotLights) {
             sp.UnUse();
         }
@@ -82,16 +82,16 @@ namespace nsK2EngineLow {
 
     void SceneLight::DeletePointLight(SPointLight* m_pointlight)
     {
-        //�|�C���^�ɃA�h���X�������ĂȂ������牽�������Ԃ�
+        //ポインタにアドレスが入ってなかったら何もせず返す
         if (m_pointlight == nullptr)
         {
             return;
         }
-        //������V�[�����C�g���Ǘ����Ă��Ȃ��|�C���g���C�g�ɑ΂��č폜���������s����ƊǗ����o�O��(���Ɏg�p���̃��C�g�̐�)�̂�
-        //�{���ɍ폜���������Ă������m�F����
+        //万が一シーンライトが管理していないポイントライトに対して削除処理を実行すると管理がバグる(特に使用中のライトの数)ので
+        //本当に削除処理をしていいか確認する
         // 
-        //�����Ă����|�C���^�ɓ����Ă���A�h���X�ƁA�z��̊e�v�f�̃A�h���X���Ƃ炵���킹�āA
-        //�A�h���X���������̂���������A�폜���������s����
+        //送られてきたポインタに入っているアドレスと、配列の各要素のアドレスを照らし合わせて、
+        //アドレスが同じものを見つけたら、削除処理を実行する
         for (int i = 0; i < MAX_POINT_LIGHT; i++)
         {
             

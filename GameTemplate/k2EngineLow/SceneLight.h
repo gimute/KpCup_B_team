@@ -273,6 +273,11 @@ namespace nsK2EngineLow {
 		//使用中のスポットライトを削除
 		void DeleteSpotLight(SSpotLight* m_spotlight);
 
+		Light* GetLightData()
+		{
+			return &m_light;
+		}
+
 	private:
 
 
