@@ -379,7 +379,7 @@ void Player::Collision()
 				{
 					m_remainingBulletsUi->IsReload(true);
 					m_isReload = true;
-					m_reloadTime = 0.5f;
+					m_reloadTime = 0.3f;
 					auto hgoe = NewGO<LanchSlowMotion>(0, "LanchSlowMotion");
 					hgoe->Initialize(m_game);
 					//m_game->SlowStart(0.1f);
@@ -442,8 +442,16 @@ void Player::AttackRotation()
 
 	if (shot == false)
 	{
+		if (m_isReload)
+		{
+			return;
+		}
+
 		if (m_remainingBullets <= 0)
 		{
+			m_remainingBulletsUi->IsReload(true);
+			m_isReload = true;
+			m_reloadTime = 3.5f;
 			return;
 		}
 
