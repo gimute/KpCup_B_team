@@ -36,7 +36,7 @@ bool Player::Start()
 	//m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	//m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
 
-	m_modelRender.Init("Assets/modelData/player/V2_player/player.tkm", m_animationclips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/player/V2_player/player.tkm", m_animationclips, enAnimationClip_Num,enModelUpAxisZ);
 
 	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
@@ -73,7 +73,7 @@ void Player::Update()
 	//当たり判定処理
 	Collision();
 	//アニメーション処理
-	PlayAnimation();
+	//PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
 	//タイマー変数加減処理
