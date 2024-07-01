@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "InformationUi.h"
+#include "Game.h"
 
 InformationUi::InformationUi()
 {
@@ -8,7 +9,10 @@ InformationUi::InformationUi()
 
 InformationUi::~InformationUi()
 {
-
+	for (const auto& ptr : m_informationList)
+	{
+		delete ptr.second;
+	}
 }
 
 bool InformationUi::Start()
@@ -16,6 +20,12 @@ bool InformationUi::Start()
 	InformationSprite* info1 = new InformationSprite;
 	info1->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
 	InitInformationList("info1", info1);
+
+	InformationSprite* info2 = new InformationSprite;
+	info2->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
+	InitInformationList("info2", info2);
+
+	m_game = FindGO<Game>("game");
 
 	return true;
 }
@@ -27,11 +37,6 @@ void InformationUi::Update()
 		return;
 	}
 
-	if (g_pad[0]->IsTrigger(enButtonA))
-	{
-		m_isInfoWipe = false;
-	}
-
 	WipeCalc();
 
 	m_informationListIterator->second->m_InformationUi.Update();
@@ -40,22 +45,22 @@ void InformationUi::Update()
 void InformationUi::WipeCalc()
 {
 
-	if (m_isInfoWipe && GetNowIteratorWipeSize() >= -1920.0f)
+	if (m_isInfoWipe && GetNowIteratorWipeSizeX() >= -1920.0f)
 	{
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX -= 16.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX -= 39.0f;
 
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY -= 9.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY -= 23.0f;
 
 		return;
 	}
 
 	if (!m_isInfoWipe) 
 	{
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX += 16.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX += 39.0f;
 
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY += 9.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY += 23.0f;
 
-		if (GetNowIteratorWipeSize() >= 0)
+		if (GetNowIteratorWipeSizeX() >= 0)
 		{
 			m_isInfoDraw = false;
 			m_isInfoWipe = true;

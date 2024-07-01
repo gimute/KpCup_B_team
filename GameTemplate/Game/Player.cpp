@@ -234,6 +234,11 @@ void Player::Update()
 
 void Player::Move()
 {
+	if (m_game->GetPlayerMove())
+	{
+		return;
+	}
+
 	//ステートが回避の場合
 	if (m_playerstate == enPlayerState_Rolling)
 	{
@@ -324,6 +329,11 @@ void Player::Rolling()
 
 void Player::Rotation()
 {
+	if (m_game->GetPlayerMove())
+	{
+		return;
+	}
+
 	//特定のステートの時は回転処理をしない
 	if (m_playerstate == enPlayerState_Attack || m_playerstate == enPlayerState_PostureWalk
 		||m_playerstate == enPlayerState_Rolling)
@@ -622,6 +632,11 @@ void Player::PlayAnimation()
 
 void Player::ProcessCommonStateTransition()
 {
+	if (m_game->GetPlayerMove())
+	{
+		return;
+	}
+
 	//Aボタンが押されたら
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{

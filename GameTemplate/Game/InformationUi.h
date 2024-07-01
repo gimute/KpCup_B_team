@@ -1,4 +1,8 @@
 #pragma once
+#include "Game.h"
+
+class Game;
+
 class InformationUi : public IGameObject
 {
 public:
@@ -102,6 +106,11 @@ public:
 	/// インフォメーションリストイテレーター
 	/// </summary>
 	std::map<std::string, InformationSprite*>::iterator m_informationListIterator;
+	/////////////////////////////////////////ポインタ変数
+	/// <summary>
+	/// ゲームのインスタンス取得用変数
+	/// </summary>
+	Game* m_game = nullptr;
 	/////////////////////////////////////////メンバ関数
 	/// <summary>
 	/// リストにインフォメーションを登録
@@ -117,11 +126,17 @@ public:
 	/// </summary>
 	void InitGOInformation(const char* Name)
 	{
+		if (m_isInfoDraw)
+		{
+			return;
+		}
+
 		m_informationListIterator = m_informationList.find(Name);
 
 		if (m_informationListIterator != m_informationList.end())
 		{
 			m_isInfoDraw = true;
+			m_game->IsPlayerMove(true);
 		}
 		else
 		{
@@ -130,12 +145,20 @@ public:
 		}
 	}
 	/// <summary>
-	/// 現在のワイプサイズを取得
+	/// 現在のワイプサイズXを取得
 	/// </summary>
 	/// <returns></returns>
-	float GetNowIteratorWipeSize()
+	float GetNowIteratorWipeSizeX()
 	{
 		return m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX;
+	}
+	/// <summary>
+	/// 開いてるインフォメーションを閉じる関数
+	/// </summary>
+	void InformationClose()
+	{
+		m_isInfoWipe = false;
+		m_game->IsPlayerMove(false);
 	}
 };
 
