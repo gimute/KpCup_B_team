@@ -104,7 +104,7 @@ Game::Game()
 	m_infoUi = NewGO<InformationUi>(0,"UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//mapuiテスト
+	//mapuiテスト6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//ゲーム中のBGMを読み込む
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
@@ -252,7 +252,7 @@ void Game::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
-		test->StartScene(EventCamera::en_Scene1_Door);
+		m_infoUi->InitGOInformation("info1");
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
