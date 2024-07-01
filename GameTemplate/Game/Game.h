@@ -108,6 +108,16 @@ public:
 		return m_EnemyList.size();
 	}
 
+	void IsPlayerMove(bool playermove)
+	{
+		m_isPlayerMove = playermove;
+	}
+
+	bool GetPlayerMove()
+	{
+		return m_isPlayerMove;
+	}
+
 	//メンバ変数
 	Player* m_player;
 	Enemy* m_enemy;
@@ -152,6 +162,7 @@ private:
 	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
+	bool m_isPlayerMove = false;				//プレイヤーが移動できるかどうか
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 	float m_slowTime = 0.0f;			//スローモーション時間
 

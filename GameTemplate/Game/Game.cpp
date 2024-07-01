@@ -100,10 +100,10 @@ Game::Game()
 	m_hpui = NewGO<HpUi>(1, "UI");
 	//残弾管理用UIを作る
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//インフォメーションテスト
-	m_infoUi = NewGO<InformationUi>(0,"UI");
 	//危険信号表示Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
+	//インフォメーションテスト
+	m_infoUi = NewGO<InformationUi>(1, "UI");
 	//mapuiテスト6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//ゲーム中のBGMを読み込む
@@ -124,6 +124,7 @@ Game::~Game()
 	{
 		m_gametimer->m_game = nullptr;
 	}
+	DeleteGO(m_infoUi);
 	DeleteGO(m_remainingBulletsUi);
 	DeleteGO(m_mapUi);
 	DeleteGO(m_background);	
@@ -256,10 +257,11 @@ void Game::Update()
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
+		m_infoUi->InitGOInformation("info2");
 	}
 	if (g_pad[0]->IsTrigger(enButtonLeft))
 	{
-		test->StartScene(EventCamera::en_Scene2_MapUp1);
+		m_infoUi->InformationClose();
 	}
 }
 
