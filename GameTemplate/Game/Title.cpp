@@ -23,7 +23,7 @@ bool Title::Start()
 	SpriteInitData initData;
 	//DDSファイル（画像データ）のファイルパスを指定する。
 	//スタートボタンの画像データを指定する。
-	initData.m_ddsFilePath[0] = "Assets/sprite/Press_Start_Button2.DDS";
+	initData.m_ddsFilePath[0] = "Assets/sprite/PressAButton2.DDS";
 
 	//Sprite表示用のシェーダーのファイルパスを指定する。
 	initData.m_fxFilePath = "Assets/shader/sprite_Title.fx";

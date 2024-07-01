@@ -9,6 +9,7 @@ public:
 	GameClear();
 	~GameClear();
 	bool Start();
+	void AlphaCalc();
 	//更新処理
 	void Update();
 	//クリアタイム表示
@@ -19,7 +20,7 @@ public:
 	//メンバ変数
 	SpriteRender m_spriterender;	//スプライトレンダー
 	SpriteRender m_spriterender_moya;	//スプライトレンダー
-
+	SpriteRender m_pressRender;		//Press A Button レンダー
 	Game* m_game = nullptr;
 	GameTimer* m_gametimer = nullptr;
 	GameClear* m_gameclear;
@@ -32,5 +33,9 @@ public:
 	bool m_isSaveClearTime = false;
 	float m_clearminit = 0.0f;
 	int m_cleartimer = 0.0f;
+
+	//アルファチャンネルの調整用の変数
+	float m_alpha = 0.1f;
+	bool m_alphaCalcBool;
 };
 
