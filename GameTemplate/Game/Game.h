@@ -73,7 +73,7 @@ public:
 	//他のクラスから呼ぶためのゲームクリア処理。
 	void GameClearProcess();
 	//スローモージョンスタート
-	void SlowStart(float SlowTime);
+	void SlowStart(float SlowTime,int SlowStrength);
 
 	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
 	//エネミーを全員倒したかのフラグを返す
@@ -106,6 +106,16 @@ public:
 	int GetEnemyListSize()
 	{
 		return m_EnemyList.size();
+	}
+
+	void IsPlayerMove(bool playermove)
+	{
+		m_isPlayerMove = playermove;
+	}
+
+	bool GetPlayerMove()
+	{
+		return m_isPlayerMove;
 	}
 
 	//メンバ変数
@@ -152,6 +162,10 @@ private:
 	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
+	bool m_isPlayerMove = false;				//プレイヤーが移動できるかどうか
+	bool m_isFirstInfo = false;
+	bool m_isSecondInfo = false;
+	bool m_isTimerStart = false;
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 	float m_slowTime = 0.0f;			//スローモーション時間
 

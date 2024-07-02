@@ -58,7 +58,11 @@ namespace nsK2EngineLow {
 			
 			if (m_isSlowMotion)
 			{
-				return m_frameDeltaTime / 4;
+				if (m_slowintStrength == 0)
+				{
+					return m_fixedFrameDeltaTime * 0;
+				}
+				return m_frameDeltaTime / m_slowintStrength;
 			}
 
 			return m_frameDeltaTime;
@@ -110,6 +114,12 @@ namespace nsK2EngineLow {
 		{
 			m_isSlowMotion = isSlow;
 		}
+
+		void IsSlowMotion(bool isSlow,int slowintStrength)
+		{
+			m_isSlowMotion = isSlow;
+			m_slowintStrength = slowintStrength;
+		}
 	private:
 		friend class K2EngineLow;
 		Stopwatch m_sw;
@@ -119,5 +129,6 @@ namespace nsK2EngineLow {
 		float		m_fixedFrameDeltaTime = 1.0f / 60.0f;	// å≈íËåoâﬂéûä‘ÅB
 
 		bool m_isSlowMotion = false;
+		int m_slowintStrength;
 	};
 }

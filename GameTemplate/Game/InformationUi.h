@@ -1,4 +1,8 @@
 #pragma once
+#include "Game.h"
+
+class Game;
+
 class InformationUi : public IGameObject
 {
 public:
@@ -73,6 +77,10 @@ public:
 	/// <returns></returns>
 	bool Start();
 	/// <summary>
+	/// 新しいスプライトを外部から登録する関数
+	/// </summary>
+	void InitInformationSprite(const char* listName, const char* filePath);
+	/// <summary>
 	/// アップデート関数
 	/// </summary>
 	void Update();
@@ -93,6 +101,10 @@ public:
 	/// ワイプの開閉
 	/// </summary>
 	bool m_isInfoWipe = true;
+	/// <summary>
+	/// ワイプが開ききったかどうか
+	/// </summary>
+	bool m_isWipeFullyOpen = false;
 	/////////////////////////////////////////配列
 	/// <summary>
 	/// インフォメーションリスト
@@ -102,6 +114,11 @@ public:
 	/// インフォメーションリストイテレーター
 	/// </summary>
 	std::map<std::string, InformationSprite*>::iterator m_informationListIterator;
+	/////////////////////////////////////////ポインタ変数
+	/// <summary>
+	/// ゲームのインスタンス取得用変数
+	/// </summary>
+	Game* m_game = nullptr;
 	/////////////////////////////////////////メンバ関数
 	/// <summary>
 	/// リストにインフォメーションを登録
@@ -117,25 +134,60 @@ public:
 	/// </summary>
 	void InitGOInformation(const char* Name)
 	{
+		if (m_isInfoDraw)
+		{
+			return;
+		}
+
 		m_informationListIterator = m_informationList.find(Name);
 
 		if (m_informationListIterator != m_informationList.end())
 		{
 			m_isInfoDraw = true;
+			m_game->IsPlayerMove(true);
+			m_game->SlowStart(true, 0);
 		}
-		else
+
+	}
+	/// <summary>
+	/// 現在のワイプサイズXを取得
+	/// </summary>
+	/// <returns></returns>
+	float GetNowIteratorWipeSizeX()
+	{
+		return m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX;
+	}
+	/// <summary>
+	/// 開いてるインフォメーションを閉じる関数
+	/// </summary>
+	void InformationClose(bool slowBool)
+	{
+		if (!m_isWipeFullyOpen)
 		{
-			m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX = 0.0f;
-			m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY = 0.0f;
+			return;
+		}
+
+		m_isInfoWipe = false;
+		m_game->IsPlayerMove(false);
+		if (slowBool)
+		{
+			g_gameTime->IsSlowMotion(false);
 		}
 	}
 	/// <summary>
-	/// 現在のワイプサイズを取得
+	/// 現在インフォメーション中かどうか
 	/// </summary>
 	/// <returns></returns>
-	float GetNowIteratorWipeSize()
+	bool IsInformationOpen()
 	{
-		return m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX;
+		if (m_isInfoDraw)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 };
 
