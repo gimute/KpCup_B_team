@@ -17,17 +17,24 @@ InformationUi::~InformationUi()
 
 bool InformationUi::Start()
 {
-	InformationSprite* info1 = new InformationSprite;
-	info1->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
-	InitInformationList("info1", info1);
+	InformationSprite* info_Mission = new InformationSprite;
+	info_Mission->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
+	InitInformationList("Mission", info_Mission);
 
-	InformationSprite* info2 = new InformationSprite;
-	info2->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
-	InitInformationList("info2", info2);
+	InformationSprite* info_Sousa = new InformationSprite;
+	info_Sousa->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
+	InitInformationList("Sousa", info_Sousa);
 
 	m_game = FindGO<Game>("game");
 
 	return true;
+}
+
+void InformationUi::InitInformationSprite(const char* listName, const char* filePath)
+{
+	InformationSprite* new_Sprite = new InformationSprite;
+	new_Sprite->InitInformationSpriteParam(filePath, 1920.0f / 2, 1080.0f / 2);
+	InitInformationList(listName, new_Sprite);
 }
 
 void InformationUi::Update()
@@ -51,6 +58,11 @@ void InformationUi::WipeCalc()
 
 		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY -= 23.0f;
 
+		if (GetNowIteratorWipeSizeX() <= -1920.0f)
+		{
+			m_isWipeFullyOpen = true;
+		}
+
 		return;
 	}
 
@@ -64,6 +76,7 @@ void InformationUi::WipeCalc()
 		{
 			m_isInfoDraw = false;
 			m_isInfoWipe = true;
+			m_isWipeFullyOpen = false;
 		}
 	}
 

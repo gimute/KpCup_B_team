@@ -77,6 +77,10 @@ public:
 	/// <returns></returns>
 	bool Start();
 	/// <summary>
+	/// 新しいスプライトを外部から登録する関数
+	/// </summary>
+	void InitInformationSprite(const char* listName, const char* filePath);
+	/// <summary>
 	/// アップデート関数
 	/// </summary>
 	void Update();
@@ -97,6 +101,10 @@ public:
 	/// ワイプの開閉
 	/// </summary>
 	bool m_isInfoWipe = true;
+	/// <summary>
+	/// ワイプが開ききったかどうか
+	/// </summary>
+	bool m_isWipeFullyOpen = false;
 	/////////////////////////////////////////配列
 	/// <summary>
 	/// インフォメーションリスト
@@ -137,12 +145,9 @@ public:
 		{
 			m_isInfoDraw = true;
 			m_game->IsPlayerMove(true);
+			m_game->SlowStart(true, 0);
 		}
-		else
-		{
-			m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX = 0.0f;
-			m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY = 0.0f;
-		}
+
 	}
 	/// <summary>
 	/// 現在のワイプサイズXを取得
@@ -155,10 +160,34 @@ public:
 	/// <summary>
 	/// 開いてるインフォメーションを閉じる関数
 	/// </summary>
-	void InformationClose()
+	void InformationClose(bool slowBool)
 	{
+		if (!m_isWipeFullyOpen)
+		{
+			return;
+		}
+
 		m_isInfoWipe = false;
 		m_game->IsPlayerMove(false);
+		if (slowBool)
+		{
+			g_gameTime->IsSlowMotion(false);
+		}
+	}
+	/// <summary>
+	/// 現在インフォメーション中かどうか
+	/// </summary>
+	/// <returns></returns>
+	bool IsInformationOpen()
+	{
+		if (m_isInfoDraw)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 };
 

@@ -22,7 +22,7 @@ public:
 	{
 		m_timer += g_gameTime->GetFrameDeltaTime();
 		if (m_timer > 0.05f) {
-			m_game->SlowStart(0.05f);
+			m_game->SlowStart(0.05f,4);
 			DeleteGO(this);
 		}
 	}
@@ -70,6 +70,11 @@ bool Player::Start()
 		});
 	//スケール
 	m_modelRender.SetScale(m_scale);
+
+	m_modelRender.SetPosition(m_position);
+
+	m_modelRender.Update();
+
 
 	m_charaCon.Init(25.0f, 40.0f, m_position);
 	

@@ -54,17 +54,14 @@ Game::Game()
 	m_pncSpriteRender.Update();
 	
 
-	//ゲーム開始時ロード画面表示
+	//m_load->enState_FadeOut;
+		//ゲーム開始時ロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
-	//m_load->enState_FadeOut;
 
 	//背景のオブジェクトを作る。
 	m_background = NewGO<BackGround>(0, "background");
 	
-	//ゲームタイマー表示
-	m_gametimer = NewGO<GameTimer>(1, "gametimer");
-
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
@@ -116,6 +113,8 @@ Game::Game()
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
 	m_hpLowBgm = NewGO<SoundSource>(11);
+
+	IsPlayerMove(true);
 }
 
 Game::~Game()
@@ -160,6 +159,31 @@ void Game::NotifyGameOver()
 
 void Game::Update()
 {
+	if (!m_load->IsFade()&& !m_isFirstInfo)
+	{
+		m_infoUi->InitGOInformation("Sousa");
+		m_isFirstInfo = true;
+	}
+
+	if (m_isFirstInfo && !m_isSecondInfo && !m_infoUi->IsInformationOpen())
+	{
+		m_infoUi->InitGOInformation("Mission");
+		m_isSecondInfo = true;
+	}
+
+	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
+	{
+		//ゲームタイマー表示
+		m_gametimer = NewGO<GameTimer>(1, "gametimer");
+		m_isTimerStart = true;
+		g_gameTime->IsSlowMotion(false);
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonA) && !m_isTimerStart)
+	{
+		m_infoUi->InformationClose(false);
+	}
+
 	//アルファチャンネルの調整
 	AlphaCalc();
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
@@ -170,7 +194,10 @@ void Game::Update()
 	switch (m_gameState)
 	{
 	case enIdle:
-		DisplayTime();
+		if (m_isTimerStart)
+		{
+			DisplayTime();
+		}
 		break;
 
 	case enGameClear:
@@ -253,15 +280,11 @@ void Game::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
-		m_infoUi->InitGOInformation("info1");
+		m_infoUi->InitGOInformation("Sousa");
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		m_infoUi->InitGOInformation("info2");
-	}
-	if (g_pad[0]->IsTrigger(enButtonLeft))
-	{
-		m_infoUi->InformationClose();
+		m_infoUi->InitGOInformation("Mission");
 	}
 }
 
@@ -478,9 +501,9 @@ void Game::EventUiDelete(bool mode)
 	}
 }
 
-void Game::SlowStart(float slowTime)
+void Game::SlowStart(float slowTime, int SlowStrength)
 {
-	g_gameTime->IsSlowMotion(true);
+	g_gameTime->IsSlowMotion(true,SlowStrength);
 	m_slowTime = slowTime;
 }
 
