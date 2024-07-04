@@ -15,25 +15,30 @@ InformationUi::~InformationUi()
 	}
 }
 
+namespace {
+	float WIDTH_WIPE_SPEED = 39.0f;
+	float HEIGHT_WIPE_SPEED = 23.0f;
+}
+
 bool InformationUi::Start()
 {
-	InformationSprite* info_Mission = new InformationSprite;
-	info_Mission->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
-	InitInformationList("Mission", info_Mission);
+	//InformationSprite* info_Mission = new InformationSprite;
+	//info_Mission->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
+	//InitInformationList("Mission", info_Mission);
 
-	InformationSprite* info_Sousa = new InformationSprite;
-	info_Sousa->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
-	InitInformationList("Sousa", info_Sousa);
+	//InformationSprite* info_Sousa = new InformationSprite;
+	//info_Sousa->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
+	//InitInformationList("Sousa", info_Sousa);
 
 	m_game = FindGO<Game>("game");
 
 	return true;
 }
 
-void InformationUi::InitInformationSprite(const char* listName, const char* filePath)
+void InformationUi::InitInformationSprite(const char* listName, const char* filePath, const float w, const float h)
 {
 	InformationSprite* new_Sprite = new InformationSprite;
-	new_Sprite->InitInformationSpriteParam(filePath, 1920.0f / 2, 1080.0f / 2);
+	new_Sprite->InitInformationSpriteParam(filePath, w, h);
 	InitInformationList(listName, new_Sprite);
 }
 
@@ -54,9 +59,9 @@ void InformationUi::WipeCalc()
 
 	if (m_isInfoWipe && GetNowIteratorWipeSizeX() >= -1920.0f)
 	{
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX -= 39.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX -= WIDTH_WIPE_SPEED;
 
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY -= 23.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY -= HEIGHT_WIPE_SPEED;
 
 		if (GetNowIteratorWipeSizeX() <= -1920.0f)
 		{
@@ -68,9 +73,9 @@ void InformationUi::WipeCalc()
 
 	if (!m_isInfoWipe) 
 	{
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX += 39.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeX += WIDTH_WIPE_SPEED;
 
-		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY += 23.0f;
+		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY += HEIGHT_WIPE_SPEED;
 
 		if (GetNowIteratorWipeSizeX() >= 0)
 		{

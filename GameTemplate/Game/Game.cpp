@@ -101,6 +101,9 @@ Game::Game()
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
 	//インフォメーションテスト
 	m_infoUi = NewGO<InformationUi>(1, "UI");
+	//登録
+	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
+	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
 	//mapuiテスト6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//ゲーム中のBGMを読み込む
