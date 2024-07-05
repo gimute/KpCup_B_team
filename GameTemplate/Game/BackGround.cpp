@@ -13,6 +13,11 @@ BackGround::~BackGround()
 
 bool BackGround::Start()
 {
+	///どうなんてんだ
+	if (true)
+	{
+		m_position = Vector3::Zero;
+	}
 	//モデルを読み込む。
 	m_modelRender.Init("Assets/modelData/Map/Map6.tkm", nullptr, 0, enModelUpAxisZ, true);
 	//座標を設定する。

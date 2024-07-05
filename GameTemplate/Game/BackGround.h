@@ -10,13 +10,13 @@ public:
 	void Render(RenderContext& rc);
 
 
-//ƒƒ“ƒoŠÖ”
+//ãƒ¡ãƒ³ãƒé–¢æ•°
 
-	ModelRender				m_modelRender;			//ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[B
-	ModelRender				m_floor;				//°—pƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
-	Vector3					m_position;				//À•WB
-	Vector3					m_scale = Vector3::One;	//‘å‚«‚³B
-	PhysicsStaticObject		physicsStaticObject;	//Ã“IƒIƒuƒWƒFƒNƒg‚ğ•Û‚³‚¹‚éB
-	PhysicsStaticObject		physicsStaticObject_floor;	//Ã“IƒIƒuƒWƒFƒNƒg‚ğ•Û‚³‚¹‚éB°—p
+	ModelRender				m_modelRender;			//ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
+	ModelRender				m_floor;				//åºŠç”¨ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ¼
+	Vector3					m_position;				//åº§æ¨™ã€‚
+	Vector3					m_scale = Vector3::One;	//å¤§ãã•ã€‚
+	PhysicsStaticObject		physicsStaticObject;	//é™çš„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿æŒã•ã›ã‚‹ã€‚
+	PhysicsStaticObject		physicsStaticObject_floor;	//é™çš„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿æŒã•ã›ã‚‹ã€‚åºŠç”¨
 };
 

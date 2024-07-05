@@ -5,27 +5,27 @@
 /// </summary>
 
 namespace {
-	//A‚ÌˆÊ’u
+	//Aã®ä½ç½®
 	const Vector3 n_position_A{ -450.0f,342.5f,0.0f };
-	//B‚ÆC‚ÌˆÊ’u
+	//Bã¨Cã®ä½ç½®
 	const Vector3 n_position_BC{ -765.0f,350.0f,0.0f };
-	//B‚ÆC‚ÌŠî“_
+	//Bã¨Cã®åŸºç‚¹
 	const Vector2 n_pivot_BC{ 0,0.5 };
-	//delaytimer‚Ì‰Šúİ’èŠÔ
+	//delaytimerã®åˆæœŸè¨­å®šæ™‚é–“
 	float m_delaytime = 0.7f;
 }
 
 bool HpUi::Start()
 {
-	//‰æ‘œİ’è
+	//ç”»åƒè¨­å®š
 	m_hpUI_A.Init("Assets/modelData/ui_hp/UIV2_A.DDS", 630.0f, 75.0f);
 	m_hpUI_B.Init("Assets/modelData/ui_hp/UIV2_B.DDS", 630.0f, 60.0f);
 	m_hpUI_C.Init("Assets/modelData/ui_hp/UIV2_C.DDS", 630.0f, 60.0f);
-	//ˆÊ’uİ’è
+	//ä½ç½®è¨­å®š
 	m_hpUI_A.SetPosition(n_position_A);
 	m_hpUI_B.SetPosition(n_position_BC);
 	m_hpUI_C.SetPosition(n_position_BC);
-	//Šî“_İ’è
+	//åŸºç‚¹è¨­å®š
 	m_hpUI_B.SetPivot(n_pivot_BC);
 	m_hpUI_C.SetPivot(n_pivot_BC);
 	return true;
@@ -33,11 +33,11 @@ bool HpUi::Start()
 
 void HpUi::Update()
 {
-	//Œ¸ZŒvZˆ—
+	//æ¸›ç®—è¨ˆç®—å‡¦ç†
 	Adjustment();
-	//“§‰ßŒ¸ZŒvZˆ—
+	//é€éæ¸›ç®—è¨ˆç®—å‡¦ç†
 	AdjustmentTransparent();
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	m_hpUI_A.Update();
 	m_hpUI_B.Update();
 	m_hpUI_C.Update();
@@ -45,31 +45,31 @@ void HpUi::Update()
 
 void HpUi::Adjustment()
 {
-	//0ˆÈ‰º‚É‚µ‚È‚¢
+	//0ä»¥ä¸‹ã«ã—ãªã„
 	if (m_nowhp < 0) {
 		m_nowhp = 0;
 	}
-	//Œ»İHP‚ªŒ¸­‚µ‚½‚ç
+	//ç¾åœ¨HPãŒæ¸›å°‘ã—ãŸã‚‰
 	if (m_nowhp < m_oldhp)
 	{
 		float a = m_nowhp;
 		float b = m_fullhp;
-		//Œ»İHP‚ÆÅ‘åHP‚ÌŠ„‡‚ğŒvZ
+		//ç¾åœ¨HPã¨æœ€å¤§HPã®å‰²åˆã‚’è¨ˆç®—
 		float ratio = a / b;
-		//Œ»İ‚Ìm_hpUI_B‚Ìscale.x‚ÆŠ„‡‚ğŒvZ
+		//ç¾åœ¨ã®m_hpUI_Bã®scale.xã¨å‰²åˆã‚’è¨ˆç®—
 		Vector3 changeS_B = m_scale_B;
 		changeS_B.x = m_scale_B.x * ratio;
 		m_hpUI_B.SetScale(changeS_B);
-		//‰ß‹HP‚ÉŒ»İ‚ÌHP‚ğ•Û‘¶
+		//éå»HPã«ç¾åœ¨ã®HPã‚’ä¿å­˜
 		m_oldhp = m_nowhp;
-		//“§‰ß’x‰„ŠJn
+		//é€éé…å»¶é–‹å§‹
 		DecreaseTransitionIN1;
 	}
 }
 
 void HpUi::AdjustmentTransparent()
 {
-	//ƒXƒ^ƒ“ƒoƒCó‘Ô‚Åˆ—‚ğÀs‚µ‚È‚¢
+	//ã‚¹ã‚¿ãƒ³ãƒã‚¤çŠ¶æ…‹ã§å‡¦ç†ã‚’å®Ÿè¡Œã—ãªã„
 	if (DecreaseTransition0)
 		return;
 
@@ -80,65 +80,65 @@ void HpUi::AdjustmentTransparent()
 		{
 			float a = m_nowhp;
 			float b = m_fullhp;
-			//Œ»İHP‚ÆÅ‘åHP‚ÌŠ„‡‚ğŒvZ
+			//ç¾åœ¨HPã¨æœ€å¤§HPã®å‰²åˆã‚’è¨ˆç®—
 			float ratio = a / b;
-			//Œ»İ‚Ìm_hpUI_B‚Ìscale.x‚ÆŠ„‡‚ğŒvZ
+			//ç¾åœ¨ã®m_hpUI_Bã®scale.xã¨å‰²åˆã‚’è¨ˆç®—
 			m_changeS_C.x = m_scale_C.x * ratio;
-			//Œ¸­ˆ—‚ÉˆÚs
+			//æ¸›å°‘å‡¦ç†ã«ç§»è¡Œ
 			DecreaseTransitionIN4;
 		}
 
-		//Œ¸­ˆ—AŒJ‚è•Ô‚µˆ—‚ÅŒvZ‚µ‚½Š„‡‚ÆŒ»İ‚ÌScale.x‚Æ“¯’l‚É‚È‚é‚Ü‚ÅŒ¸Z
+		//æ¸›å°‘å‡¦ç†ã€ç¹°ã‚Šè¿”ã—å‡¦ç†ã§è¨ˆç®—ã—ãŸå‰²åˆã¨ç¾åœ¨ã®Scale.xã¨åŒå€¤ã«ãªã‚‹ã¾ã§æ¸›ç®—
 		if (DecreaseTransition4)
 		{
-			//‚ß‚¿‚á‚­‚¿‚á×‚©‚­Œ¸‚ç‚·
+			//ã‚ã¡ã‚ƒãã¡ã‚ƒç´°ã‹ãæ¸›ã‚‰ã™
 			m_nowScale.x -= 0.009;
-			//0ˆÈ‰º‚¾‚Á‚½‚ç0‚É–ß‚·
+			//0ä»¥ä¸‹ã ã£ãŸã‚‰0ã«æˆ»ã™
 			if (m_nowScale.x < 0)
 			{
 				m_nowScale.x = 0;
 			}
-			//‘å‚«‚³‚ğ•ÏX‚·‚é
+			//å¤§ãã•ã‚’å¤‰æ›´ã™ã‚‹
 			m_hpUI_C.SetScale(m_nowScale);
 
-			//Œ»İscale‚ª•ÏXŒãscaleˆÈ‰º‚É‚È‚Á‚½‚ç
+			//ç¾åœ¨scaleãŒå¤‰æ›´å¾Œscaleä»¥ä¸‹ã«ãªã£ãŸã‚‰
 			if (m_changeS_C.x > m_nowScale.x)
 			{
-				//”O‚Ì‚½‚ß‰Šú‰»
+				//å¿µã®ãŸã‚åˆæœŸåŒ–
 				m_changeS_C = m_scale_C;
 				m_nowScale = m_hpUI_C.GetScale();
-				//ƒXƒ^ƒ“ƒoƒC‚ÉˆÚs
+				//ã‚¹ã‚¿ãƒ³ãƒã‚¤ã«ç§»è¡Œ
 				DecreaseTransitionIN0;
 				return;
 			}
-			//•ÏXŒãˆÈã‚Ìê‡
+			//å¤‰æ›´å¾Œä»¥ä¸Šã®å ´åˆ
 			else
 				return;
 		}
 	}
 
-	//‚±‚±‚©‚ç‰º‚Ìˆ—‚ÍŒ¸­’x‰„‚Ìƒ^ƒCƒ}[ˆ—
+	//ã“ã“ã‹ã‚‰ä¸‹ã®å‡¦ç†ã¯æ¸›å°‘é…å»¶ã®ã‚¿ã‚¤ãƒãƒ¼å‡¦ç†
 
-	//delaytimerŒ¸­ˆ—
+	//delaytimeræ¸›å°‘å‡¦ç†
 	if (0.0 < m_delaytimer && DecreaseTransition2)
 	{
 		m_delaytimer -= g_gameTime->GetFrameDeltaTime();
 	}
-	//delaytimer‚ª0‚É‚È‚Á‚½‚ç
+	//delaytimerãŒ0ã«ãªã£ãŸã‚‰
 	else if (m_delaytimer < 0.0 && DecreaseTransition2)
 	{
-		//“§‰ßUIŒ¸ZŠ„‡ŒvZˆ—‚ÉˆÚs
+		//é€éUIæ¸›ç®—å‰²åˆè¨ˆç®—å‡¦ç†ã«ç§»è¡Œ
 		DecreaseTransitionIN3;
 		return;
 	}
 
-	//m_delayloop‚ªtrue‚Ì‚Í‚±‚±‚©‚çŒã‚Íˆ—‚µ‚È‚¢
+	//m_delayloopãŒtrueã®æ™‚ã¯ã“ã“ã‹ã‚‰å¾Œã¯å‡¦ç†ã—ãªã„
 	if (DecreaseTransition2)
 		return;
 
-	//“§‰ßŒ¸­’x‰„ƒ^ƒCƒ}[‰Šú‰»
+	//é€éæ¸›å°‘é…å»¶ã‚¿ã‚¤ãƒãƒ¼åˆæœŸåŒ–
 	m_delaytimer = m_delaytime;
-	//’x‰„ˆ—‚ÉˆÚs
+	//é…å»¶å‡¦ç†ã«ç§»è¡Œ
 	DecreaseTransitionIN2;
 }
 
@@ -146,11 +146,11 @@ void HpUi::Render(RenderContext& rc)
 {
 	m_game = FindGO<Game>("game");
 	if (m_game->m_TempDelHpUi == true) {
-		//HPUI‚Ì•`‰æˆ—‚ğæ‚É
+		//HPUIã®æç”»å‡¦ç†ã‚’å…ˆã«
 		m_hpUI_A.Draw(rc);
-		//ƒo[‚Ì•`‰æˆ—‚ğŒã‚É
+		//ãƒãƒ¼ã®æç”»å‡¦ç†ã‚’å¾Œã«
 		m_hpUI_C.Draw(rc);
-		//“§‰ßƒo[‚Ì•`‰æˆ—‚ğˆê”ÔŒã‚É
+		//é€éãƒãƒ¼ã®æç”»å‡¦ç†ã‚’ä¸€ç•ªå¾Œã«
 		m_hpUI_B.Draw(rc);
 	}
 }

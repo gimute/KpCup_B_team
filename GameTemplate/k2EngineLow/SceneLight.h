@@ -5,7 +5,7 @@
 
 namespace nsK2EngineLow {
 
-	//ƒfƒBƒŒƒNƒVƒ‡ƒ“ƒ‰ƒCƒg‚Ì\‘¢‘Ì
+	//ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ã‚¤ãƒˆã®æ§‹é€ ä½“
 	struct DirectionLight
 	{
 		Vector3 direction;
@@ -14,18 +14,18 @@ namespace nsK2EngineLow {
 		float pad;
 	};
 
-	//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚Ì\‘¢‘Ì
+	//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®æ§‹é€ ä½“
 	struct SPointLight
 	{
 	private:
-		Vector3 position = g_vec3Zero;		//À•W
-		int isUse = false;					//g—p’†ƒtƒ‰ƒO
-		Vector3 color = g_vec3One;			//ƒ‰ƒCƒg‚ÌƒJƒ‰[
+		Vector3 position = g_vec3Zero;		//åº§æ¨™
+		int isUse = false;					//ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°
+		Vector3 color = g_vec3One;			//ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼
 		float pad1;
-		Vector3 attn = { 1.0f,1.0f,0.0f };	//Œ¸Šƒpƒ‰ƒ[ƒ^Bx‚É‰e‹¿”ÍˆÍAy‚É‚Í‰e‹¿—¦‚É—İæ‚·‚éƒpƒ‰ƒ[ƒ^
+		Vector3 attn = { 1.0f,1.0f,0.0f };	//æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚xã«å½±éŸ¿ç¯„å›²ã€yã«ã¯å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 		float pad2;
 	public:
-		//À•W‚ğİ’è
+		//åº§æ¨™ã‚’è¨­å®š
 		void SetPosition(const Vector3& position)
 		{
 			this->position = position;
@@ -34,13 +34,13 @@ namespace nsK2EngineLow {
 		{
 			SetPosition({ x, y, z });
 		}
-		//À•W‚ğæ“¾
+		//åº§æ¨™ã‚’å–å¾—
 		const Vector3& GetPosition() const
 		{
 			return position;
 		}
 
-		//ƒJƒ‰[‚ğİ’è
+		//ã‚«ãƒ©ãƒ¼ã‚’è¨­å®š
 		void SetColor(const Vector3& color)
 		{
 			this->color = color;
@@ -49,42 +49,42 @@ namespace nsK2EngineLow {
 		{
 			SetColor({ r, g, b });
 		}
-		//ƒJƒ‰[‚ğæ“¾
+		//ã‚«ãƒ©ãƒ¼ã‚’å–å¾—
 		const Vector3& GetColor() const
 		{
 			return color;
 		}
 
-		//”ÍˆÍ‚ğİ’è
+		//ç¯„å›²ã‚’è¨­å®š
 		void SetRange(float range)
 		{
 			attn.x = range;
 		}
-		//‰e‹¿”ÍˆÍ‚ğæ“¾
+		//å½±éŸ¿ç¯„å›²ã‚’å–å¾—
 		float GetRange() const
 		{
 			return attn.x;
 		}
 
-		//‰e‹¿—¦‚Ì—İæ”‚ğİ’èB
+		//å½±éŸ¿ç‡ã®ç´¯ä¹—æ•°ã‚’è¨­å®šã€‚
 		void SetAffectPowParam(float powParam)
 		{
 			attn.y = powParam;
 		}
 
-		//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ğg—p’†‚É‚·‚é
-		//ƒGƒ“ƒWƒ“‚Åg—p‚·‚é‚½‚ß‚ÌŠÖ”‚È‚Ì‚ÅƒQ[ƒ€‘¤‚©‚çŒÄ‚Ño‚³‚È‚¢‚æ‚¤’ˆÓ
+		//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã‚’ä½¿ç”¨ä¸­ã«ã™ã‚‹
+		//ã‚¨ãƒ³ã‚¸ãƒ³ã§ä½¿ç”¨ã™ã‚‹ãŸã‚ã®é–¢æ•°ãªã®ã§ã‚²ãƒ¼ãƒ å´ã‹ã‚‰å‘¼ã³å‡ºã•ãªã„ã‚ˆã†æ³¨æ„
 		void Use()
 		{
 			isUse = true;
 		}
-		//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ğ–¢g—p‚É‚·‚é
-		//ƒGƒ“ƒWƒ“‚Åg—p‚·‚é‚½‚ß‚ÌŠÖ”‚È‚Ì‚ÅƒQ[ƒ€‘¤‚©‚çŒÄ‚Ño‚³‚È‚¢‚æ‚¤’ˆÓ
+		//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã‚’æœªä½¿ç”¨ã«ã™ã‚‹
+		//ã‚¨ãƒ³ã‚¸ãƒ³ã§ä½¿ç”¨ã™ã‚‹ãŸã‚ã®é–¢æ•°ãªã®ã§ã‚²ãƒ¼ãƒ å´ã‹ã‚‰å‘¼ã³å‡ºã•ãªã„ã‚ˆã†æ³¨æ„
 		void UnUse()
 		{
 			isUse = false;
 		}
-		//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ªg—p’†‚©’²‚×‚é
+		//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆãŒä½¿ç”¨ä¸­ã‹èª¿ã¹ã‚‹
 		const int GetUse() const
 		{
 			return isUse;
@@ -92,23 +92,23 @@ namespace nsK2EngineLow {
 
 	};
 
-	//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì\‘¢‘Ì
+	//ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®æ§‹é€ ä½“
 	struct SSpotLight
 	{
 	private:
-		Vector3 position = g_vec3Zero;	//À•W
-		int isUse = false;				//g—p’†ƒtƒ‰ƒO
-		Vector3 color = g_vec3One;		//ƒ‰ƒCƒg‚ÌƒJƒ‰[
-		float range;					//‰e‹¿”ÍˆÍ
-		Vector3 direction = g_vec3Down;	//Ëo•ûŒü
-		float angle;					//ËoŠp“x
-		Vector3 pow = {1.0f,1.0f,0.0f};	//‰e‹¿—¦‚É—İæ‚·‚éƒpƒ‰ƒ[ƒ^
-										//x‚ª‹——£‚É‚æ‚é‰e‹¿—¦‚ÉæZ‚·‚éƒpƒ‰ƒ[ƒ^
-										//y‚ªŠp“x‚É‚æ‚é‰e‹¿—¦‚ÉæZ‚·‚éƒpƒ‰ƒ[ƒ^
+		Vector3 position = g_vec3Zero;	//åº§æ¨™
+		int isUse = false;				//ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°
+		Vector3 color = g_vec3One;		//ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼
+		float range;					//å½±éŸ¿ç¯„å›²
+		Vector3 direction = g_vec3Down;	//å°„å‡ºæ–¹å‘
+		float angle;					//å°„å‡ºè§’åº¦
+		Vector3 pow = {1.0f,1.0f,0.0f};	//å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+										//xãŒè·é›¢ã«ã‚ˆã‚‹å½±éŸ¿ç‡ã«ä¹—ç®—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+										//yãŒè§’åº¦ã«ã‚ˆã‚‹å½±éŸ¿ç‡ã«ä¹—ç®—ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 		float pad;
 
 	public:
-		//À•W‚ğİ’è
+		//åº§æ¨™ã‚’è¨­å®š
 		void SetPosition(const Vector3& position)
 		{
 			this->position = position;
@@ -117,13 +117,13 @@ namespace nsK2EngineLow {
 		{
 			SetPosition({ x, y, z });
 		}
-		//À•W‚ğæ“¾
+		//åº§æ¨™ã‚’å–å¾—
 		const Vector3& GetPosition() const
 		{
 			return position;
 		}
 
-		//ƒ‰ƒCƒg‚ÌƒJƒ‰[‚ğİ’è
+		//ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼ã‚’è¨­å®š
 		void SetColor(const Vector3 color)
 		{
 			this->color = color;
@@ -132,13 +132,13 @@ namespace nsK2EngineLow {
 		{
 			SetColor({ r, g, b });
 		}
-		//ƒ‰ƒCƒg‚ÌƒJƒ‰[‚ğæ“¾
+		//ãƒ©ã‚¤ãƒˆã®ã‚«ãƒ©ãƒ¼ã‚’å–å¾—
 		const Vector3& GetColor() const
 		{
 			return color;
 		}
 
-		//Ëo•ûŒü‚ğİ’è
+		//å°„å‡ºæ–¹å‘ã‚’è¨­å®š
 		void SetDirection(const Vector3& direction)
 		{
 			this->direction = direction;
@@ -149,95 +149,95 @@ namespace nsK2EngineLow {
 			direction.Set(x, y, z);
 			direction.Normalize();
 		}
-		//Ëo•ûŒü‚ğæ“¾
+		//å°„å‡ºæ–¹å‘ã‚’å–å¾—
 		const Vector3& GetDirection() const
 		{
 			return direction;
 		}
 
-		//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğg—p’†‚É‚·‚é
-		//ƒGƒ“ƒWƒ“‚Åg—p‚·‚é‚½‚ß‚ÌŠÖ”‚È‚Ì‚ÅƒQ[ƒ€‘¤‚©‚çŒÄ‚Ño‚³‚È‚¢‚æ‚¤’ˆÓ
+		//ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’ä½¿ç”¨ä¸­ã«ã™ã‚‹
+		//ã‚¨ãƒ³ã‚¸ãƒ³ã§ä½¿ç”¨ã™ã‚‹ãŸã‚ã®é–¢æ•°ãªã®ã§ã‚²ãƒ¼ãƒ å´ã‹ã‚‰å‘¼ã³å‡ºã•ãªã„ã‚ˆã†æ³¨æ„
 		void Use()
 		{
 			isUse = true;
 		}
-		//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğ–¢g—p‚É‚·‚é
-		//ƒGƒ“ƒWƒ“‚Åg—p‚·‚é‚½‚ß‚ÌŠÖ”‚È‚Ì‚ÅƒQ[ƒ€‘¤‚©‚çŒÄ‚Ño‚³‚È‚¢‚æ‚¤’ˆÓ
+		//ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’æœªä½¿ç”¨ã«ã™ã‚‹
+		//ã‚¨ãƒ³ã‚¸ãƒ³ã§ä½¿ç”¨ã™ã‚‹ãŸã‚ã®é–¢æ•°ãªã®ã§ã‚²ãƒ¼ãƒ å´ã‹ã‚‰å‘¼ã³å‡ºã•ãªã„ã‚ˆã†æ³¨æ„
 		void UnUse()
 		{
 			isUse = false;
 		}
-		//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ªg—p’†‚©’²‚×‚é
+		//ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆãŒä½¿ç”¨ä¸­ã‹èª¿ã¹ã‚‹
 		const int GetUse() const
 		{
 			return isUse;
 		}
 
 
-		//‰e‹¿”ÍˆÍ‚ğİ’è
+		//å½±éŸ¿ç¯„å›²ã‚’è¨­å®š
 		void SetRange(float range)
 		{
 			this->range = range;
 		}
-		//‰e‹¿”ÍˆÍ‚ğæ“¾
+		//å½±éŸ¿ç¯„å›²ã‚’å–å¾—
 		const float GetRange() const
 		{
 			return range;
 		}
 
-		//ËoŠp“x‚ğİ’è
+		//å°„å‡ºè§’åº¦ã‚’è¨­å®š
 		void SetAngle(float angle)
 		{
 			this->angle = angle;
 		}
-		//ËoŠp“x‚ğæ“¾
+		//å°„å‡ºè§’åº¦ã‚’å–å¾—
 		const float GetAngle() const
 		{
 			return angle;
 		}
 
-		//Œõ‚Ì‹——£‚É‚æ‚é‰e‹¿—¦‚É—İæ‚·‚é’l‚ğİ’è
+		//å…‰ã®è·é›¢ã«ã‚ˆã‚‹å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹å€¤ã‚’è¨­å®š
 		void SetRangeAffectPowParam(float powParam)
 		{
 			pow.x = powParam;
 		}
 
-		//Œõ‚ÌŠp“x‚É‚æ‚é‰e‹¿—¦‚É—İæ‚·‚é’l‚ğİ’è
+		//å…‰ã®è§’åº¦ã«ã‚ˆã‚‹å½±éŸ¿ç‡ã«ç´¯ä¹—ã™ã‚‹å€¤ã‚’è¨­å®š
 		void SetAngleAffectPowParam(float powParam)
 		{
 			pow.y = powParam;
 		}
 	};
 
-	//ƒ‰ƒCƒg\‘¢‘Ì
+	//ãƒ©ã‚¤ãƒˆæ§‹é€ ä½“
 	struct Light
 	{
 		DirectionLight directionalLight[MAX_DIRECTIONAL_LIGHT];
-		SPointLight pointLights[MAX_POINT_LIGHT];                    // ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚Ì”z—ñB
+		SPointLight pointLights[MAX_POINT_LIGHT];                    // ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®é…åˆ—ã€‚
 		SSpotLight spotLights[MAX_SPOT_LIGHT];
-		Vector3 eyePos;			//‹“_‚ÌˆÊ’u
-		int numPointLight;		//g—p’†‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚Ì”
-		Vector3 ambientLight;	//ŠÂ‹«Œõ
-		int numSpotLight;		//g—p’†‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”
+		Vector3 eyePos;			//è¦–ç‚¹ã®ä½ç½®
+		int numPointLight;		//ä½¿ç”¨ä¸­ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®æ•°
+		Vector3 ambientLight;	//ç’°å¢ƒå…‰
+		int numSpotLight;		//ä½¿ç”¨ä¸­ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®æ•°
 	};
 
-	//ƒV[ƒ“ƒ‰ƒCƒgƒNƒ‰ƒX
+	//ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆã‚¯ãƒ©ã‚¹
 	class SceneLight : public Noncopyable
 	{
 	public:
 		SceneLight();
 
-		//‰Šú‰»
+		//åˆæœŸåŒ–
 		void Init();
 
 
-		//ƒV[ƒ“ƒ‰ƒCƒg‚ğæ“¾
+		//ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆã‚’å–å¾—
 		Light& GetSceneLight()
 		{
 			return m_light;
 		}
 
-		//ƒfƒBƒŒƒNƒVƒ‡ƒ“ƒ‰ƒCƒg‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è
+		//ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ©ã‚¤ãƒˆã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®š
 		void SetDirectionLight(int lightNo, Vector3 direction, Vector3 color)
 		{
 			direction.Normalize();
@@ -245,32 +245,32 @@ namespace nsK2EngineLow {
 			m_light.directionalLight[lightNo].color = color;
 		}
 
-		//‰e‚ğƒLƒƒƒXƒg‚·‚éH
+		//å½±ã‚’ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ï¼Ÿ
 		bool IsCastShadow(int ligNo)
 		{
 			return m_light.directionalLight[ligNo].castShadow;
 		}
 
-		//ŠÂ‹«Œõ‚ğİ’è
+		//ç’°å¢ƒå…‰ã‚’è¨­å®š
 		void SetAmbinet(Vector3 ambient)
 		{
 			m_light.ambientLight = ambient;
 		}
 
-		//XVAŒ»ó‰½‚à‚µ‚Ä‚È‚¢
+		//æ›´æ–°ã€ç¾çŠ¶ä½•ã‚‚ã—ã¦ãªã„
 		void Update();
 
-		//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg”z—ñ‚©‚ç–¢g—p‚Ìƒ‰ƒCƒg‚Ìƒ|ƒCƒ“ƒ^‚ğ’ñ‹Ÿ
+		//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆé…åˆ—ã‹ã‚‰æœªä½¿ç”¨ã®ãƒ©ã‚¤ãƒˆã®ãƒã‚¤ãƒ³ã‚¿ã‚’æä¾›
 		SPointLight* NewPointLight();
 
-		//g—p’†‚Ìƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ğíœ
+		//ä½¿ç”¨ä¸­ã®ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã‚’å‰Šé™¤
 		void DeletePointLight(SPointLight* m_pointlight);
 
 
-		//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì”z—ñ‚©‚ç–¢g—p‚Ìƒ‰ƒCƒg‚Ìƒ|ƒCƒ“ƒ^‚ğ’ñ‹Ÿ
+		//ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®é…åˆ—ã‹ã‚‰æœªä½¿ç”¨ã®ãƒ©ã‚¤ãƒˆã®ãƒã‚¤ãƒ³ã‚¿ã‚’æä¾›
 		SSpotLight* NewSpotLight();
 
-		//g—p’†‚ÌƒXƒ|ƒbƒgƒ‰ƒCƒg‚ğíœ
+		//ä½¿ç”¨ä¸­ã®ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã‚’å‰Šé™¤
 		void DeleteSpotLight(SSpotLight* m_spotlight);
 
 		Light* GetLightData()
@@ -283,7 +283,7 @@ namespace nsK2EngineLow {
 
 
 	private:
-		Light m_light;	//ƒV[ƒ“ƒ‰ƒCƒg
+		Light m_light;	//ã‚·ãƒ¼ãƒ³ãƒ©ã‚¤ãƒˆ
 
 	};
 }
