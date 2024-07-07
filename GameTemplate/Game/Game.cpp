@@ -35,16 +35,16 @@ Game::Game()
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HPãŒãƒ”ãƒ³ãƒãªæ™‚ã®ç”»é¢ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç”»åƒã®è¨­å®š
+	//HP‚ªƒsƒ“ƒ`‚È‚Ì‰æ–ÊƒGƒtƒFƒNƒg‰æ‘œ‚Ìİ’è
 	SpriteInitData initData;
-	//DDSãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆç”»åƒãƒ‡ãƒ¼ã‚¿ï¼‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æŒ‡å®šã™ã‚‹
-	//HPãŒãƒ”ãƒ³ãƒãªæ™‚ã®ç”»é¢ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’æŒ‡å®šã™ã‚‹
+	//DDSƒtƒ@ƒCƒ‹i‰æ‘œƒf[ƒ^j‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚é
+	//HP‚ªƒsƒ“ƒ`‚È‚Ì‰æ–ÊƒGƒtƒFƒNƒg‚Ì‰æ‘œƒf[ƒ^‚ğw’è‚·‚é
 	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
-	//Spriteè¡¨ç¤ºç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æŒ‡å®šã™ã‚‹
+	//Sprite•\¦—p‚ÌƒVƒF[ƒ_[‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚é
 	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
 	initData.m_expandConstantBuffer = &m_alpha;
 	initData.m_expandConstantBufferSize += sizeof(float);
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®å¹…ã¨é«˜ã•ã‚’æŒ‡å®šã™ã‚‹
+	//ƒXƒvƒ‰ƒCƒg‚Ì•‚Æ‚‚³‚ğw’è‚·‚é
 	initData.m_width = static_cast<UINT>(1920);
 	initData.m_height = static_cast<UINT>(1080);
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -55,18 +55,18 @@ Game::Game()
 	
 
 	//m_load->enState_FadeOut;
-		//ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ãƒ­ãƒ¼ãƒ‰ç”»é¢è¡¨ç¤º
+		//ƒQ[ƒ€ŠJnƒ[ƒh‰æ–Ê•\¦
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
 
-	//èƒŒæ™¯ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ã€‚
+	//”wŒi‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚éB
 	m_background = NewGO<BackGround>(0, "background");
 	
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
-			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ã€‚
+			//ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚éB
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
 			return true;
@@ -88,33 +88,45 @@ Game::Game()
 		return true;
 	});
 
-	//ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ã€‚
+	//ƒQ[ƒ€ƒJƒƒ‰‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚éB
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	test = NewGO<EventCamera>(0,"camera");
 
-	//HPUIã‚’ä½œã‚‹
+	//HPUI‚ğì‚é
 	m_hpui = NewGO<HpUi>(1, "UI");
-	//æ®‹å¼¾ç®¡ç†ç”¨UIã‚’ä½œã‚‹
+	//c’eŠÇ——pUI‚ğì‚é
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//å±é™ºä¿¡å·è¡¨ç¤ºUi
+	//ŠëŒ¯M†•\¦Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//ã‚¤ãƒ³ãƒ•ã‚©ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ†ã‚¹ãƒˆ
+	//ƒCƒ“ƒtƒHƒ[ƒVƒ‡ƒ“ƒeƒXƒg
 	m_infoUi = NewGO<InformationUi>(1, "UI");
-	//mapuiãƒ†ã‚¹ãƒˆ6
+	//mapuiƒeƒXƒg6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//ã‚²ãƒ¼ãƒ ä¸­ã®BGMã‚’èª­ã¿è¾¼ã‚€
+	//ƒQ[ƒ€’†‚ÌBGM‚ğ“Ç‚İ‚Ş
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
-	//ã‚²ãƒ¼ãƒ ä¸­ã®BGMã‚’å†ç”Ÿã™ã‚‹
+	//ƒQ[ƒ€’†‚ÌBGM‚ğÄ¶‚·‚é
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
-	//HPãŒãƒ”ãƒ³ãƒã®æ™‚ã®BGMã‚’èª­ã¿è¾¼ã‚€
+	//HP‚ªƒsƒ“ƒ`‚Ì‚ÌBGM‚ğ“Ç‚İ‚Ş
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
 	m_hpLowBgm = NewGO<SoundSource>(11);
 
 	IsPlayerMove(true);
+
+	//ƒƒbƒZ[ƒW‚Ì”wŒi€”õ
+	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
+	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
+	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
+	m_massageBackGround.Update();
+
+	//ƒhƒA‚ªŠJ‚¢‚½‚±‚Æ‚ğ’m‚ç‚¹‚éƒƒbƒZ[ƒW€”õ
+	m_doorOpenMassage.SetText(L"‚Ç‚±‚©‚Ì”à‚ªŠJ‚¢‚½‚æ‚¤‚¾");
+	m_doorOpenMassage.SetScale(0.5f);
+	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
+	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 Game::~Game()
@@ -173,7 +185,7 @@ void Game::Update()
 
 	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
 	{
-		//ã‚²ãƒ¼ãƒ ã‚¿ã‚¤ãƒãƒ¼è¡¨ç¤º
+		//ƒQ[ƒ€ƒ^ƒCƒ}[•\¦
 		m_gametimer = NewGO<GameTimer>(1, "gametimer");
 		m_isTimerStart = true;
 		g_gameTime->IsSlowMotion(false);
@@ -184,7 +196,7 @@ void Game::Update()
 		m_infoUi->InformationClose(false);
 	}
 
-	//ã‚¢ãƒ«ãƒ•ã‚¡ãƒãƒ£ãƒ³ãƒãƒ«ã®èª¿æ•´
+	//ƒAƒ‹ƒtƒ@ƒ`ƒƒƒ“ƒlƒ‹‚Ì’²®
 	AlphaCalc();
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
@@ -201,15 +213,15 @@ void Game::Update()
 		break;
 
 	case enGameClear:
-		//ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ä¸­ã¯UIéè¡¨ç¤º
+		//ƒQ[ƒ€ƒNƒŠƒA’†‚ÍUI”ñ•\¦
 		EventUiDelete(true);
 
 		//m_hpLowBgm->Stop();
 
 		if (!m_load->IsFade()) {
-			//è‡ªèº«ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+			//©g‚ğíœ‚·‚éB
 			DeleteGO(this);
-			//ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã¤ãã‚‹ã€‚
+			//ƒQ[ƒ€ƒNƒŠƒA‚ÌƒIƒuƒWƒFƒNƒg‚ğ‚Â‚­‚éB
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
 
 		}
@@ -218,7 +230,7 @@ void Game::Update()
 	case enGameOver:
 		if (!m_load->IsFade()) {
 
-			//ã‚¨ãƒãƒŸãƒ¼å‰Šé™¤å‡¦ç†
+			//ƒGƒlƒ~[íœˆ—
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -228,25 +240,25 @@ void Game::Update()
 			{
 				DeleteGO(enemy);
 			}
-			//è‡ªèº«ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+			//©g‚ğíœ‚·‚éB
 			DeleteGO(this);
-			//ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã¤ãã‚‹ã€‚
+			//ƒQ[ƒ€ƒI[ƒo[‚ÌƒIƒuƒWƒFƒNƒg‚ğ‚Â‚­‚éB
 			NewGO<GameOver>(0, "gameover");
 		}
 		break;
 	}
 
-	//ã‚¨ãƒãƒŸãƒ¼ã‚’ã™ã¹ã¦å€’ã—ãŸã‚‰
+	//ƒGƒlƒ~[‚ğ‚·‚×‚Ä“|‚µ‚½‚ç
 	if (m_EnemyQua == 0)
 	{
-		//ã‚¨ãƒãƒŸãƒ¼å…¨æ»…ãƒ•ãƒ©ã‚°ã‚’tureã«ã™ã‚‹
+		//ƒGƒlƒ~[‘S–Åƒtƒ‰ƒO‚ğture‚É‚·‚é
 		m_enemyAllKillFlag = true;
 	}
 
-	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPãŒ25ä»¥ä¸‹ãªã‚‰
+	//ƒvƒŒƒCƒ„[‚ÌHP‚ª25ˆÈ‰º‚È‚ç
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
-		//HPãŒãƒ”ãƒ³ãƒãªæ™‚ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+		//HP‚ªƒsƒ“ƒ`‚È‚ÌƒGƒtƒFƒNƒg
 		m_pncDraw = true;
 
 		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
@@ -286,9 +298,26 @@ void Game::Update()
 	{
 		m_infoUi->InitGOInformation("Mission");
 	}
+
+	//ƒGƒlƒ~[‚ª‹‚È‚¢‚©‚ÂAƒQ[ƒ€ƒXƒe[ƒg‚ªIdle‚È‚ç
+	if (!EnemyListExistence() and m_gameState == enIdle)
+	{
+		if (m_massageTimer <= 6.0f)
+		{
+			//ƒGƒlƒ~[‚ğ‚·‚×‚Ä“|‚µ‚½ƒtƒ‰ƒO‚ğtrue‚É
+			m_doorOpenMassageFlag = true;
+			
+			m_massageTimer += g_gameTime->GetFrameDeltaTime();
+		}
+		else
+		{
+			m_doorOpenMassageFlag = false;
+		}
+		
+	}
 }
 
-//ã‚¢ãƒ«ãƒ•ã‚¡ãƒãƒ£ãƒ³ãƒãƒ«ã®èª¿æ•´
+//ƒAƒ‹ƒtƒ@ƒ`ƒƒƒ“ƒlƒ‹‚Ì’²®
 void Game::AlphaCalc()
 {
 	if (m_hpEffect)
@@ -310,7 +339,7 @@ void Game::AlphaCalc()
 	}
 }
 
-//åˆ¶é™æ™‚é–“è¡¨ç¤º
+//§ŒÀŠÔ•\¦
 void Game::DisplayTime()
 {
 	m_gametimer->FontSet();
@@ -395,19 +424,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
-	//ã‚¤ãƒ™ãƒ³ãƒˆã‚·ãƒ¼ãƒ³ãŒå†ç”Ÿä¸­ãªã‚‰
+	//ƒCƒxƒ“ƒgƒV[ƒ“‚ªÄ¶’†‚È‚ç
 	if (test->IsEvent() == true)
 	{
 		m_gameState = enEvent;
 	}
 
-	//ã‚²ãƒ¼ãƒ ã‚¹ãƒ†ãƒ¼ãƒˆãŒIdleãªã‚‰
+	//ƒQ[ƒ€ƒXƒe[ƒg‚ªIdle‚È‚ç
 	if (m_gameState == enIdle)
 	{
-		//ãƒ‰ã‚¢ãŒé–‹ã„ã¦ã„ã‚‹ãªã‚‰
+		//ƒhƒA‚ªŠJ‚¢‚Ä‚¢‚é‚È‚ç
 		if (door1->GetDoorOpenFlag())
 		{
-			//ã‚¨ãƒãƒŸãƒ¼å‰Šé™¤å‡¦ç†
+			//ƒGƒlƒ~[íœˆ—
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -428,7 +457,7 @@ void Game::GameStateTransition()
 			return;
 		}
 
-		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPãŒ0ä»¥ä¸‹ãªã‚‰
+		//ƒvƒŒƒCƒ„[‚ÌHP‚ª0ˆÈ‰º‚È‚ç
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
 			m_hpLowBgm->Stop();
@@ -444,23 +473,23 @@ void Game::GameStateTransition()
 			m_hpLowBgm->Stop();
 		}
 
-		//ã‚¤ãƒ™ãƒ³ãƒˆã‚·ãƒ¼ãƒ³ãŒçµ‚äº†ã—ãŸã‚‰
+		//ƒCƒxƒ“ƒgƒV[ƒ“‚ªI—¹‚µ‚½‚ç
 		if (test->IsEvent() == false)
 		{
 			switch (m_EventAfterState)
 			{
 			case enGameClear:
-				//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã‚’é–‹å§‹
+				//ƒtƒF[ƒhƒAƒEƒg‚ğŠJn
 				m_load->StartFadeOut();
-				//ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã«
+				//ƒXƒe[ƒg‚ğƒQ[ƒ€ƒNƒŠƒA‚É
 				m_gameState = enGameClear;
 
 				break;
 
 			case enGameOver:
-				//ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã‚’é–‹å§‹
+				//ƒtƒF[ƒhƒAƒEƒg‚ğŠJn
 				m_load->StartFadeOut();
-				//ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã«
+				//ƒXƒe[ƒg‚ğƒQ[ƒ€ƒNƒŠƒA‚É
 				m_gameState = enGameOver;
 
 				DeleteGO(m_gametimer);
@@ -516,4 +545,9 @@ void Game::Render(RenderContext& rc)
 		m_pncSpriteRender.Draw(rc);
 	}
 	
+	if (m_doorOpenMassageFlag)
+	{
+		m_massageBackGround.Draw(rc);
+		m_doorOpenMassage.Draw(rc);
+	}
 }
