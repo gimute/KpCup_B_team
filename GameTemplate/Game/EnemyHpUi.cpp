@@ -91,7 +91,7 @@ void EnemyHpUi::DisplayDis()
 	//取得したプレイヤーの位置から取得したエネミーの位置まで伸びるベクトルを計算
 	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
 
-	if (diff.LengthSq() >= LimitedRange * LimitedRange)
+	if (diff.LengthSq() >= LimitedRange * LimitedRange && AngleCheck())
 	{
 		//表示しないようにする。
 		m_isImage = false;
@@ -105,15 +105,20 @@ void EnemyHpUi::DisplayDis()
 
 bool EnemyHpUi::AngleCheck()
 {
+	if (m_Vectornum == -1)
+	{
+		return false;
+	}
+
 	Vector3 EnemyPosition = m_game->GetEnemyListPos(m_Vectornum);
 	Vector3 PlayerPosition = m_player->GetPosition();
 	btTransform start, end;
 	start.setIdentity();
 	end.setIdentity();
 	//始点はプレイヤーの座標
-	start.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
+	start.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
 	//終点はエネミーの座標
-	end.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
+	end.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
 
 	SweepResultWall callback;
 	//制作したコライダーを始点から終点まで動かして壁に接触したか判定
