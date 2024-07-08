@@ -147,7 +147,7 @@ public:
 	/// <summary>
 	/// 配列のナンバー
 	/// </summary>
-	int m_Vectornum = 0;					
+	int m_Vectornum = -1;					
 	/// <summary>
 	/// 描画状態かそうでないか
 	/// </summary>

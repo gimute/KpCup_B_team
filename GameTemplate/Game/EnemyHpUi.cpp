@@ -6,35 +6,35 @@
 
 namespace {
 	/// <summary>
-	/// delaytimer‚Ì‰Šúİ’èŠÔ
+	/// delaytimerã®åˆæœŸè¨­å®šæ™‚é–“
 	/// </summary>
 	float m_delaytime = 0.7f;
 	/// <summary>
-	/// B‚ÆC‚ÌŠî“_
+	/// Bã¨Cã®åŸºç‚¹
 	/// </summary>
 	const Vector2 n_pivot_BC{ 0,0.5 };
 	/// <summary>
-	/// •\¦ŒÀŠE‹——£
+	/// è¡¨ç¤ºé™ç•Œè·é›¢
 	/// </summary>
 	const float LimitedRange = 600.0f;
 }
 
 bool EnemyHpUi::Start()
 {
-	//‰æ‘œİ’è
+	//ç”»åƒè¨­å®š
 	m_hpUI_A.Init("Assets/modelData/ui_hp/Enemy_UIV2_A.DDS", 100.0f, 15.0f);
 	m_hpUI_B.Init("Assets/modelData/ui_hp/Enemy_UIV2_B.DDS", 100.0f, 10.0f);
 	m_hpUI_C.Init("Assets/modelData/ui_hp/Enemy_UIV2_C.DDS", 100.0f, 10.0f);
-	//Šî“_İ’è
+	//åŸºç‚¹è¨­å®š
 	m_hpUI_B.SetPivot(n_pivot_BC);
 	m_hpUI_C.SetPivot(n_pivot_BC);
 
-	//ƒQ[ƒ€‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‚Á‚Ä‚«‚Ä
+	//ã‚²ãƒ¼ãƒ ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒã£ã¦ãã¦
 	m_game = FindGO<Game>("game");
-	//ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚à‚Á‚Ä‚­‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚‚æŒã£ã¦ãã‚‹
 	m_player = FindGO<Player>("player");
 
-	//HP‚ğ‰Šú‰»
+	//HPã‚’åˆæœŸåŒ–
 	SetEnemyHp();
 
 	m_sphereCollider.Create(0.5f);
@@ -44,15 +44,15 @@ bool EnemyHpUi::Start()
 
 void EnemyHpUi::Update()
 {
-	//ˆÊ’uXVˆ—
+	//ä½ç½®æ›´æ–°å‡¦ç†
 	PositionUpdate();
-	//Œ¸ZŒvZˆ—
+	//æ¸›ç®—è¨ˆç®—å‡¦ç†
 	Adjustment();
-	//“§‰ßŒ¸ZŒvZˆ—
+	//é€éæ¸›ç®—è¨ˆç®—å‡¦ç†
 	AdjustmentTransparent();
-	//•\¦‹——£ŒvZˆ—
+	//è¡¨ç¤ºè·é›¢è¨ˆç®—å‡¦ç†
 	DisplayDis();
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	m_hpUI_A.Update();
 	m_hpUI_B.Update();
 	m_hpUI_C.Update();
@@ -63,21 +63,21 @@ void EnemyHpUi::DeleteUi()
 	DeleteGO(this);
 }
 
-//WallCheck‚Ég‚Á‚Ä‚¢‚é\‘¢‘ÌAWallCheck‚ÌˆÊ’u‚ğ“®‚©‚·‚Æ‚«‚Íˆê‚É“®‚©‚µ‚Ä‚­‚¾‚³‚¢
+//WallCheckã«ä½¿ã£ã¦ã„ã‚‹æ§‹é€ ä½“ã€WallCheckã®ä½ç½®ã‚’å‹•ã‹ã™ã¨ãã¯ä¸€ç·’ã«å‹•ã‹ã—ã¦ãã ã•ã„
 struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 {
 	bool isHit = false;
 
 	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
 	{
-		//•Ç‚Æ‚Ô‚Â‚©‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç
+		//å£ã¨ã¶ã¤ã‹ã£ã¦ã„ãªã‹ã£ãŸã‚‰
 		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
 		{
-			//Õ“Ë‚µ‚½‚Ì‚Í•Ç‚Å‚Í‚È‚¢
+			//è¡çªã—ãŸã®ã¯å£ã§ã¯ãªã„
 			return 0.0f;
 		}
 
-		//•Ç‚Æ‚Ô‚Â‚©‚Á‚½‚çƒtƒ‰ƒO‚ğtrue‚É‚·‚é
+		//å£ã¨ã¶ã¤ã‹ã£ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚’trueã«ã™ã‚‹
 		isHit = true;
 		return 0.0f;
 	}
@@ -85,22 +85,23 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 
 void EnemyHpUi::DisplayDis()
 {
-	//ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ğæ“¾
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã‚’å–å¾—
 	Vector3 DisplayCenterPos = m_player->GetPosition();
-	//©g‚Ì”z—ñ”Ô†‚©‚çˆê’v‚·‚éƒGƒlƒ~[‚ÌˆÊ’u‚ğæ“¾
+	//è‡ªèº«ã®é…åˆ—ç•ªå·ã‹ã‚‰ä¸€è‡´ã™ã‚‹ã‚¨ãƒãƒŸãƒ¼ã®ä½ç½®ã‚’å–å¾—
 	Vector3 DisplayTargetPos = m_game->GetEnemyListPos(m_Vectornum);
 
-	//æ“¾‚µ‚½ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚©‚çæ“¾‚µ‚½ƒGƒlƒ~[‚ÌˆÊ’u‚Ü‚ÅL‚Ñ‚éƒxƒNƒgƒ‹‚ğŒvZ
+	//å–å¾—ã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã‹ã‚‰å–å¾—ã—ãŸã‚¨ãƒãƒŸãƒ¼ã®ä½ç½®ã¾ã§ä¼¸ã³ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
 	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
+
 
 	if (AngleCheck(DisplayCenterPos, DisplayTargetPos) || diff.LengthSq() >= LimitedRange * LimitedRange)
 	{
-		//•\¦‚µ‚È‚¢‚æ‚¤‚É‚·‚éB
+		//è¡¨ç¤ºã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã€‚
 		m_isImage = false;
 	}
 	else
 	{
-		//•\¦‚·‚é
+		//è¡¨ç¤ºã™ã‚‹
 		m_isImage = true;
 	}
 }
@@ -110,15 +111,15 @@ bool EnemyHpUi::AngleCheck(const Vector3 PlayerPosition, const Vector3 EnemyPosi
 	btTransform start, end;
 	start.setIdentity();
 	end.setIdentity();
-	//n“_‚ÍƒvƒŒƒCƒ„[‚ÌÀ•W
+	//å§‹ç‚¹ã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™
 	start.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
-	//I“_‚ÍƒGƒlƒ~[‚ÌÀ•W
+	//çµ‚ç‚¹ã¯ã‚¨ãƒãƒŸãƒ¼ã®åº§æ¨™
 	end.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
 
 	SweepResultWall callback;
-	//§ì‚µ‚½ƒRƒ‰ƒCƒ_[‚ğn“_‚©‚çI“_‚Ü‚Å“®‚©‚µ‚Ä•Ç‚ÉÚG‚µ‚½‚©”»’è
+	//åˆ¶ä½œã—ãŸã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å§‹ç‚¹ã‹ã‚‰çµ‚ç‚¹ã¾ã§å‹•ã‹ã—ã¦å£ã«æ¥è§¦ã—ãŸã‹åˆ¤å®š
 	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
-	//•Ç‚ÆÕ“Ë‚µ‚½
+	//å£ã¨è¡çªã—ãŸæ™‚
 	if (callback.isHit == true)
 	{
 		return true;
@@ -130,49 +131,49 @@ bool EnemyHpUi::AngleCheck(const Vector3 PlayerPosition, const Vector3 EnemyPosi
 void EnemyHpUi::PositionUpdate()
 {
 	Vector3 position = m_game->GetEnemyListPos(m_Vectornum);
-	//ƒIƒuƒWƒFƒNƒg‚Ìã‚Ì•û‚É‰æ‘œ‚ğ•\¦‚µ‚½‚¢‚Ì‚ÅB
-	//yÀ•W‚ğ­‚µ‘å‚«‚­‚·‚éB
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¸Šã®æ–¹ã«ç”»åƒã‚’è¡¨ç¤ºã—ãŸã„ã®ã§ã€‚
+	//yåº§æ¨™ã‚’å°‘ã—å¤§ããã™ã‚‹ã€‚
 	position.y += 80.0f;
-	//ƒ[ƒ‹ƒhÀ•W‚©‚çƒXƒNƒŠ[ƒ“À•W‚ğŒvZB
-	//ŒvZŒ‹‰Ê‚ªm_positionA‚É‘ã“ü‚³‚ê‚éB
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’è¨ˆç®—ã€‚
+	//è¨ˆç®—çµæœãŒm_positionAã«ä»£å…¥ã•ã‚Œã‚‹ã€‚
 	g_camera3D->CalcScreenPositionFromWorldPosition(m_positionA, position);
 	m_hpUI_A.SetPosition(Vector3(m_positionA.x, m_positionA.y, 0.0f));
-	//B‚ÆC‚É‚àˆÊ’uİ’è
+	//Bã¨Cã«ã‚‚ä½ç½®è¨­å®š
 	m_hpUI_B.SetPosition(Vector3(m_positionA.x - 50.0f, m_positionA.y, 0.0f));
 	m_hpUI_C.SetPosition(Vector3(m_positionA.x - 50.0f, m_positionA.y, 0.0f));
 }
 
 void EnemyHpUi::Adjustment()
 {
-	//0ˆÈ‰º‚É‚µ‚È‚¢
+	//0ä»¥ä¸‹ã«ã—ãªã„
 	if (m_nowhp < 0) {
 		m_nowhp = 0;
 	}
-	//Œ»İHP‚ªŒ¸­‚µ‚½‚ç
+	//ç¾åœ¨HPãŒæ¸›å°‘ã—ãŸã‚‰
 	if (m_nowhp < m_oldhp)
 	{
 		float a = m_nowhp;
 		float b = m_fullhp;
-		//Œ»İHP‚ÆÅ‘åHP‚ÌŠ„‡‚ğŒvZ
+		//ç¾åœ¨HPã¨æœ€å¤§HPã®å‰²åˆã‚’è¨ˆç®—
 		float ratio = a / b;
-		//Œ»İ‚Ìm_hpUI_B‚Ìscale.x‚ÆŠ„‡‚ğŒvZ
+		//ç¾åœ¨ã®m_hpUI_Bã®scale.xã¨å‰²åˆã‚’è¨ˆç®—
 		Vector3 changeS_B = m_scale_B;
 		changeS_B.x = m_scale_B.x * ratio;
 		m_hpUI_B.SetScale(changeS_B);
-		//‰ß‹HP‚ÉŒ»İ‚ÌHP‚ğ•Û‘¶
+		//éå»HPã«ç¾åœ¨ã®HPã‚’ä¿å­˜
 		m_oldhp = m_nowhp;
-		//“§‰ß’x‰„ŠJn
+		//é€éé…å»¶é–‹å§‹
 		m_decrease_TRAN = en_DelayTimeON_TRAN;
 	}
 }
 
 void EnemyHpUi::AdjustmentTransparent()
 {
-	//ƒXƒ^ƒ“ƒoƒCó‘Ô‚Åˆ—‚ğÀs‚µ‚È‚¢
+	//ã‚¹ã‚¿ãƒ³ãƒã‚¤çŠ¶æ…‹ã§å‡¦ç†ã‚’å®Ÿè¡Œã—ãªã„
 	if (m_decrease_TRAN == en_Standby_TRAN)
 		return;
 
-	//“§‰ßUIŒ¸­ŒvZ’†‚Ü‚½‚Í“§‰ßŒ¸­’†‚Å‚ ‚ê‚Î
+	//é€éUIæ¸›å°‘è¨ˆç®—ä¸­ã¾ãŸã¯é€éæ¸›å°‘ä¸­ã§ã‚ã‚Œã°
 	if (m_decrease_TRAN == en_TransparentDecreaseCalc_TRAN 
 		|| m_decrease_TRAN == en_TransparentDecreaseON_TRAN)
 	{
@@ -180,67 +181,67 @@ void EnemyHpUi::AdjustmentTransparent()
 		{
 			float a = m_nowhp;
 			float b = m_fullhp;
-			//Œ»İHP‚ÆÅ‘åHP‚ÌŠ„‡‚ğŒvZ
+			//ç¾åœ¨HPã¨æœ€å¤§HPã®å‰²åˆã‚’è¨ˆç®—
 			float ratio = a / b;
-			//Œ»İ‚Ìm_hpUI_B‚Ìscale.x‚ÆŠ„‡‚ğŒvZ
+			//ç¾åœ¨ã®m_hpUI_Bã®scale.xã¨å‰²åˆã‚’è¨ˆç®—
 			m_changeS_C.x = m_scale_C.x * ratio;
-			//Œ¸­ˆ—‚ÉˆÚs
+			//æ¸›å°‘å‡¦ç†ã«ç§»è¡Œ
 			m_decrease_TRAN = en_TransparentDecreaseON_TRAN;
 		}
 
-		//Œ¸­ˆ—AŒJ‚è•Ô‚µˆ—‚ÅŒvZ‚µ‚½Š„‡‚ÆŒ»İ‚ÌScale.x‚Æ“¯’l‚É‚È‚é‚Ü‚ÅŒ¸Z
+		//æ¸›å°‘å‡¦ç†ã€ç¹°ã‚Šè¿”ã—å‡¦ç†ã§è¨ˆç®—ã—ãŸå‰²åˆã¨ç¾åœ¨ã®Scale.xã¨åŒå€¤ã«ãªã‚‹ã¾ã§æ¸›ç®—
 		if (m_decrease_TRAN == en_TransparentDecreaseON_TRAN)
 		{
-			//‚ß‚¿‚á‚­‚¿‚á×‚©‚­Œ¸‚ç‚·
+			//ã‚ã¡ã‚ƒãã¡ã‚ƒç´°ã‹ãæ¸›ã‚‰ã™
 			m_nowScale.x -= 0.009;
-			//0ˆÈ‰º‚¾‚Á‚½‚ç0‚É–ß‚·
+			//0ä»¥ä¸‹ã ã£ãŸã‚‰0ã«æˆ»ã™
 			if (m_nowScale.x < 0)
 			{
 				m_nowScale.x = 0;
 			}
-			//‘å‚«‚³‚ğ•ÏX‚·‚é
+			//å¤§ãã•ã‚’å¤‰æ›´ã™ã‚‹
 			m_hpUI_C.SetScale(m_nowScale);
 
-			//Œ»İscale‚ª•ÏXŒãscaleˆÈ‰º‚É‚È‚Á‚½‚ç
+			//ç¾åœ¨scaleãŒå¤‰æ›´å¾Œscaleä»¥ä¸‹ã«ãªã£ãŸã‚‰
 			if (m_changeS_C.x > m_nowScale.x)
 			{
-				//”O‚Ì‚½‚ß‰Šú‰»
+				//å¿µã®ãŸã‚åˆæœŸåŒ–
 				m_changeS_C = m_scale_C;
 				m_nowScale = m_hpUI_C.GetScale();
-				//ƒXƒ^ƒ“ƒoƒC‚ÉˆÚs
+				//ã‚¹ã‚¿ãƒ³ãƒã‚¤ã«ç§»è¡Œ
 				m_decrease_TRAN = en_Standby_TRAN;
 				return;
 			}
-			//•ÏXŒãˆÈã‚Ìê‡
+			//å¤‰æ›´å¾Œä»¥ä¸Šã®å ´åˆ
 			else
 				return;
 		}
 	}
 
-	//‚±‚±‚©‚ç‰º‚Ìˆ—‚ÍŒ¸­’x‰„‚Ìƒ^ƒCƒ}[ˆ—
+	//ã“ã“ã‹ã‚‰ä¸‹ã®å‡¦ç†ã¯æ¸›å°‘é…å»¶ã®ã‚¿ã‚¤ãƒãƒ¼å‡¦ç†
 
-	//delaytimerŒ¸­ˆ—
+	//delaytimeræ¸›å°‘å‡¦ç†
 	if (0.0 < m_delaytimer 
 		&& m_decrease_TRAN == en_DelayTimeLoop_TRAN)
 	{
 		m_delaytimer -= g_gameTime->GetFrameDeltaTime();
 	}
-	//delaytimer‚ª0‚É‚È‚Á‚½‚ç
+	//delaytimerãŒ0ã«ãªã£ãŸã‚‰
 	else if (m_delaytimer < 0.0 
 		&& m_decrease_TRAN == en_DelayTimeLoop_TRAN)
 	{
-		//“§‰ßUIŒ¸ZŠ„‡ŒvZˆ—‚ÉˆÚs
+		//é€éUIæ¸›ç®—å‰²åˆè¨ˆç®—å‡¦ç†ã«ç§»è¡Œ
 		m_decrease_TRAN = en_TransparentDecreaseCalc_TRAN;
 		return;
 	}
 
-	//m_delayloop‚ªtrue‚Ì‚Í‚±‚±‚©‚çŒã‚Íˆ—‚µ‚È‚¢
+	//m_delayloopãŒtrueã®æ™‚ã¯ã“ã“ã‹ã‚‰å¾Œã¯å‡¦ç†ã—ãªã„
 	if (m_decrease_TRAN == en_DelayTimeLoop_TRAN)
 		return;
 
-	//“§‰ßŒ¸­’x‰„ƒ^ƒCƒ}[‰Šú‰»
+	//é€éæ¸›å°‘é…å»¶ã‚¿ã‚¤ãƒãƒ¼åˆæœŸåŒ–
 	m_delaytimer = m_delaytime;
-	//’x‰„ˆ—‚ÉˆÚs
+	//é…å»¶å‡¦ç†ã«ç§»è¡Œ
 	m_decrease_TRAN = en_DelayTimeLoop_TRAN;
 }
 
@@ -248,11 +249,11 @@ void EnemyHpUi::Render(RenderContext& rc)
 {
 	if (m_isImage)
 	{
-		//HPUI‚Ì•`‰æˆ—‚ğæ‚É
+		//HPUIã®æç”»å‡¦ç†ã‚’å…ˆã«
 		m_hpUI_A.Draw(rc);
-		//ƒo[‚Ì•`‰æˆ—‚ğŒã‚É
+		//ãƒãƒ¼ã®æç”»å‡¦ç†ã‚’å¾Œã«
 		m_hpUI_C.Draw(rc);
-		//“§‰ßƒo[‚Ì•`‰æˆ—‚ğˆê”ÔŒã‚É
+		//é€éãƒãƒ¼ã®æç”»å‡¦ç†ã‚’ä¸€ç•ªå¾Œã«
 		m_hpUI_B.Draw(rc);
 	}
 }

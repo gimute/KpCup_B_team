@@ -41,28 +41,28 @@ Player::~Player()
 
 bool Player::Start()
 {
-	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");
+	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/playerV2/un_idle.tka");
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/proto_player/run.tka");
+	m_animationclips[enAnimationClip_Walk].Load("Assets/modelData/player/playerV2/un_run.tka");
 	m_animationclips[enAnimationClip_Walk].SetLoopFlag(true);
 	m_animationclips[enAnimationClip_Crouching].Load("Assets/modelData/player/proto_player/crouching.tka");
 	m_animationclips[enAnimationClip_Crouching].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Punch].Load("Assets/modelData/player/proto_player/punch.tka");
 	m_animationclips[enAnimationClip_Punch].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/proto_player/gunshot_short.tka");
+	m_animationclips[enAnimationClip_Gunshot].Load("Assets/modelData/player/playerV2/un_gunshot_short.tka");
 	m_animationclips[enAnimationClip_Gunshot].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");
+	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/playerV2/un_gunwalk.tka");
 	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_PostureIdle].Load("Assets/modelData/player/proto_player/shotstandby.tka");
+	m_animationclips[enAnimationClip_PostureIdle].Load("Assets/modelData/player/playerV2/un_shotstandby.tka");
 	m_animationclips[enAnimationClip_PostureIdle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/proto_player/rolling.tka");
+	m_animationclips[enAnimationClip_Rolling].Load("Assets/modelData/player/playerV2/un_rolling.tka");
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/proto_player/knockdown.tka");
+	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/playerV2/un_knockdown.tka");
 	m_animationclips[enAnimationClip_knockdown].SetLoopFlag(false);
 
-	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/player/playerV2/un_player.tkm", m_animationclips, enAnimationClip_Num);
 
 	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
