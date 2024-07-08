@@ -68,7 +68,7 @@ public:
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	bool AngleCheck();
+	bool AngleCheck(const Vector3 PlayerPosition, const Vector3 EnemyPosition);
 	/// <summary>
 	/// ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
 	/// </summary>
