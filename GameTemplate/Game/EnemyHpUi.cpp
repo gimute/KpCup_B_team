@@ -37,19 +37,21 @@ bool EnemyHpUi::Start()
 	//HPを初期化
 	SetEnemyHp();
 
+	m_sphereCollider.Create(0.5f);
+
 	return true;
 }
 
 void EnemyHpUi::Update()
 {
-	//表示距離計算処理
-	DisplayDis();
 	//位置更新処理
 	PositionUpdate();
 	//減算計算処理
 	Adjustment();
 	//透過減算計算処理
 	AdjustmentTransparent();
+	//表示距離計算処理
+	DisplayDis();
 	//描画処理
 	m_hpUI_A.Update();
 	m_hpUI_B.Update();
@@ -83,7 +85,7 @@ struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
 
 void EnemyHpUi::DisplayDis()
 {
-	//プレイヤーの一を取得
+	//プレイヤーの位置を取得
 	Vector3 DisplayCenterPos = m_player->GetPosition();
 	//自身の配列番号から一致するエネミーの位置を取得
 	Vector3 DisplayTargetPos = m_game->GetEnemyListPos(m_Vectornum);
@@ -91,7 +93,7 @@ void EnemyHpUi::DisplayDis()
 	//取得したプレイヤーの位置から取得したエネミーの位置まで伸びるベクトルを計算
 	Vector3 diff = DisplayTargetPos - DisplayCenterPos;
 
-	if (diff.LengthSq() >= LimitedRange * LimitedRange)
+	if (AngleCheck(DisplayCenterPos, DisplayTargetPos) || diff.LengthSq() >= LimitedRange * LimitedRange)
 	{
 		//表示しないようにする。
 		m_isImage = false;
@@ -103,17 +105,15 @@ void EnemyHpUi::DisplayDis()
 	}
 }
 
-bool EnemyHpUi::AngleCheck()
+bool EnemyHpUi::AngleCheck(const Vector3 PlayerPosition, const Vector3 EnemyPosition)
 {
-	Vector3 EnemyPosition = m_game->GetEnemyListPos(m_Vectornum);
-	Vector3 PlayerPosition = m_player->GetPosition();
 	btTransform start, end;
 	start.setIdentity();
 	end.setIdentity();
 	//始点はプレイヤーの座標
-	start.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
+	start.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
 	//終点はエネミーの座標
-	end.setOrigin(btVector3(PlayerPosition.x, PlayerPosition.y + 70.0f, PlayerPosition.z));
+	end.setOrigin(btVector3(EnemyPosition.x, EnemyPosition.y + 70.0f, EnemyPosition.z));
 
 	SweepResultWall callback;
 	//制作したコライダーを始点から終点まで動かして壁に接触したか判定
@@ -121,10 +121,10 @@ bool EnemyHpUi::AngleCheck()
 	//壁と衝突した時
 	if (callback.isHit == true)
 	{
-		return false;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void EnemyHpUi::PositionUpdate()
