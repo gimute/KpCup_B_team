@@ -79,7 +79,7 @@ public:
 	/// <summary>
 	/// 新しいスプライトを外部から登録する関数
 	/// </summary>
-	void InitInformationSprite(const char* listName, const char* filePath);
+	void InitInformationSprite(const char* listName, const char* filePath,const float w,const float h);
 	/// <summary>
 	/// アップデート関数
 	/// </summary>
