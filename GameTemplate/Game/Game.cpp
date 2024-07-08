@@ -35,16 +35,16 @@ Game::Game()
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HPがピンチな時の画面エフェクト画像の設定
+	//HP���s���`�Ȏ��̉�ʃG�t�F�N�g�摜�̐ݒ�
 	SpriteInitData initData;
-	//DDSファイル（画像データ）のファイルパスを指定する
-	//HPがピンチな時の画面エフェクトの画像データを指定する
+	//DDS�t�@�C���i�摜�f�[�^�j�̃t�@�C���p�X���w�肷��
+	//HP���s���`�Ȏ��̉�ʃG�t�F�N�g�̉摜�f�[�^���w�肷��
 	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
-	//Sprite表示用のシェーダーのファイルパスを指定する
+	//Sprite�\���p�̃V�F�[�_�[�̃t�@�C���p�X���w�肷��
 	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
 	initData.m_expandConstantBuffer = &m_alpha;
 	initData.m_expandConstantBufferSize += sizeof(float);
-	//スプライトの幅と高さを指定する
+	//�X�v���C�g�̕��ƍ������w�肷��
 	initData.m_width = static_cast<UINT>(1920);
 	initData.m_height = static_cast<UINT>(1080);
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -55,18 +55,18 @@ Game::Game()
 	
 
 	//m_load->enState_FadeOut;
-		//ゲーム開始時ロード画面表示
+		//�Q�[���J�n�����[�h��ʕ\��
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
 
-	//背景のオブジェクトを作る。
+	//�w�i�̃I�u�W�F�N�g�����B
 	m_background = NewGO<BackGround>(0, "background");
 	
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
-			//プレイヤーのオブジェクトを作る。
+			//�v���C���[�̃I�u�W�F�N�g�����B
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
 			return true;
@@ -88,36 +88,48 @@ Game::Game()
 		return true;
 	});
 
-	//ゲームカメラのオブジェクトを作る。
+	//�Q�[���J�����̃I�u�W�F�N�g�����B
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	test = NewGO<EventCamera>(0,"camera");
 
-	//HPUIを作る
+	//HPUI�����
 	m_hpui = NewGO<HpUi>(1, "UI");
-	//残弾管理用UIを作る
+	//�c�e�Ǘ��pUI�����
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//危険信号表示Ui
+	//�댯�M���\��Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//インフォメーションテスト
+	//�C���t�H���[�V�����e�X�g
 	m_infoUi = NewGO<InformationUi>(1, "UI");
 	//登録
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
 	//mapuiテスト6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//ゲーム中のBGMを読み込む
+	//�Q�[������BGM��ǂݍ���
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
-	//ゲーム中のBGMを再生する
+	//�Q�[������BGM���Đ�����
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
-	//HPがピンチの時のBGMを読み込む
+	//HP���s���`�̎���BGM��ǂݍ���
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
 	m_hpLowBgm = NewGO<SoundSource>(11);
 
 	IsPlayerMove(true);
+
+	//���b�Z�[�W�̔w�i����
+	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
+	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
+	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
+	m_massageBackGround.Update();
+
+	//�h�A���J�������Ƃ�m�点�郁�b�Z�[�W����
+	m_doorOpenMassage.SetText(L"�ǂ����̔����J�����悤��");
+	m_doorOpenMassage.SetScale(0.5f);
+	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
+	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
 
 Game::~Game()
@@ -176,7 +188,7 @@ void Game::Update()
 
 	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
 	{
-		//ゲームタイマー表示
+		//�Q�[���^�C�}�[�\��
 		m_gametimer = NewGO<GameTimer>(1, "gametimer");
 		m_isTimerStart = true;
 		g_gameTime->IsSlowMotion(false);
@@ -187,7 +199,7 @@ void Game::Update()
 		m_infoUi->InformationClose(false);
 	}
 
-	//アルファチャンネルの調整
+	//�A���t�@�`�����l���̒���
 	AlphaCalc();
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
@@ -204,15 +216,15 @@ void Game::Update()
 		break;
 
 	case enGameClear:
-		//ゲームクリア中はUI非表示
+		//�Q�[���N���A����UI��\��
 		EventUiDelete(true);
 
 		//m_hpLowBgm->Stop();
 
 		if (!m_load->IsFade()) {
-			//自身を削除する。
+			//���g���폜����B
 			DeleteGO(this);
-			//ゲームクリアのオブジェクトをつくる。
+			//�Q�[���N���A�̃I�u�W�F�N�g������B
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
 
 		}
@@ -221,7 +233,7 @@ void Game::Update()
 	case enGameOver:
 		if (!m_load->IsFade()) {
 
-			//エネミー削除処理
+			//�G�l�~�[�폜����
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -231,25 +243,25 @@ void Game::Update()
 			{
 				DeleteGO(enemy);
 			}
-			//自身を削除する。
+			//���g���폜����B
 			DeleteGO(this);
-			//ゲームオーバーのオブジェクトをつくる。
+			//�Q�[���I�[�o�[�̃I�u�W�F�N�g������B
 			NewGO<GameOver>(0, "gameover");
 		}
 		break;
 	}
 
-	//エネミーをすべて倒したら
+	//�G�l�~�[�����ׂē|������
 	if (m_EnemyQua == 0)
 	{
-		//エネミー全滅フラグをtureにする
+		//�G�l�~�[�S�Ńt���O��ture�ɂ���
 		m_enemyAllKillFlag = true;
 	}
 
-	//プレイヤーのHPが25以下なら
+	//�v���C���[��HP��25�ȉ��Ȃ�
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
-		//HPがピンチな時のエフェクト
+		//HP���s���`�Ȏ��̃G�t�F�N�g
 		m_pncDraw = true;
 
 		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
@@ -289,9 +301,26 @@ void Game::Update()
 	{
 		m_infoUi->InitGOInformation("Mission");
 	}
+
+	//�G�l�~�[�����Ȃ����A�Q�[���X�e�[�g��Idle�Ȃ�
+	if (!EnemyListExistence() and m_gameState == enIdle)
+	{
+		if (m_massageTimer <= 6.0f)
+		{
+			//�G�l�~�[�����ׂē|�����t���O��true��
+			m_doorOpenMassageFlag = true;
+			
+			m_massageTimer += g_gameTime->GetFrameDeltaTime();
+		}
+		else
+		{
+			m_doorOpenMassageFlag = false;
+		}
+		
+	}
 }
 
-//アルファチャンネルの調整
+//�A���t�@�`�����l���̒���
 void Game::AlphaCalc()
 {
 	if (m_hpEffect)
@@ -313,7 +342,7 @@ void Game::AlphaCalc()
 	}
 }
 
-//制限時間表示
+//�������ԕ\��
 void Game::DisplayTime()
 {
 	m_gametimer->FontSet();
@@ -398,19 +427,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
-	//イベントシーンが再生中なら
+	//�C�x���g�V�[�����Đ����Ȃ�
 	if (test->IsEvent() == true)
 	{
 		m_gameState = enEvent;
 	}
 
-	//ゲームステートがIdleなら
+	//�Q�[���X�e�[�g��Idle�Ȃ�
 	if (m_gameState == enIdle)
 	{
-		//ドアが開いているなら
+		//�h�A���J���Ă���Ȃ�
 		if (door1->GetDoorOpenFlag())
 		{
-			//エネミー削除処理
+			//�G�l�~�[�폜����
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -431,7 +460,7 @@ void Game::GameStateTransition()
 			return;
 		}
 
-		//プレイヤーのHPが0以下なら
+		//�v���C���[��HP��0�ȉ��Ȃ�
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
 			m_hpLowBgm->Stop();
@@ -447,23 +476,23 @@ void Game::GameStateTransition()
 			m_hpLowBgm->Stop();
 		}
 
-		//イベントシーンが終了したら
+		//�C�x���g�V�[�����I��������
 		if (test->IsEvent() == false)
 		{
 			switch (m_EventAfterState)
 			{
 			case enGameClear:
-				//フェードアウトを開始
+				//�t�F�[�h�A�E�g���J�n
 				m_load->StartFadeOut();
-				//ステートをゲームクリアに
+				//�X�e�[�g���Q�[���N���A��
 				m_gameState = enGameClear;
 
 				break;
 
 			case enGameOver:
-				//フェードアウトを開始
+				//�t�F�[�h�A�E�g���J�n
 				m_load->StartFadeOut();
-				//ステートをゲームクリアに
+				//�X�e�[�g���Q�[���N���A��
 				m_gameState = enGameOver;
 
 				DeleteGO(m_gametimer);
@@ -519,4 +548,9 @@ void Game::Render(RenderContext& rc)
 		m_pncSpriteRender.Draw(rc);
 	}
 	
+	if (m_doorOpenMassageFlag)
+	{
+		m_massageBackGround.Draw(rc);
+		m_doorOpenMassage.Draw(rc);
+	}
 }

@@ -80,7 +80,7 @@ bool Door::Start()
 
 	//フォントレンダーの設定
 	m_fontRender.SetText(L"敵をすべて倒さないと開かないようだ");
-	m_fontRender.SetScale(0.7f);
+	m_fontRender.SetScale(0.5f);
 	m_fontRender.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_fontRender.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
