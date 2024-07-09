@@ -3,7 +3,7 @@
 
 namespace nsK2EngineLow {
 
-	// ‘¼‚ÌƒRƒŠƒWƒ‡ƒ“‚Æ“–‚½‚è”»’è‚ğs‚¤ƒNƒ‰ƒXB
+	// ä»–ã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã¨å½“ãŸã‚Šåˆ¤å®šã‚’è¡Œã†ã‚¯ãƒ©ã‚¹ã€‚
 	class CollisionObject : public IGameObject
 	{
 	public:
@@ -12,65 +12,65 @@ namespace nsK2EngineLow {
 		bool Start();
 		void Update();
 
-		/// ƒ{ƒbƒNƒXŒ`ó‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg‚ğì¬B
+		/// ãƒœãƒƒã‚¯ã‚¹å½¢çŠ¶ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã€‚
 		/// </summary>
-		/// <param name="pos">À•WB</param>
-		/// <param name="rot">‰ñ“]B</param>
-		/// <param name="size">ƒTƒCƒYB</param>
+		/// <param name="pos">åº§æ¨™ã€‚</param>
+		/// <param name="rot">å›è»¢ã€‚</param>
+		/// <param name="size">ã‚µã‚¤ã‚ºã€‚</param>
 		void CreateBox(Vector3 pos, Quaternion rot, Vector3 size)
 		{
 			m_physicsGhostObject.CreateBox(pos, rot, size);
 		}
 		/// <summary>
-		/// ƒJƒvƒZƒ‹Œ`ó‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg‚ğì¬B
+		/// ã‚«ãƒ—ã‚»ãƒ«å½¢çŠ¶ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã€‚
 		/// </summary>
-		/// <param name="pos">À•WB</param>
-		/// <param name="rot">‰ñ“]B</param>
-		/// <param name="radius">ƒJƒvƒZƒ‹‚Ì”¼ŒaB</param>
-		/// <param name="height">ƒJƒvƒZƒ‹‚Ì‚‚³B</param>
+		/// <param name="pos">åº§æ¨™ã€‚</param>
+		/// <param name="rot">å›è»¢ã€‚</param>
+		/// <param name="radius">ã‚«ãƒ—ã‚»ãƒ«ã®åŠå¾„ã€‚</param>
+		/// <param name="height">ã‚«ãƒ—ã‚»ãƒ«ã®é«˜ã•ã€‚</param>
 		void CreateCapsule(Vector3 pos, Quaternion rot, float radius, float height)
 		{
 			m_physicsGhostObject.CreateCapsule(pos, rot, radius, height);
 		}
 		/// <summary>
-		/// ‹…Œ`ó‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg‚ğì¬B
+		/// çƒå½¢çŠ¶ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã€‚
 		/// </summary>
-		/// <param name="pos">À•WB</param>
-		/// <param name="rot">‰ñ“]B</param>
-		/// <param name="radius">‹…Œ`‚Ì”¼ŒaB</param>
+		/// <param name="pos">åº§æ¨™ã€‚</param>
+		/// <param name="rot">å›è»¢ã€‚</param>
+		/// <param name="radius">çƒå½¢ã®åŠå¾„ã€‚</param>
 		void CreateSphere(Vector3 pos, Quaternion rot, float radius)
 		{
 			m_physicsGhostObject.CreateSphere(pos, rot, radius);
 		}
 		/// <summary>
-		/// ƒƒbƒVƒ…Œ`ó‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg‚ğì¬B
+		/// ãƒ¡ãƒƒã‚·ãƒ¥å½¢çŠ¶ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã€‚
 		/// </summary>
-		/// <param name="pos">À•WB</param>
-		/// <param name="rot">‰ñ“]B</param>
-		/// <param name="model">ƒ‚ƒfƒ‹B</param>
-		/// <param name="worldMatrix">ƒ[ƒ‹ƒhs—ñB</param>
+		/// <param name="pos">åº§æ¨™ã€‚</param>
+		/// <param name="rot">å›è»¢ã€‚</param>
+		/// <param name="model">ãƒ¢ãƒ‡ãƒ«ã€‚</param>
+		/// <param name="worldMatrix">ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã€‚</param>
 		void CreateMesh(Vector3 pos, Quaternion rot, const Model& model, const Matrix& worldMatrix)
 		{
 			m_physicsGhostObject.CreateMesh(pos, rot, model, worldMatrix);
 		}
 		/// <summary>
-		/// İ’è‚µ‚½ŠÔ(•b)‚ªŒo‰ß‚·‚é‚Æ©“®‚Åíœ‚³‚ê‚Ü‚·B0.0f‚ğİ’è‚µ‚½‚ç1ƒtƒŒ[ƒ€Œo‰ß‚Åíœ‚³‚ê‚Ü‚·B
+		/// è¨­å®šã—ãŸæ™‚é–“(ç§’)ãŒçµŒéã™ã‚‹ã¨è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œã¾ã™ã€‚0.0fã‚’è¨­å®šã—ãŸã‚‰1ãƒ•ãƒ¬ãƒ¼ãƒ çµŒéã§å‰Šé™¤ã•ã‚Œã¾ã™ã€‚
 		/// </summary>
-		/// <param name="timeLimit">íœ‚µ‚½‚¢ŠÔ(•b)B</param>
+		/// <param name="timeLimit">å‰Šé™¤ã—ãŸã„æ™‚é–“(ç§’)ã€‚</param>
 		void SetTimeLimit(const float timeLimit)
 		{
 			m_timeLimit = timeLimit;
 		}
 		/// <summary>
-		/// –¼‘O‚ğİ’èB
+		/// åå‰ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="name">–¼‘OB</param>
+		/// <param name="name">åå‰ã€‚</param>
 		void SetName(const char* name)
 		{
 			m_name = name;
 		}
 		/// <summary>
-		/// –¼‘O‚ğæ“¾B
+		/// åå‰ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		const char* GetName() const
@@ -78,7 +78,7 @@ namespace nsK2EngineLow {
 			return m_name;
 		}
 		/// <summary>
-		/// À•W‚ğİ’èB
+		/// åº§æ¨™ã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <param name="position"></param>
 		void SetPosition(const Vector3& position)
@@ -86,7 +86,7 @@ namespace nsK2EngineLow {
 			m_physicsGhostObject.SetPosition(position);
 		}
 		/// <summary>
-		/// ‰ñ“]‚ğİ’èB
+		/// å›è»¢ã‚’è¨­å®šã€‚
 		/// </summary>
 		/// <param name="rotation"></param>
 		void SetRotation(const Quaternion& rotation)
@@ -94,9 +94,9 @@ namespace nsK2EngineLow {
 			m_physicsGhostObject.SetRotation(rotation);
 		}
 		/// <summary>
-		/// s—ñ‚ğİ’èB
+		/// è¡Œåˆ—ã‚’è¨­å®šã€‚
 		/// </summary>
-		/// <param name="rotation">s—ñB</param>
+		/// <param name="rotation">è¡Œåˆ—ã€‚</param>
 		void SetWorldMatrix(const Matrix& matrix)
 		{
 			Vector3 position;
@@ -109,18 +109,18 @@ namespace nsK2EngineLow {
 			SetRotation(rotation);
 		}
 		/// <summary>
-		/// ©“®‚Åíœ‚·‚é‚©‚Ç‚¤‚©‚ğİ’è‚·‚éB
+		/// è‡ªå‹•ã§å‰Šé™¤ã™ã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®šã™ã‚‹ã€‚
 		/// </summary>
-		/// <param name="isFlag">true‚È‚ç©“®‚Åíœ‚³‚ê‚éBfalse‚È‚ç©“®‚Åíœ‚³‚ê‚È‚¢‚Ì‚ÅADeleteGO‚ğ‚·‚é•K—v‚ª‚ ‚éB</param>
+		/// <param name="isFlag">trueãªã‚‰è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œã‚‹ã€‚falseãªã‚‰è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œãªã„ã®ã§ã€DeleteGOã‚’ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚</param>
 		void SetIsEnableAutoDelete(bool isFlag)
 		{
 			m_isEnableAutoDelete = isFlag;
 		}
 		/// <summary>
-		/// ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg“¯m‚Ì“–‚½‚è”»’èB
+		/// ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåŒå£«ã®å½“ãŸã‚Šåˆ¤å®šã€‚
 		/// </summary>
-		/// <param name="collisionObject">Õ“Ë”»’è‚µ‚½‚¢ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgB</param>
-		/// <returns>Õ“Ë‚µ‚½‚çtrueB</returns>
+		/// <param name="collisionObject">è¡çªåˆ¤å®šã—ãŸã„ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</param>
+		/// <returns>è¡çªã—ãŸã‚‰trueã€‚</returns>
 		const bool IsHit(CollisionObject* collisionObject) const
 		{
 			bool isCollision = false;
@@ -132,10 +132,10 @@ namespace nsK2EngineLow {
 			return isCollision;
 		}
 		/// <summary>
-		/// ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ÆƒLƒƒƒ‰ƒRƒ“‚Ì“–‚½‚è”»’èB
+		/// ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã®å½“ãŸã‚Šåˆ¤å®šã€‚
 		/// </summary>
-		/// <param name="collisionObject">Õ“Ë”»’è‚µ‚½‚¢ƒLƒƒƒ‰ƒRƒ“B</param>
-		/// <returns>Õ“Ë‚µ‚½‚çtrueB</returns>
+		/// <param name="collisionObject">è¡çªåˆ¤å®šã—ãŸã„ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã€‚</param>
+		/// <returns>è¡çªã—ãŸã‚‰trueã€‚</returns>
 		const bool IsHit(CharacterController& characterController) const
 		{
 			bool isCollision = false;
@@ -146,58 +146,46 @@ namespace nsK2EngineLow {
 				});
 			return isCollision;
 		}
-
-		const bool IsHit(PhysicsStaticObject& physicsStaticObject) const
-		{
-			bool isCollision = false;
-			PhysicsWorld::GetInstance()->ContactTest(physicsStaticObject.GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
-				if (m_physicsGhostObject.IsSelf(contactObject) == true){
-					isCollision = true;
-				}
-				});
-			return isCollision;
-		}
-
 		/// <summary>
-		/// ƒS[ƒXƒgƒIƒuƒWƒFƒNƒg‚ğæ“¾B
+		/// ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>ƒS[ƒXƒgƒIƒuƒWƒFƒNƒgB</returns>
+		/// <returns>ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</returns>
 		PhysicsGhostObject& GetGhostObject()
 		{
 			return m_physicsGhostObject;
 		}
 		/// <summary>
-		/// btƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğæ“¾B
+		/// btã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>btƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgB</returns>
+		/// <returns>btã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</returns>
 		btCollisionObject& GetbtCollisionObject()
 		{
 			return m_physicsGhostObject.GetbtCollisionObject();
 		}
 		/// <summary>
-		/// “–‚½‚è”»’è‚ª—LŒø‚©‚Ç‚¤‚©‚ğİ’è‚·‚éB
+		/// å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ã‹ã©ã†ã‹ã‚’è¨­å®šã™ã‚‹ã€‚
 		/// </summary>
-		/// <param name="isEnable">—LŒø‚É‚µ‚½‚¢‚È‚çtrueB</param>
+		/// <param name="isEnable">æœ‰åŠ¹ã«ã—ãŸã„ãªã‚‰trueã€‚</param>
 		void SetIsEnable(bool isEnable)
 		{
 			m_isEnable = isEnable;
 		}
 		/// <summary>
-		/// “–‚½‚è”»’è‚ª—LŒø‚©‚Ç‚¤‚©‚ğæ“¾‚·‚éB
+		/// å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ã€‚
 		/// </summary>
-		/// <returns>“–‚½‚è”»’è‚ª—LŒø‚È‚çtrueB</returns>
+		/// <returns>å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰trueã€‚</returns>
 		const bool IsEnable() const
 		{
 			return m_isEnable;
 		}
 
 	private:
-		PhysicsGhostObject			m_physicsGhostObject;				//ƒS[ƒXƒgƒIƒuƒWƒFƒNƒgB
-		const char*					m_name = nullptr;					//–¼‘OB
-		float						m_timer = 0.0f;						//ƒ^ƒCƒ}[B
-		float						m_timeLimit = 0.0f;					//íœ‚³‚ê‚é‚Ü‚Å‚ÌŠÔB
-		bool						m_isEnableAutoDelete = true;		//©“®‚Åíœ‚³‚ê‚é‚È‚çtrueB
-		bool						m_isEnable = true;					//true‚È‚ç“–‚½‚è”»’è—LŒøB
+		PhysicsGhostObject			m_physicsGhostObject;				//ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚
+		const char*					m_name = nullptr;					//åå‰ã€‚
+		float						m_timer = 0.0f;						//ã‚¿ã‚¤ãƒãƒ¼ã€‚
+		float						m_timeLimit = 0.0f;					//å‰Šé™¤ã•ã‚Œã‚‹ã¾ã§ã®æ™‚é–“ã€‚
+		bool						m_isEnableAutoDelete = true;		//è‡ªå‹•ã§å‰Šé™¤ã•ã‚Œã‚‹ãªã‚‰trueã€‚
+		bool						m_isEnable = true;					//trueãªã‚‰å½“ãŸã‚Šåˆ¤å®šæœ‰åŠ¹ã€‚
 	};
 
 	class CollisionObjectManager
@@ -210,18 +198,18 @@ namespace nsK2EngineLow {
 			m_collisionObjectVector.push_back(collisionObject);
 		}
 		/// <summary>
-		/// –¼‘O‚ªŠ®‘Sˆê’v‚·‚éƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚·‚éB‚±‚¿‚ç‚Í1‚Â‚¾‚¯B
+		/// åå‰ãŒå®Œå…¨ä¸€è‡´ã™ã‚‹ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã™ã‚‹ã€‚ã“ã¡ã‚‰ã¯1ã¤ã ã‘ã€‚
 		/// </summary>
-		/// <param name="name">–¼‘OB</param>
-		/// <returns>ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgBŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍnullptrB</returns>
+		/// <param name="name">åå‰ã€‚</param>
+		/// <returns>ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã¯nullptrã€‚</returns>
 		CollisionObject* FindCollisionObject(const char* name)
 		{
 			for (auto collisionObject : m_collisionObjectVector)
 			{
-				//–¼‘Oˆê’vI
+				//åå‰ä¸€è‡´ï¼
 				if (strcmp(collisionObject->GetName(), name) == 0)
 				{
-					//“–‚½‚è”»’è‚ª—LŒø‚È‚çB
+					//å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰ã€‚
 					if (collisionObject->IsEnable() == true)
 					{
 						return collisionObject;
@@ -231,10 +219,10 @@ namespace nsK2EngineLow {
 			return nullptr;
 		}
 		/// <summary>
-		/// –¼‘O‚ª‘O•ûˆê’v‚·‚éƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚·‚éB‚±‚¿‚ç‚Í1‚Â‚¾‚¯B
+		/// åå‰ãŒå‰æ–¹ä¸€è‡´ã™ã‚‹ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã™ã‚‹ã€‚ã“ã¡ã‚‰ã¯1ã¤ã ã‘ã€‚
 		/// </summary>
-		/// <param name="name">–¼‘OB</param>
-		/// <returns>ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgBŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚ÍnullptrB</returns>
+		/// <param name="name">åå‰ã€‚</param>
+		/// <returns>ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã¯nullptrã€‚</returns>
 		const CollisionObject* FindMatchForwardNameCollisionObject(const char* name) const
 		{
 			for (auto collisionObject : m_collisionObjectVector)
@@ -242,12 +230,12 @@ namespace nsK2EngineLow {
 				auto len = strlen(name);
 				auto namelen = strlen(collisionObject->GetName());
 				if (len > namelen) {
-					//–¼‘O‚ª’·‚¢B•sˆê’vB
+					//åå‰ãŒé•·ã„ã€‚ä¸ä¸€è‡´ã€‚
 					continue;
 				}
 				if (strncmp(name, collisionObject->GetName(), len) == 0)
 				{
-					//“–‚½‚è”»’è‚ª—LŒø‚È‚çB
+					//å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰ã€‚
 					if (collisionObject->IsEnable() == true)
 					{
 						return collisionObject;
@@ -257,19 +245,19 @@ namespace nsK2EngineLow {
 			return nullptr;
 		}
 		/// <summary>
-		/// –¼‘O‚ªŠ®‘Sˆê’v‚·‚éƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚·‚éB‚±‚¿‚ç‚Í•¡”B
+		/// åå‰ãŒå®Œå…¨ä¸€è‡´ã™ã‚‹ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã™ã‚‹ã€‚ã“ã¡ã‚‰ã¯è¤‡æ•°ã€‚
 		/// </summary>
-		/// <param name="name">–¼‘OB</param>
-		/// <returns>ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚Ì”z—ñB</returns>
+		/// <param name="name">åå‰ã€‚</param>
+		/// <returns>ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—ã€‚</returns>
 		const std::vector<CollisionObject*>& FindCollisionObjects(const char* name)
 		{
 			m_findMatchForwardNameCollisionObjectVector.clear();
 			for (auto collisionObject : m_collisionObjectVector)
 			{
-				//–¼‘Oˆê’vI
+				//åå‰ä¸€è‡´ï¼
 				if (strcmp(collisionObject->GetName(), name) == 0)
 				{
-					//“–‚½‚è”»’è‚ª—LŒø‚È‚çB
+					//å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰ã€‚
 					if (collisionObject->IsEnable() == true)
 					{
 						m_findMatchForwardNameCollisionObjectVector.push_back(collisionObject);
@@ -279,10 +267,10 @@ namespace nsK2EngineLow {
 			return m_findMatchForwardNameCollisionObjectVector;
 		}
 		/// <summary>
-		/// –¼‘O‚ª‘O•ûˆê’v‚·‚éƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚·‚éB‚±‚¿‚ç‚Í•¡”B
+		/// åå‰ãŒå‰æ–¹ä¸€è‡´ã™ã‚‹ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã™ã‚‹ã€‚ã“ã¡ã‚‰ã¯è¤‡æ•°ã€‚
 		/// </summary>
-		/// <param name="name">–¼‘OB</param>
-		/// <returns>ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚Ì”z—ñB</returns>
+		/// <param name="name">åå‰ã€‚</param>
+		/// <returns>ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—ã€‚</returns>
 		const std::vector<CollisionObject*>& FindMatchForwardNameCollisionObjects(const char* name)
 		{
 			m_findsCollisionObjectVector.clear();
@@ -291,12 +279,12 @@ namespace nsK2EngineLow {
 				auto len = strlen(name);
 				auto namelen = strlen(collisionObject->GetName());
 				if (len > namelen) {
-					//–¼‘O‚ª’·‚¢B•sˆê’vB
+					//åå‰ãŒé•·ã„ã€‚ä¸ä¸€è‡´ã€‚
 					continue;
 				}
 				if (strncmp(name, collisionObject->GetName(), len) == 0)
 				{
-					//“–‚½‚è”»’è‚ª—LŒø‚È‚çB
+					//å½“ãŸã‚Šåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰ã€‚
 					if (collisionObject->IsEnable() == true)
 					{
 						m_findsCollisionObjectVector.push_back(collisionObject);
@@ -306,18 +294,18 @@ namespace nsK2EngineLow {
 			return m_findsCollisionObjectVector;
 		}
 		/// <summary>
-		/// ”z—ñ‚©‚çƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğíœB
+		/// é…åˆ—ã‹ã‚‰ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤ã€‚
 		/// </summary>
-		/// <param name="deleteCollisionObject">íœ‚µ‚½‚¢ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒgB</param>
+		/// <param name="deleteCollisionObject">å‰Šé™¤ã—ãŸã„ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€‚</param>
 		void RemoveCollisionObject(CollisionObject* deleteCollisionObject)
 		{
 			for (auto it = m_collisionObjectVector.begin(); it != m_collisionObjectVector.end();) {
-				// ğŒˆê’v‚µ‚½—v‘f‚ğíœ‚·‚é
+				// æ¡ä»¶ä¸€è‡´ã—ãŸè¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 				if (*it == deleteCollisionObject) {
-					// íœ‚³‚ê‚½—v‘f‚ÌŸ‚ğw‚·ƒCƒeƒŒ[ƒ^‚ª•Ô‚³‚ê‚éB
+					// å‰Šé™¤ã•ã‚ŒãŸè¦ç´ ã®æ¬¡ã‚’æŒ‡ã™ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ãŒè¿”ã•ã‚Œã‚‹ã€‚
 					it = m_collisionObjectVector.erase(it);
 				}
-				// —v‘fíœ‚ğ‚µ‚È‚¢ê‡‚ÉAƒCƒeƒŒ[ƒ^‚ği‚ß‚é
+				// è¦ç´ å‰Šé™¤ã‚’ã—ãªã„å ´åˆã«ã€ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’é€²ã‚ã‚‹
 				else {
 					++it;
 				}

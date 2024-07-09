@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "Bullet.h"
-#include "BackGround.h"
 
-//ì‚é‚Í‚±‚ñ‚ÈŠ´‚¶‚Å«
+//ä½œã‚‹æ™‚ã¯ã“ã‚“ãªæ„Ÿã˜ã§â†“
 //if (g_pad[0]->IsTrigger(enButtonB))
 //{
 //	m_bullet = NewGO<Bullet>(0, "bullet");
@@ -11,12 +10,32 @@
 //	m_bullet->SetPosition(m_position);
 //}
 
+//WallCheckã«ä½¿ã£ã¦ã„ã‚‹æ§‹é€ ä½“ã€WallCheckã®ä½ç½®ã‚’å‹•ã‹ã™ã¨ãã¯ä¸€ç·’ã«å‹•ã‹ã—ã¦ãã ã•ã„
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//å£ã¨ã¶ã¤ã‹ã£ã¦ã„ãªã‹ã£ãŸã‚‰
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//è¡çªã—ãŸã®ã¯å£ã§ã¯ãªã„
+			return 0.0f;
+		}
+
+		//å£ã¨ã¶ã¤ã‹ã£ãŸã‚‰ãƒ•ãƒ©ã‚°ã‚’trueã«ã™ã‚‹
+		isHit = true;
+		return 0.0f;
+	}
+};
+
 namespace {
-	//’eŠÛÁ‹ƒfƒBƒŒƒCƒ^ƒCƒ}[
+	//å¼¾ä¸¸æ¶ˆå»ãƒ‡ã‚£ãƒ¬ã‚¤ã‚¿ã‚¤ãƒãƒ¼
 	const float deletetimer = 0.1f;
-	//‘å‚«‚³
+	//å¤§ãã•
 	const Vector3 scale = { 1.5f,1.5f,1.5f };
-	//ˆÊ’uC³
+	//ä½ç½®ä¿®æ­£
 	const Vector3 corre = { 0.0f,55.0f,0.0f };
 }
 
@@ -34,9 +53,9 @@ bool Bullet::Start()
 	m_position += corre;
 
 	
-	//ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚éB
+	//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ã€‚
 	m_collisionObject = NewGO<CollisionObject>(0);
-	//‹…ó‚ÌƒRƒŠƒWƒ‡ƒ“‚ğì¬‚·‚éB
+	//çƒçŠ¶ã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’ä½œæˆã™ã‚‹ã€‚
 	m_collisionObject->CreateSphere(m_position, Quaternion::Identity, 20.0f * m_scale.z);
 	if (m_shotType == en_Player)
 	{
@@ -46,7 +65,7 @@ bool Bullet::Start()
 	{
 		m_collisionObject->SetName("enemy_attack");
 	}
-	//ƒRƒŠƒWƒ‡ƒ“ƒIƒuƒWƒFƒNƒg‚ª©“®‚Åíœ‚³‚ê‚È‚¢‚æ‚¤‚É‚·‚éB
+	//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒè‡ªå‹•ã§å‰Šé™¤ã•ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹ã€‚
 	m_collisionObject->SetIsEnableAutoDelete(false);
 	
 	return true;
@@ -54,33 +73,59 @@ bool Bullet::Start()
 
 void Bullet::Update()
 {
-	//’eŠÛˆÚ“®
+	//å¼¾ä¸¸ç§»å‹•
 	Movebullet();
-	//‰ñ“]ˆ—
+	//å›è»¢å‡¦ç†
 	Rotation();
-	//’eŠÛŠÔÁ–Åˆ—
+	//å¼¾ä¸¸æ™‚é–“æ¶ˆæ»…å‡¦ç†
 	Inpacttime();
-	//’eŠÛ‘ÎÛÕ“Ëˆ—
+	//å¼¾ä¸¸å¯¾è±¡è¡çªå‡¦ç†
 	Inpacthit();
-	//’eŠÛÁ‹ˆ—
+	//å¼¾ä¸¸æ¶ˆå»å‡¦ç†
 	deletebullet();
-	//•`‰æˆ—
+
+	//æ¬¡ã®ç§»å‹•å…ˆã¨ãªã‚‹åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹ã€‚
+	Vector3 nextPosition = m_position;
+	//é€Ÿåº¦ã‹ã‚‰ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã®ç§»å‹•é‡ã‚’æ±‚ã‚ã‚‹ã€‚ã‚ªã‚¤ãƒ©ãƒ¼ç©åˆ†ã€‚
+	Vector3 addPos = m_velocity * 0.8f;
+	addPos.Scale(g_gameTime->GetFrameDeltaTime());
+	nextPosition.Add(addPos);
+
+	m_sphereCollider.Create(0.5f);
+
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	//å§‹ç‚¹ã¯å¼¾ä¸¸ã®åŸºç‚¹
+	start.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
+	end.setOrigin(btVector3(nextPosition.x, m_position.y, nextPosition.z));
+	SweepResultWall callback;
+
+	//è¡çªæ¤œå‡ºã€‚
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+	if (callback.isHit) {
+		//å½“ãŸã£ãŸã€‚
+		DeleteGO(m_collisionObject);
+		DeleteGO(this);
+	}
+	//æç”»å‡¦ç†
 	m_modelrender.Update();
 }
 
 void Bullet::Movebullet()
 {
-	//À•W‚ğˆÚ“®‚³‚¹‚éB
+	//åº§æ¨™ã‚’ç§»å‹•ã•ã›ã‚‹ã€‚
 	m_position += m_velocity * g_gameTime->GetFrameDeltaTime();
 	m_modelrender.SetPosition(m_position);
 	m_collisionObject->SetPosition(m_position);
-	bullettime -= g_gameTime->GetFrameDeltaTime();	//©‘RÁ‹ƒ^ƒCƒ}[‚ğŒ¸‚ç‚·ƒ„ƒc
+	bullettime -= g_gameTime->GetFrameDeltaTime();	//è‡ªç„¶æ¶ˆå»ã‚¿ã‚¤ãƒãƒ¼ã‚’æ¸›ã‚‰ã™ãƒ¤ãƒ„
 }
 
 void Bullet::Rotation()
 {
-	//³Šm‚É‚Í’eŠÛ‚ğˆÚ“®•ûŒü‚ÉŒü‚©‚¹‚éƒvƒƒOƒ‰ƒ€
-				//ˆÚ“®‘¬“x‚ğ«‚É“ü‚ê‚é‚Æ‚Å‚«‚éB
+	//æ­£ç¢ºã«ã¯å¼¾ä¸¸ã‚’ç§»å‹•æ–¹å‘ã«å‘ã‹ã›ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+				//ç§»å‹•é€Ÿåº¦ã‚’â†“ã«å…¥ã‚Œã‚‹ã¨ã§ãã‚‹ã€‚
 	float angle = atan2(-m_velocity.x, m_velocity.z);
 	m_rotation.SetRotationY(-angle);
 	m_modelrender.SetRotation(m_rotation);
@@ -105,18 +150,18 @@ void Bullet::Inpacthit()
 	}
 
 	if (m_collisionObject->GetName() == "player_attack") {
-		//enemy‚ÌƒRƒŠƒWƒ‡ƒ“‚ğæ“¾‚·‚é												//«enemy‚Ì‹¤’ÊƒRƒŠƒWƒ‡ƒ“
+		//enemyã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’å–å¾—ã™ã‚‹												//â†“enemyã®å…±é€šã‚³ãƒªã‚¸ãƒ§ãƒ³
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_col");
-		//ƒRƒŠƒWƒ‡ƒ“‚Ì”z—ñ‚ğfor•¶‚Å‰ñ‚·
+		//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®é…åˆ—ã‚’foræ–‡ã§å›ã™
 		for (auto collision : collisions)
 		{
-			//ƒRƒŠƒWƒ‡ƒ“‚ÆƒLƒƒƒ‰ƒRƒ“‚ªÕ“Ë‚µ‚½‚ç
+			//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã¨ã‚­ãƒ£ãƒ©ã‚³ãƒ³ãŒè¡çªã—ãŸã‚‰
 			if (collision->IsHit(m_collisionObject))
 			{
 				if (m_isDelete == false) {
-					//deletebullet‚Ìif•¶‚ª’Ê‚é‚æ‚¤‚É‚·‚é
+					//deletebulletã®ifæ–‡ãŒé€šã‚‹ã‚ˆã†ã«ã™ã‚‹
 					m_isDelete = true;
-					//deletetimer‚ÍŒ»İ0.2f
+					//deletetimerã¯ç¾åœ¨0.2f
 					m_deleteTimer = deletetimer;
 				}
 			}
@@ -124,18 +169,18 @@ void Bullet::Inpacthit()
 	}
 
 	if (m_collisionObject->GetName() == "enemy_attack") {
-		//player‚ÌƒRƒŠƒWƒ‡ƒ“‚ğæ“¾‚·‚é
+		//playerã®ã‚³ãƒªã‚¸ãƒ§ãƒ³ã‚’å–å¾—ã™ã‚‹
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("player_col");
-		//ƒRƒŠƒWƒ‡ƒ“‚Ì”z—ñ‚ğfor•¶‚Å‰ñ‚·
+		//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã®é…åˆ—ã‚’foræ–‡ã§å›ã™
 		for (auto collision : collisions)
 		{
-			//ƒRƒŠƒWƒ‡ƒ“‚ÆƒLƒƒƒ‰ƒRƒ“‚ªÕ“Ë‚µ‚½‚ç
+			//ã‚³ãƒªã‚¸ãƒ§ãƒ³ã¨ã‚­ãƒ£ãƒ©ã‚³ãƒ³ãŒè¡çªã—ãŸã‚‰
 			if (collision->IsHit(m_collisionObject))
 			{
 				if (m_isDelete == false) {
-					//deletebullet‚Ìif•¶‚ª’Ê‚é‚æ‚¤‚É‚·‚é
+					//deletebulletã®ifæ–‡ãŒé€šã‚‹ã‚ˆã†ã«ã™ã‚‹
 					m_isDelete = true;
-					//deletetimer‚ÍŒ»İ0.2f
+					//deletetimerã¯ç¾åœ¨0.2f
 					m_deleteTimer = deletetimer;
 				}
 			}
@@ -149,9 +194,9 @@ void Bullet::deletebullet()
 	if (m_isDelete)
 	{
 
-		m_deleteTimer -= g_gameTime->GetFrameDeltaTime(); //deletetimer‚ğ1ƒtƒŒ[ƒ€‚¸‚Â
-		//Œ¸‚ç‚·B
-			//«ƒ^ƒCƒ}[‚ªƒ[ƒ‚É‚È‚Á‚½‚çB(deletetimer‚æ‚è0‚Ì•û‚ª‘å‚«‚­‚È‚Á‚½‚ç)
+		m_deleteTimer -= g_gameTime->GetFrameDeltaTime(); //deletetimerã‚’1ãƒ•ãƒ¬ãƒ¼ãƒ ãšã¤
+		//æ¸›ã‚‰ã™ã€‚
+			//â†“ã‚¿ã‚¤ãƒãƒ¼ãŒã‚¼ãƒ­ã«ãªã£ãŸã‚‰ã€‚(deletetimerã‚ˆã‚Š0ã®æ–¹ãŒå¤§ãããªã£ãŸã‚‰)
 		if (m_deleteTimer <= 0.0f)
 		{
 			DeleteGO(m_collisionObject);
