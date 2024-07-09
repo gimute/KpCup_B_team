@@ -1,4 +1,7 @@
 #pragma once
+
+class BackGround;
+
 class Bullet : public IGameObject
 {
 public:
@@ -34,6 +37,8 @@ public:
 	ModelRender m_modelrender;
 	//コリジョンオブジェクト
 	CollisionObject* m_collisionObject;
+	//バックグラウンドのインスタンス格納変数
+	BackGround* m_backGround = nullptr;
 	/////////////////////////////////////////変数
 	//正面ベクトル
 	Vector3 m_forward = Vector3::AxisZ;
