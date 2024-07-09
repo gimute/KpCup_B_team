@@ -146,6 +146,18 @@ namespace nsK2EngineLow {
 				});
 			return isCollision;
 		}
+
+		const bool IsHit(PhysicsStaticObject& physicsStaticObject) const
+		{
+			bool isCollision = false;
+			PhysicsWorld::GetInstance()->ContactTest(physicsStaticObject.GetbtCollisionObject(), [&](const btCollisionObject& contactObject) {
+				if (m_physicsGhostObject.IsSelf(contactObject) == true){
+					isCollision = true;
+				}
+				});
+			return isCollision;
+		}
+
 		/// <summary>
 		/// ゴーストオブジェクトを取得。
 		/// </summary>
