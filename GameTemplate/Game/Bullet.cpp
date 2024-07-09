@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Bullet.h"
-
 //作る時はこんな感じで↓
 //if (g_pad[0]->IsTrigger(enButtonB))
 //{
@@ -9,6 +8,26 @@
 //	m_bullet->Setrotation(m_rotation);
 //	m_bullet->SetPosition(m_position);
 //}
+
+//WallCheckに使っている構造体、WallCheckの位置を動かすときは一緒に動かしてください
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//壁とぶつかっていなかったら
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//衝突したのは壁ではない
+			return 0.0f;
+		}
+
+		//壁とぶつかったらフラグをtrueにする
+		isHit = true;
+		return 0.0f;
+	}
+};
 
 namespace {
 	//弾丸消去ディレイタイマー
@@ -59,6 +78,32 @@ void Bullet::Update()
 	Inpacthit();
 	//弾丸消去処理
 	deletebullet();
+
+	//次の移動先となる座標を計算する。
+	Vector3 nextPosition = m_position;
+	//速度からこのフレームでの移動量を求める。オイラー積分。
+	Vector3 addPos = m_velocity * 0.8f;
+	addPos.Scale(g_gameTime->GetFrameDeltaTime());
+	nextPosition.Add(addPos);
+
+	m_sphereCollider.Create(0.5f);
+
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	//始点は弾丸の基点
+	start.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
+	end.setOrigin(btVector3(nextPosition.x, m_position.y, nextPosition.z));
+	SweepResultWall callback;
+
+	//衝突検出。
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+	if (callback.isHit) {
+		//当たった。
+		DeleteGO(m_collisionObject);
+		DeleteGO(this);
+	}
 	//描画処理
 	m_modelrender.Update();
 }

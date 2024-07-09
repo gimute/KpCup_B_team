@@ -146,6 +146,7 @@ namespace nsK2EngineLow {
 				});
 			return isCollision;
 		}
+
 		/// <summary>
 		/// ゴーストオブジェクトを取得。
 		/// </summary>

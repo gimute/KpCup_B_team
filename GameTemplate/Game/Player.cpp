@@ -436,6 +436,25 @@ void Player::Collision()
 	}
 }
 
+struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
+	{
+		//壁とぶつかっていなかったら
+		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			//衝突したのは壁ではない
+			return 0.0f;
+		}
+
+		//壁とぶつかったらフラグをtrueにする
+		isHit = true;
+		return 0.0f;
+	}
+};
+
 void Player::AttackRotation()
 {
 	m_forward = Vector3::AxisZ;
@@ -469,6 +488,28 @@ void Player::AttackRotation()
 			m_reloadTime = 3.5f;
 			return;
 		}
+		m_sphereCollider.Create(0.5f);
+
+		btTransform start, end;
+		start.setIdentity();
+		end.setIdentity();
+
+		Vector3 endPos = m_forward;
+		endPos *= 100.0f;
+		endPos += m_position;
+
+		//始点は弾丸の基点
+		start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+		end.setOrigin(btVector3(endPos.x, m_position.y + 70.0f, endPos.z));
+		SweepResultWall callback;
+
+		//衝突検出。
+		PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+		if (callback.isHit) {
+			//当たった。
+			m_remainingBullets--;
+			return;
+		}
 
 		m_bullet = NewGO<Bullet>(0, "bullet");
 		Quaternion rot;
@@ -488,25 +529,6 @@ void Player::AttackRotation()
 		shot = true;
 	}	
 }
-
-struct SweepResultWall :public btCollisionWorld::ConvexResultCallback
-{
-	bool isHit = false;
-
-	virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& covexResult, bool normalInWorldSpace)
-	{
-		//壁とぶつかっていなかったら
-		if (covexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
-		{
-			//衝突したのは壁ではない
-			return 0.0f;
-		}
-
-		//壁とぶつかったらフラグをtrueにする
-		isHit = true;
-		return 0.0f;
-	}
-};
 
 bool Player::AngleCheck(const Vector3 froward ,const Vector3& position)
 {

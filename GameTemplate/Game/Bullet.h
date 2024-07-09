@@ -54,6 +54,8 @@ public:
 	bool m_isDelete = false;
 	//誰が撃ったかの判定
 	ShotType m_shotType = en_None;
+	//コリダー
+	SphereCollider m_sphereCollider;
 	/////////////////////////////////////////初期設定系統
 	//進行方向設定(プレイヤーの正面ベクトルなど)
 	void SetMoveDirection(const Vector3 direction)

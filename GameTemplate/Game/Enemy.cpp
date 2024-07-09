@@ -686,6 +686,28 @@ void Enemy::OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 	}
 	else if (wcscmp(eventName, L"A_shot_point") == 0)
 	{
+		m_sphereCollider.Create(0.5f);
+
+		btTransform start, end;
+		start.setIdentity();
+		end.setIdentity();
+
+		Vector3 endPos = m_forward;
+		endPos *= 100.0f;
+		endPos += m_position;
+
+		//始点は弾丸の基点
+		start.setOrigin(btVector3(m_position.x, m_position.y + 70.0f, m_position.z));
+		end.setOrigin(btVector3(endPos.x, m_position.y + 70.0f, endPos.z));
+		SweepResultWall callback;
+
+		//衝突検出。
+		PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+		if (callback.isHit) {
+			//当たった。
+			return;
+		}
+
 		Vector3 m_shotPos = m_player->GetPosition() - m_position;
 		m_shotPos.Normalize();
 
