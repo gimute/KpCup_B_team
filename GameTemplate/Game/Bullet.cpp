@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bullet.h"
+#include "BackGround.h"
 
 //作る時はこんな感じで↓
 //if (g_pad[0]->IsTrigger(enButtonB))
@@ -16,15 +17,19 @@ namespace {
 	//大きさ
 	const Vector3 scale = { 1.5f,1.5f,1.5f };
 	//位置修正
-	const Vector3 corre = { 0.0f,40.0f,0.0f };
+	const Vector3 corre = { 0.0f,55.0f,0.0f };
 }
 
 bool Bullet::Start()
 {
+	m_backGround = FindGO<BackGround>("background");
+
 	m_modelrender.Init("Assets/modelData/bullet/bullet_proto.tkm");
 
 	m_rotation.Apply(m_velocity);
-	m_position += m_velocity * 50.0f;
+	m_position.x += m_velocity.x * 20.0f;
+	m_position.z += m_velocity.z * 20.0f;
+	m_position.y += m_velocity.y * 70.0f;
 	m_velocity *= 1200.0f;
 	m_position += corre;
 
@@ -93,6 +98,12 @@ void Bullet::Inpacttime()
 
 void Bullet::Inpacthit()
 {
+	if (m_collisionObject->IsHit(m_backGround->physicsStaticObject))
+	{
+		DeleteGO(m_collisionObject);
+		DeleteGO(this);
+	}
+
 	if (m_collisionObject->GetName() == "player_attack") {
 		//enemyのコリジョンを取得する												//↓enemyの共通コリジョン
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_col");
