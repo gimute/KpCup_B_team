@@ -141,7 +141,6 @@ void Bullet::Inpacttime()
 
 void Bullet::Inpacthit()
 {
-
 	if (m_collisionObject->GetName() == "player_attack") {
 		//enemyのコリジョンを取得する												//↓enemyの共通コリジョン
 		const auto& collisions = g_collisionObjectManager->FindCollisionObjects("enemy_col");
