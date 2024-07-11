@@ -41,8 +41,6 @@ namespace {
 
 bool Bullet::Start()
 {
-	m_backGround = FindGO<BackGround>("background");
-
 	m_modelrender.Init("Assets/modelData/bullet/bullet_proto.tkm");
 
 	m_rotation.Apply(m_velocity);
@@ -143,11 +141,6 @@ void Bullet::Inpacttime()
 
 void Bullet::Inpacthit()
 {
-	if (m_collisionObject->IsHit(m_backGround->physicsStaticObject))
-	{
-		DeleteGO(m_collisionObject);
-		DeleteGO(this);
-	}
 
 	if (m_collisionObject->GetName() == "player_attack") {
 		//enemyのコリジョンを取得する												//↓enemyの共通コリジョン
