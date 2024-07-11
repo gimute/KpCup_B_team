@@ -707,7 +707,7 @@ void Player::ProcessCommonStateTransition()
 		return;
 	}
 
-	if (g_pad[0]->IsTrigger(enButtonRB1))
+	if (g_pad[0]->IsTrigger(enButtonLB1))
 	{
 		//カメラの前方向と右方向のベクトルを持ってくる。
 		Vector3 forward = g_camera3D->GetForward();
@@ -757,7 +757,7 @@ void Player::ProcessCommonStateTransition()
 			rot.Apply(m_forward);
 		}
 	}
-	if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isReload)
+	if (g_pad[0]->IsTrigger(enButtonX) && !m_isReload)
 	{
 		if (!m_isReload || m_remainingBullets == 17)
 		{
@@ -766,7 +766,7 @@ void Player::ProcessCommonStateTransition()
 			m_reloadTime = 3.0f;
 		}
 	}
-	if (g_pad[0]->IsPress(enButtonRB1))
+	if (g_pad[0]->IsPress(enButtonLB1))
 	{
 		//構えなしの足音が再生中なら
 		if (m_playerWalk->IsPlaying())
@@ -805,7 +805,7 @@ void Player::ProcessCommonStateTransition()
 		}
 		m_playerstate = enPlayerState_PostureWalk;
 		// 
-		if (g_pad[0]->IsTrigger(enButtonRB1))
+		if (g_pad[0]->IsTrigger(enButtonLB1))
 		{
 			//銃を構えた時の効果音を流す
 			SoundSource* m_gunStance = NewGO<SoundSource>(0);

@@ -35,6 +35,16 @@ bool MapUi::Start()
 	//位置を設定
 	m_mapUiPlayerPoint.SetPosition(MAP_POSITION);
 
+	//マップの目的地指すヤツポインタ(矢印)画像を読み込む
+	m_mapNextDestinationPointArrow.Init("Assets/modelData/ui_map/MapNextDestinationPoint.DDS", 240.0f, 240.0f);
+	//位置を設定
+	m_mapNextDestinationPointArrow.SetPosition(MAP_POSITION);
+
+	//マップの目的地指すヤツポインタ(〇)画像を読み込む
+	m_mapNextDestInationPointCircle.Init("Assets/modelData/ui_map/MapNextDestinationPointPos.DDS", 30.0f, 30.0f);
+	//位置を設定
+	m_mapNextDestInationPointCircle.SetPosition(MAP_POSITION);
+
 	m_game = FindGO<Game>("game");
 
 	m_player = FindGO<Player>("player");
@@ -55,6 +65,8 @@ void MapUi::Update()
 
 	EnemyPointDisplay();
 
+	NextDestinationPointDisplay();
+
 	m_mapUiBase.Update();
 	m_mapUiFrame.Update();	
 	for (const auto& ptr : m_mapUiEnemyPointList)
@@ -62,6 +74,7 @@ void MapUi::Update()
 		ptr.second->m_mapUiEnemyPoint.Update();
 	}
 	m_mapUiPlayerPoint.Update();
+	m_mapNextDestinationPointArrow.Update();
 }
 
 void MapUi::MapPlayerPointUpdate()
@@ -257,6 +270,59 @@ bool MapUi::IsMapLimited(const Vector3 determineTargetPos)
 	return true;
 }
 
+void MapUi::NextDestinationPointDisplay()
+{
+	if (!m_isMapNextDestinationPointDraw)
+	{
+		return;
+	}
+
+	Vector3 playerPos = m_player->GetPosition();
+	Vector3 mapPos;
+
+	WorldPositionConvertToMapPosition(playerPos, m_mapNextDestinationPointPos, mapPos);
+
+	m_mapNextDestInationPointCircle.SetPosition(mapPos);
+
+	m_isMapNextDestinationPointDrawArrowOrCircle = IsMapLimited(m_mapNextDestInationPointCircle
+		.GetPosition());
+
+	m_mapNextDestInationPointCircle.Update();
+
+	if (m_isMapNextDestinationPointDrawArrowOrCircle)
+	{
+		return;
+	}
+
+	Vector3 CamForward = g_camera3D->GetForward();
+	CamForward.Normalize();
+	CamForward.y = 0.0f;
+
+	Vector3 camup2d;
+
+	camup2d.x = CamForward.x;
+	camup2d.y = CamForward.z;
+
+	Vector3 PlayerPos = m_player->GetPosition();
+
+	Vector3 NextDestinationForward = m_mapNextDestinationPointPos - PlayerPos;
+
+	NextDestinationForward.y = 0.0f;
+
+	NextDestinationForward.Normalize();
+
+	Vector3 uiplayerforward;
+	uiplayerforward.x = NextDestinationForward.x;
+	uiplayerforward.y = NextDestinationForward.z;
+
+	Quaternion rot;
+	rot.SetRotation(camup2d,uiplayerforward);
+
+	m_isMapNextDestinationPointDrawArrowOrCircle = false;
+
+	m_mapNextDestinationPointArrow.SetRotation(rot);
+}
+
 void MapUi::Render(RenderContext& rc)
 {
 	if (m_game->m_TempDelHpUi == true) {
@@ -270,5 +336,16 @@ void MapUi::Render(RenderContext& rc)
 			}
 		}
 		m_mapUiPlayerPoint.Draw(rc);
+		if (m_isMapNextDestinationPointDraw)
+		{
+			if (m_isMapNextDestinationPointDrawArrowOrCircle)
+			{
+				m_mapNextDestInationPointCircle.Draw(rc);
+			}
+			else
+			{
+				m_mapNextDestinationPointArrow.Draw(rc);
+			}
+		}
 	}
 }

@@ -295,7 +295,7 @@ void Game::Update()
 
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
-		m_infoUi->InitGOInformation("Sousa");
+		m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
 	}
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
@@ -309,6 +309,8 @@ void Game::Update()
 		{
 			//�G�l�~�[�����ׂē|�����t���O��true��
 			m_doorOpenMassageFlag = true;
+
+			m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
 			
 			m_massageTimer += g_gameTime->GetFrameDeltaTime();
 		}

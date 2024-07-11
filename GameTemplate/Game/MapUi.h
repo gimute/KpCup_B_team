@@ -94,6 +94,10 @@ public:
 	/// </summary>
 	void EnemyPointDisplay();
 	/// <summary>
+	/// 目的地ポインタ処理
+	/// </summary>
+	void NextDestinationPointDisplay();
+	/// <summary>
 	/// マップ処理
 	/// </summary>
 	/// <param name="worldCenterPosition"></param>
@@ -125,6 +129,18 @@ public:
 	/// 現在のエネミーの数
 	/// </summary>
 	int nowenemynumber = -1;
+	/// <summary>
+	/// 次の目的地を指すヤツを描画するかどうか
+	/// </summary>
+	bool m_isMapNextDestinationPointDraw = false;
+	/// <summary>
+	/// 丸を描画するか矢印を描画するか、falseで矢印trueで丸
+	/// </summary>
+	bool m_isMapNextDestinationPointDrawArrowOrCircle = false;
+	/// <summary>
+	/// 次の目的地の座標
+	/// </summary>
+	Vector3 m_mapNextDestinationPointPos = Vector3::Zero;
 	/////////////////////////////////////////スプライト
 	/// <summary>
 	/// マップフレームスプライト
@@ -138,11 +154,30 @@ public:
 	/// マッププレイヤーポインタスプライト
 	/// </summary>
 	SpriteRender m_mapUiPlayerPoint;
+	/// <summary>
+	/// 次の目的地の指すヤツポイント(矢印)
+	/// </summary>
+	SpriteRender m_mapNextDestinationPointArrow;
+	/// <summary>
+	/// 次の目的地の指すヤツポイント(〇)
+	/// </summary>
+	SpriteRender m_mapNextDestInationPointCircle;
+	
 	/////////////////////////////////////////配列
 	/// <summary>
 	/// エネミーポインタスプライトの構造体のアドレスを格納するmap
 	/// </summary>
 	std::map<int, MapUi_EnemyPoint*> m_mapUiEnemyPointList;
 	/////////////////////////////////////////メンバ関数
+	/// <summary>
+	/// 目的地ポインタを出す
+	/// </summary>
+	/// <param name="SetPosition"></param>
+	void InitGOMapUiPlayerPoint(const Vector3 SetPosition)
+	{
+		m_isMapNextDestinationPointDraw = true;
+
+		m_mapNextDestinationPointPos = SetPosition;
+	}
 };
 
