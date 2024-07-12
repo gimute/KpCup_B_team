@@ -33,21 +33,21 @@ bool Enemy::Start()
 	//
 
 	//アニメーション読み込み
-	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/player/proto_player/idle.tka");					//待機
+	m_animationclips[enAnimationClip_Idle].Load("Assets/modelData/enemy/un_idle.tka");									//待機
 	m_animationclips[enAnimationClip_Idle].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/player/proto_player/run.tka");					//走り
+	m_animationclips[enAnimationClip_Chase].Load("Assets/modelData/enemy/un_run.tka");									//走り
 	m_animationclips[enAnimationClip_Chase].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/player/proto_player/gunshot.tka");				//射撃
+	m_animationclips[enAnimationClip_Attack].Load("Assets/modelData/enemy/un_gunshot.tka");							//射撃
 	m_animationclips[enAnimationClip_Attack].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/player/proto_player/shotstandby.tka");		//構え
+	m_animationclips[enAnimationClip_ShotStandby].Load("Assets/modelData/enemy/un_shotstandby.tka");					//構え
 	m_animationclips[enAnimationClip_ShotStandby].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/player/proto_player/gunwalk.tka");			//構え歩き
+	m_animationclips[enAnimationClip_PostureWalk].Load("Assets/modelData/enemy/un_gunwalk.tka");						//構え歩き
 	m_animationclips[enAnimationClip_PostureWalk].SetLoopFlag(true);
-	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");		//被ダメージ
-	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
+	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/enemy/un_receivedamage.tka");						//被ダメージ
+	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);	
 
 	//モデル読み込み
-	m_modelRender.Init("Assets/modelData/player/proto_player/proto_player2.tkm", m_animationclips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/enemy/un_enemy_Pistol.tkm", m_animationclips, enAnimationClip_Num);
 
 	//アニメーションイベント用の関数を設定する。
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
