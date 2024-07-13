@@ -173,6 +173,7 @@ private:
 	SoundSource* m_hpLowBgm;
 
 	SpriteRender m_massageBackGround;	//メッセージ背景
+	SpriteRender m_spRenUnKnDown;		//メッセージの最後にアンダーバー
 	FontRender m_doorOpenMassage;		//ドアが開いたことを知らせるメッセージ
 	bool m_doorOpenMassageFlag = false;	//ドアが開いたことを知らせるメッセージ表示フラグ
 	float m_massageTimer;				//メッセージを表示する時間を制御するタイマー

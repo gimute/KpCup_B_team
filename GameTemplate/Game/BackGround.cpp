@@ -29,7 +29,7 @@ bool BackGround::Start()
 	physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
 	//モデルを読み込む
-	m_floor.Init("Assets/modelData/Map/Map_floor.tkm", nullptr, 0, enModelUpAxisZ, false, true);
+	m_floor.Init("Assets/modelData/Map/Map_floorV2.tkm", nullptr, 0, enModelUpAxisZ, false, true);
 
 	//影を落とさないに用に設定
 	m_floor.SetShadowChasterFlag(false);

@@ -74,13 +74,13 @@ bool Door::Start()
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
 	m_spRen_under.Init(initData);
-	m_spRen_under.SetPosition(Vector3{ 165.0f,-373.0f,0.0f });
+	m_spRen_under.SetPosition(Vector3{ 150.0f,-378.0f,0.0f });
 	//m_spRen_under.SetMulColor({ 1.0f,1.0f,1.0f,1.0f });
 	m_spRen_under.Update();
 
 	//フォントレンダーの設定
 	m_fontRender.SetText(L"敵をすべて倒さないと開かないようだ");
-	m_fontRender.SetScale(0.5f);
+	m_fontRender.SetScale(0.35f);
 	m_fontRender.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_fontRender.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 

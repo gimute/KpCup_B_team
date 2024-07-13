@@ -35,16 +35,16 @@ Game::Game()
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HPï¿½ï¿½ï¿½sï¿½ï¿½ï¿½`ï¿½Èï¿½ï¿½Ì‰ï¿½ÊƒGï¿½tï¿½Fï¿½Nï¿½gï¿½æ‘œï¿½Ìİ’ï¿½
+	//HP???s???`???????G?t?F?N?g??????
 	SpriteInitData initData;
-	//DDSï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½iï¿½æ‘œï¿½fï¿½[ï¿½^ï¿½jï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
-	//HPï¿½ï¿½ï¿½sï¿½ï¿½ï¿½`ï¿½Èï¿½ï¿½Ì‰ï¿½ÊƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ì‰æ‘œï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
+	//DDS?t?@?C???i???f?[?^?j??t?@?C???p?X???w????
+	//HP???s???`???????G?t?F?N?g????f?[?^???w????
 	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
-	//Spriteï¿½\ï¿½ï¿½ï¿½pï¿½ÌƒVï¿½Fï¿½[ï¿½_ï¿½[ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
+	//Sprite?\???p??V?F?[?_?[??t?@?C???p?X???w????
 	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
 	initData.m_expandConstantBuffer = &m_alpha;
 	initData.m_expandConstantBufferSize += sizeof(float);
-	//ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½gï¿½Ì•ï¿½ï¿½Æï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
+	//?X?v???C?g???????????w????
 	initData.m_width = static_cast<UINT>(1920);
 	initData.m_height = static_cast<UINT>(1080);
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -55,18 +55,18 @@ Game::Game()
 	
 
 	//m_load->enState_FadeOut;
-		//ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½Ê•\ï¿½ï¿½
+		//?Q?[???J?n?????[?h???\??
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
 
-	//ï¿½wï¿½iï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½B
+	//?w?i??I?u?W?F?N?g?????B
 	m_background = NewGO<BackGround>(0, "background");
 	
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
-			//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½B
+			//?v???C???[??I?u?W?F?N?g?????B
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
 			return true;
@@ -88,46 +88,63 @@ Game::Game()
 		return true;
 	});
 
-	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½B
+	//?Q?[???J??????I?u?W?F?N?g?????B
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	test = NewGO<EventCamera>(0,"camera");
 
-	//HPUIï¿½ï¿½ï¿½ï¿½ï¿½
+	//HPUI?????
 	m_hpui = NewGO<HpUi>(1, "UI");
-	//ï¿½cï¿½eï¿½Ç—ï¿½ï¿½pUIï¿½ï¿½ï¿½ï¿½ï¿½
+	//?c?e????pUI?????
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//ï¿½ëŒ¯ï¿½Mï¿½ï¿½ï¿½\ï¿½ï¿½Ui
+	//???M???\??Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//ï¿½Cï¿½ï¿½ï¿½tï¿½Hï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Xï¿½g
+	//?C???t?H???[?V?????e?X?g
 	m_infoUi = NewGO<InformationUi>(1, "UI");
-	//ç™»éŒ²
+	//“o˜^
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
-	//mapuiãƒ†ã‚¹ãƒˆ6
+	//mapuiƒeƒXƒg6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BGMï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
+	//?Q?[??????BGM???????
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
-	//ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BGMï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
+	//?Q?[??????BGM?????????
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
-	//HPï¿½ï¿½ï¿½sï¿½ï¿½ï¿½`ï¿½Ìï¿½ï¿½ï¿½BGMï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
+	//HP???s???`?????BGM???????
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
 	m_hpLowBgm = NewGO<SoundSource>(11);
 
 	IsPlayerMove(true);
 
-	//ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Ì”wï¿½iï¿½ï¿½ï¿½ï¿½
+	//???b?Z?[?W??w?i????
 	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
 	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
 	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_massageBackGround.Update();
 
-	//ï¿½hï¿½Aï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½mï¿½ç‚¹ï¿½éƒï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½
-	m_doorOpenMassage.SetText(L"ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½ï¿½");
-	m_doorOpenMassage.SetScale(0.5f);
+	// ƒAƒ“ƒ_[ƒo[‰æ‘œ‚Ìİ’è
+	SpriteInitData UnKnDown;
+	//ƒXƒ^[ƒgƒ{ƒ^ƒ“‚Ì‰æ‘œƒf[ƒ^‚ğw’è‚·‚é
+	UnKnDown.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
+	//Sprite•\¦—p‚ÌƒVƒF[ƒ_[‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚é
+	UnKnDown.m_fxFilePath = "Assets/shader/spriteUnKnDown.fx";
+	UnKnDown.m_expandConstantBuffer = &m_alpha;
+	UnKnDown.m_expandConstantBufferSize += sizeof(float);
+	//Sprite‚Ì•‚Æ‚‚³‚ğw’è‚·‚é
+	UnKnDown.m_width = static_cast<UINT>(25);
+	UnKnDown.m_height = static_cast<UINT>(1.5);
+	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+	m_spRenUnKnDown.Init(UnKnDown);
+	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
+	m_spRenUnKnDown.Update();
+
+	//?h?A???J?????????m?“_?ˆè?b?Z?[?W????
+	m_doorOpenMassage.SetText(L"‚Ç‚±‚©‚Ì”à‚ªŠJ‚¢‚½‚æ‚¤‚¾");
+	m_doorOpenMassage.SetScale(0.35f);
 	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
@@ -176,19 +193,19 @@ void Game::Update()
 {
 	if (!m_load->IsFade()&& !m_isFirstInfo)
 	{
-		m_infoUi->InitGOInformation("Sousa");
+		m_infoUi->InitGOInformation("Mission");
 		m_isFirstInfo = true;
 	}
 
 	if (m_isFirstInfo && !m_isSecondInfo && !m_infoUi->IsInformationOpen())
 	{
-		m_infoUi->InitGOInformation("Mission");
+		m_infoUi->InitGOInformation("Sousa");
 		m_isSecondInfo = true;
 	}
 
 	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
 	{
-		//ï¿½Qï¿½[ï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½\ï¿½ï¿½
+		//?Q?[???^?C?}?[?\??
 		m_gametimer = NewGO<GameTimer>(1, "gametimer");
 		m_isTimerStart = true;
 		g_gameTime->IsSlowMotion(false);
@@ -199,10 +216,11 @@ void Game::Update()
 		m_infoUi->InformationClose(false);
 	}
 
-	//ï¿½Aï¿½ï¿½ï¿½tï¿½@ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½
+	//?A???t?@?`?????l???????
 	AlphaCalc();
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
+	m_spRenUnKnDown.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 
 	GameStateTransition();
 
@@ -216,15 +234,15 @@ void Game::Update()
 		break;
 
 	case enGameClear:
-		//ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½UIï¿½ï¿½\ï¿½ï¿½
+		//?Q?[???N???A????UI??\??
 		EventUiDelete(true);
 
 		//m_hpLowBgm->Stop();
 
 		if (!m_load->IsFade()) {
-			//ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½B
+			//???g????????B
 			DeleteGO(this);
-			//ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½B
+			//?Q?[???N???A??I?u?W?F?N?g???????B
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
 
 		}
@@ -233,7 +251,7 @@ void Game::Update()
 	case enGameOver:
 		if (!m_load->IsFade()) {
 
-			//ï¿½Gï¿½lï¿½~ï¿½[ï¿½íœï¿½ï¿½ï¿½ï¿½
+			//?G?l?~?[??????
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -243,25 +261,25 @@ void Game::Update()
 			{
 				DeleteGO(enemy);
 			}
-			//ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½B
+			//???g????????B
 			DeleteGO(this);
-			//ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½B
+			//?Q?[???I?[?o?[??I?u?W?F?N?g???????B
 			NewGO<GameOver>(0, "gameover");
 		}
 		break;
 	}
 
-	//ï¿½Gï¿½lï¿½~ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä“|ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//?G?l?~?[???????|??????
 	if (m_EnemyQua == 0)
 	{
-		//ï¿½Gï¿½lï¿½~ï¿½[ï¿½Sï¿½Åƒtï¿½ï¿½ï¿½Oï¿½ï¿½tureï¿½É‚ï¿½ï¿½ï¿½
+		//?G?l?~?[?S??t???O??ture?????
 		m_enemyAllKillFlag = true;
 	}
 
-	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½25ï¿½È‰ï¿½ï¿½È‚ï¿½
+	//?v???C???[??HP??25??????
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
-		//HPï¿½ï¿½ï¿½sï¿½ï¿½ï¿½`ï¿½Èï¿½ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½g
+		//HP???s???`?????G?t?F?N?g
 		m_pncDraw = true;
 
 		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
@@ -293,21 +311,21 @@ void Game::Update()
 	m_hpui->Update();
 	//m_pncSpriteRender.Update();
 
-	if (g_pad[0]->IsTrigger(enButtonRight))
-	{
-		m_infoUi->InitGOInformation("Sousa");
-	}
-	if (g_pad[0]->IsTrigger(enButtonDown))
-	{
-		m_infoUi->InitGOInformation("Mission");
-	}
+	//if (g_pad[0]->IsTrigger(enButtonRight))
+	//{
+	//	m_infoUi->InitGOInformation("Sousa");
+	//}
+	//if (g_pad[0]->IsTrigger(enButtonDown))
+	//{
+	//	m_infoUi->InitGOInformation("Mission");
+	//}
 
-	//ï¿½Gï¿½lï¿½~ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ÂAï¿½Qï¿½[ï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½gï¿½ï¿½Idleï¿½È‚ï¿½
+	//?G?l?~?[???????????A?Q?[???X?e?[?g??Idle???
 	if (!EnemyListExistence() and m_gameState == enIdle)
 	{
 		if (m_massageTimer <= 6.0f)
 		{
-			//ï¿½Gï¿½lï¿½~ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä“|ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½trueï¿½ï¿½
+			//?G?l?~?[???????|?????t???O??true??
 			m_doorOpenMassageFlag = true;
 			
 			m_massageTimer += g_gameTime->GetFrameDeltaTime();
@@ -320,7 +338,7 @@ void Game::Update()
 	}
 }
 
-//ï¿½Aï¿½ï¿½ï¿½tï¿½@ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½
+//?A???t?@?`?????l???????
 void Game::AlphaCalc()
 {
 	if (m_hpEffect)
@@ -342,7 +360,7 @@ void Game::AlphaCalc()
 	}
 }
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô•\ï¿½ï¿½
+//????????\??
 void Game::DisplayTime()
 {
 	m_gametimer->FontSet();
@@ -427,19 +445,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
-	//ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½È‚ï¿½
+	//?C?x???g?V?[????????????
 	if (test->IsEvent() == true)
 	{
 		m_gameState = enEvent;
 	}
 
-	//ï¿½Qï¿½[ï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½gï¿½ï¿½Idleï¿½È‚ï¿½
+	//?Q?[???X?e?[?g??Idle???
 	if (m_gameState == enIdle)
 	{
-		//ï¿½hï¿½Aï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½È‚ï¿½
+		//?h?A???J?????????
 		if (door1->GetDoorOpenFlag())
 		{
-			//ï¿½Gï¿½lï¿½~ï¿½[ï¿½íœï¿½ï¿½ï¿½ï¿½
+			//?G?l?~?[??????
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -460,7 +478,7 @@ void Game::GameStateTransition()
 			return;
 		}
 
-		//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½HPï¿½ï¿½0ï¿½È‰ï¿½ï¿½È‚ï¿½
+		//?v???C???[??HP??0??????
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
 			m_hpLowBgm->Stop();
@@ -476,23 +494,23 @@ void Game::GameStateTransition()
 			m_hpLowBgm->Stop();
 		}
 
-		//ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//?C?x???g?V?[?????I????????
 		if (test->IsEvent() == false)
 		{
 			switch (m_EventAfterState)
 			{
 			case enGameClear:
-				//ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½Jï¿½n
+				//?t?F?[?h?A?E?g???J?n
 				m_load->StartFadeOut();
-				//ï¿½Xï¿½eï¿½[ï¿½gï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½
+				//?X?e?[?g???Q?[???N???A??
 				m_gameState = enGameClear;
 
 				break;
 
 			case enGameOver:
-				//ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½Jï¿½n
+				//?t?F?[?h?A?E?g???J?n
 				m_load->StartFadeOut();
-				//ï¿½Xï¿½eï¿½[ï¿½gï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½
+				//?X?e?[?g???Q?[???N???A??
 				m_gameState = enGameOver;
 
 				DeleteGO(m_gametimer);
@@ -551,6 +569,7 @@ void Game::Render(RenderContext& rc)
 	if (m_doorOpenMassageFlag)
 	{
 		m_massageBackGround.Draw(rc);
+		m_spRenUnKnDown.Draw(rc);
 		m_doorOpenMassage.Draw(rc);
 	}
 }

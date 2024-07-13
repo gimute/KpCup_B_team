@@ -153,16 +153,16 @@ void GameClear::DisplayTime()
 	//表示するテキストを設定
 	m_fontRender.SetText(wcsbuf);
 	//フォントの位置を設定
-	m_fontRender.SetPosition(Vector3(100.0f, -300.0f, 0.0f));
+	m_fontRender.SetPosition(Vector3(100.0f, -280.0f, 0.0f));
 	//フォントの大きさを設定
 	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定
 	m_fontRender.SetColor({ 1.0f,0.843f,0.0f,1.0f});
 	
 	//表示するテキストを設定
-	m_fontRender_tensen.SetText(L"..................................");
+	m_fontRender_tensen.SetText(L"...................");
 	//フォントの位置を設定
-	m_fontRender_tensen.SetPosition(Vector3(120.0f, -350.0f, 0.0f));
+	m_fontRender_tensen.SetPosition(Vector3(80.0f, -300.0f, 0.0f));
 	//フォントの大きさを設定
 	m_fontRender_tensen.SetScale(1.0f);
 	//フォントの色を設定
