@@ -101,10 +101,10 @@ Game::Game()
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
 	//?C???t?H???[?V?????e?X?g
 	m_infoUi = NewGO<InformationUi>(1, "UI");
-	//“o˜^
+	//ï¿½oï¿½^
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
-	//mapuiƒeƒXƒg6
+	//mapuiï¿½eï¿½Xï¿½g6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
 	//?Q?[??????BGM???????
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
@@ -125,15 +125,15 @@ Game::Game()
 	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_massageBackGround.Update();
 
-	// ƒAƒ“ƒ_[ƒo[‰æ‘œ‚Ìİ’è
+	// ï¿½Aï¿½ï¿½ï¿½_ï¿½[ï¿½oï¿½[ï¿½æ‘œï¿½Ìİ’ï¿½
 	SpriteInitData UnKnDown;
-	//ƒXƒ^[ƒgƒ{ƒ^ƒ“‚Ì‰æ‘œƒf[ƒ^‚ğw’è‚·‚é
+	//ï¿½Xï¿½^ï¿½[ï¿½gï¿½{ï¿½^ï¿½ï¿½ï¿½Ì‰æ‘œï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
 	UnKnDown.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
-	//Sprite•\¦—p‚ÌƒVƒF[ƒ_[‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğw’è‚·‚é
+	//Spriteï¿½\ï¿½ï¿½ï¿½pï¿½ÌƒVï¿½Fï¿½[ï¿½_ï¿½[ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
 	UnKnDown.m_fxFilePath = "Assets/shader/spriteUnKnDown.fx";
 	UnKnDown.m_expandConstantBuffer = &m_alpha;
 	UnKnDown.m_expandConstantBufferSize += sizeof(float);
-	//Sprite‚Ì•‚Æ‚‚³‚ğw’è‚·‚é
+	//Spriteï¿½Ì•ï¿½ï¿½Æï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½
 	UnKnDown.m_width = static_cast<UINT>(25);
 	UnKnDown.m_height = static_cast<UINT>(1.5);
 	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -142,8 +142,8 @@ Game::Game()
 	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
 	m_spRenUnKnDown.Update();
 
-	//?h?A???J?????????m?“_?ˆè?b?Z?[?W????
-	m_doorOpenMassage.SetText(L"‚Ç‚±‚©‚Ì”à‚ªŠJ‚¢‚½‚æ‚¤‚¾");
+	//?h?A???J?????????m?ï¿½_?ï¿½ï¿½?b?Z?[?W????
+	m_doorOpenMassage.SetText(L"ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½ï¿½");
 	m_doorOpenMassage.SetScale(0.35f);
 	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
@@ -311,6 +311,7 @@ void Game::Update()
 	m_hpui->Update();
 	//m_pncSpriteRender.Update();
 
+
 	//if (g_pad[0]->IsTrigger(enButtonRight))
 	//{
 	//	m_infoUi->InitGOInformation("Sousa");
@@ -320,6 +321,7 @@ void Game::Update()
 	//	m_infoUi->InitGOInformation("Mission");
 	//}
 
+
 	//?G?l?~?[???????????A?Q?[???X?e?[?g??Idle???
 	if (!EnemyListExistence() and m_gameState == enIdle)
 	{
@@ -327,6 +329,8 @@ void Game::Update()
 		{
 			//?G?l?~?[???????|?????t???O??true??
 			m_doorOpenMassageFlag = true;
+
+			m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
 			
 			m_massageTimer += g_gameTime->GetFrameDeltaTime();
 		}
