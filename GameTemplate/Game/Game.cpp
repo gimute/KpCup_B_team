@@ -35,16 +35,16 @@ Game::Game()
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HP���s���`�Ȏ��̉�ʃG�t�F�N�g�摜�̐ݒ�
+	//HP???s???`???????G?t?F?N?g??????
 	SpriteInitData initData;
-	//DDS�t�@�C���i�摜�f�[�^�j�̃t�@�C���p�X���w�肷��
-	//HP���s���`�Ȏ��̉�ʃG�t�F�N�g�̉摜�f�[�^���w�肷��
+	//DDS?t?@?C???i???f?[?^?j??t?@?C???p?X???w????
+	//HP???s???`???????G?t?F?N?g????f?[?^???w????
 	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
-	//Sprite�\���p�̃V�F�[�_�[�̃t�@�C���p�X���w�肷��
+	//Sprite?\???p??V?F?[?_?[??t?@?C???p?X???w????
 	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
 	initData.m_expandConstantBuffer = &m_alpha;
 	initData.m_expandConstantBufferSize += sizeof(float);
-	//�X�v���C�g�̕��ƍ������w�肷��
+	//?X?v???C?g???????????w????
 	initData.m_width = static_cast<UINT>(1920);
 	initData.m_height = static_cast<UINT>(1080);
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
@@ -55,18 +55,18 @@ Game::Game()
 	
 
 	//m_load->enState_FadeOut;
-		//�Q�[���J�n�����[�h��ʕ\��
+		//?Q?[???J?n?????[?h???\??
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
 
-	//�w�i�̃I�u�W�F�N�g�����B
+	//?w?i??I?u?W?F?N?g?????B
 	m_background = NewGO<BackGround>(0, "background");
 	
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
-			//�v���C���[�̃I�u�W�F�N�g�����B
+			//?v???C???[??I?u?W?F?N?g?????B
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
 			return true;
@@ -88,46 +88,63 @@ Game::Game()
 		return true;
 	});
 
-	//�Q�[���J�����̃I�u�W�F�N�g�����B
+	//?Q?[???J??????I?u?W?F?N?g?????B
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
 	test = NewGO<EventCamera>(0,"camera");
 
-	//HPUI�����
+	//HPUI?????
 	m_hpui = NewGO<HpUi>(1, "UI");
-	//�c�e�Ǘ��pUI�����
+	//?c?e????pUI?????
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//�댯�M���\��Ui
+	//???M???\??Ui
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//�C���t�H���[�V�����e�X�g
+	//?C???t?H???[?V?????e?X?g
 	m_infoUi = NewGO<InformationUi>(1, "UI");
-	//登録
+	//�o�^
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
-	//mapuiテスト6
+	//mapui�e�X�g6
 	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//�Q�[������BGM��ǂݍ���
+	//?Q?[??????BGM???????
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
-	//�Q�[������BGM���Đ�����
+	//?Q?[??????BGM?????????
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
-	//HP���s���`�̎���BGM��ǂݍ���
+	//HP???s???`?????BGM???????
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 
 	m_hpLowBgm = NewGO<SoundSource>(11);
 
 	IsPlayerMove(true);
 
-	//���b�Z�[�W�̔w�i����
+	//???b?Z?[?W??w?i????
 	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
 	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
 	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_massageBackGround.Update();
 
-	//�h�A���J�������Ƃ�m�点�郁�b�Z�[�W����
+	// �A���_�[�o�[�摜�̐ݒ�
+	SpriteInitData UnKnDown;
+	//�X�^�[�g�{�^���̉摜�f�[�^���w�肷��
+	UnKnDown.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
+	//Sprite�\���p�̃V�F�[�_�[�̃t�@�C���p�X���w�肷��
+	UnKnDown.m_fxFilePath = "Assets/shader/spriteUnKnDown.fx";
+	UnKnDown.m_expandConstantBuffer = &m_alpha;
+	UnKnDown.m_expandConstantBufferSize += sizeof(float);
+	//Sprite�̕��ƍ������w�肷��
+	UnKnDown.m_width = static_cast<UINT>(25);
+	UnKnDown.m_height = static_cast<UINT>(1.5);
+	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
+
+	m_spRenUnKnDown.Init(UnKnDown);
+	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
+	m_spRenUnKnDown.Update();
+
+	//?h?A???J?????????m?�_?��?b?Z?[?W????
 	m_doorOpenMassage.SetText(L"�ǂ����̔����J�����悤��");
-	m_doorOpenMassage.SetScale(0.5f);
+	m_doorOpenMassage.SetScale(0.35f);
 	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 }
@@ -176,19 +193,19 @@ void Game::Update()
 {
 	if (!m_load->IsFade()&& !m_isFirstInfo)
 	{
-		m_infoUi->InitGOInformation("Sousa");
+		m_infoUi->InitGOInformation("Mission");
 		m_isFirstInfo = true;
 	}
 
 	if (m_isFirstInfo && !m_isSecondInfo && !m_infoUi->IsInformationOpen())
 	{
-		m_infoUi->InitGOInformation("Mission");
+		m_infoUi->InitGOInformation("Sousa");
 		m_isSecondInfo = true;
 	}
 
 	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
 	{
-		//�Q�[���^�C�}�[�\��
+		//?Q?[???^?C?}?[?\??
 		m_gametimer = NewGO<GameTimer>(1, "gametimer");
 		m_isTimerStart = true;
 		g_gameTime->IsSlowMotion(false);
@@ -199,10 +216,11 @@ void Game::Update()
 		m_infoUi->InformationClose(false);
 	}
 
-	//�A���t�@�`�����l���̒���
+	//?A???t?@?`?????l???????
 	AlphaCalc();
 	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
+	m_spRenUnKnDown.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 
 	GameStateTransition();
 
@@ -216,15 +234,15 @@ void Game::Update()
 		break;
 
 	case enGameClear:
-		//�Q�[���N���A����UI��\��
+		//?Q?[???N???A????UI??\??
 		EventUiDelete(true);
 
 		//m_hpLowBgm->Stop();
 
 		if (!m_load->IsFade()) {
-			//���g���폜����B
+			//???g????????B
 			DeleteGO(this);
-			//�Q�[���N���A�̃I�u�W�F�N�g������B
+			//?Q?[???N???A??I?u?W?F?N?g???????B
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
 
 		}
@@ -233,7 +251,7 @@ void Game::Update()
 	case enGameOver:
 		if (!m_load->IsFade()) {
 
-			//�G�l�~�[�폜����
+			//?G?l?~?[??????
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -243,25 +261,25 @@ void Game::Update()
 			{
 				DeleteGO(enemy);
 			}
-			//���g���폜����B
+			//???g????????B
 			DeleteGO(this);
-			//�Q�[���I�[�o�[�̃I�u�W�F�N�g������B
+			//?Q?[???I?[?o?[??I?u?W?F?N?g???????B
 			NewGO<GameOver>(0, "gameover");
 		}
 		break;
 	}
 
-	//�G�l�~�[�����ׂē|������
+	//?G?l?~?[???????|??????
 	if (m_EnemyQua == 0)
 	{
-		//�G�l�~�[�S�Ńt���O��ture�ɂ���
+		//?G?l?~?[?S??t???O??ture?????
 		m_enemyAllKillFlag = true;
 	}
 
-	//�v���C���[��HP��25�ȉ��Ȃ�
+	//?v???C???[??HP??25??????
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
-		//HP���s���`�Ȏ��̃G�t�F�N�g
+		//HP???s???`?????G?t?F?N?g
 		m_pncDraw = true;
 
 		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
@@ -293,21 +311,23 @@ void Game::Update()
 	m_hpui->Update();
 	//m_pncSpriteRender.Update();
 
-	if (g_pad[0]->IsTrigger(enButtonRight))
-	{
-		m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
-	}
-	if (g_pad[0]->IsTrigger(enButtonDown))
-	{
-		m_infoUi->InitGOInformation("Mission");
-	}
 
-	//�G�l�~�[�����Ȃ����A�Q�[���X�e�[�g��Idle�Ȃ�
+	//if (g_pad[0]->IsTrigger(enButtonRight))
+	//{
+	//	m_infoUi->InitGOInformation("Sousa");
+	//}
+	//if (g_pad[0]->IsTrigger(enButtonDown))
+	//{
+	//	m_infoUi->InitGOInformation("Mission");
+	//}
+
+
+	//?G?l?~?[???????????A?Q?[???X?e?[?g??Idle???
 	if (!EnemyListExistence() and m_gameState == enIdle)
 	{
 		if (m_massageTimer <= 6.0f)
 		{
-			//�G�l�~�[�����ׂē|�����t���O��true��
+			//?G?l?~?[???????|?????t???O??true??
 			m_doorOpenMassageFlag = true;
 
 			m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
@@ -322,7 +342,7 @@ void Game::Update()
 	}
 }
 
-//�A���t�@�`�����l���̒���
+//?A???t?@?`?????l???????
 void Game::AlphaCalc()
 {
 	if (m_hpEffect)
@@ -344,7 +364,7 @@ void Game::AlphaCalc()
 	}
 }
 
-//�������ԕ\��
+//????????\??
 void Game::DisplayTime()
 {
 	m_gametimer->FontSet();
@@ -429,19 +449,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
-	//�C�x���g�V�[�����Đ����Ȃ�
+	//?C?x???g?V?[????????????
 	if (test->IsEvent() == true)
 	{
 		m_gameState = enEvent;
 	}
 
-	//�Q�[���X�e�[�g��Idle�Ȃ�
+	//?Q?[???X?e?[?g??Idle???
 	if (m_gameState == enIdle)
 	{
-		//�h�A���J���Ă���Ȃ�
+		//?h?A???J?????????
 		if (door1->GetDoorOpenFlag())
 		{
-			//�G�l�~�[�폜����
+			//?G?l?~?[??????
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -462,7 +482,7 @@ void Game::GameStateTransition()
 			return;
 		}
 
-		//�v���C���[��HP��0�ȉ��Ȃ�
+		//?v???C???[??HP??0??????
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
 			m_hpLowBgm->Stop();
@@ -478,23 +498,23 @@ void Game::GameStateTransition()
 			m_hpLowBgm->Stop();
 		}
 
-		//�C�x���g�V�[�����I��������
+		//?C?x???g?V?[?????I????????
 		if (test->IsEvent() == false)
 		{
 			switch (m_EventAfterState)
 			{
 			case enGameClear:
-				//�t�F�[�h�A�E�g���J�n
+				//?t?F?[?h?A?E?g???J?n
 				m_load->StartFadeOut();
-				//�X�e�[�g���Q�[���N���A��
+				//?X?e?[?g???Q?[???N???A??
 				m_gameState = enGameClear;
 
 				break;
 
 			case enGameOver:
-				//�t�F�[�h�A�E�g���J�n
+				//?t?F?[?h?A?E?g???J?n
 				m_load->StartFadeOut();
-				//�X�e�[�g���Q�[���N���A��
+				//?X?e?[?g???Q?[???N???A??
 				m_gameState = enGameOver;
 
 				DeleteGO(m_gametimer);
@@ -553,6 +573,7 @@ void Game::Render(RenderContext& rc)
 	if (m_doorOpenMassageFlag)
 	{
 		m_massageBackGround.Draw(rc);
+		m_spRenUnKnDown.Draw(rc);
 		m_doorOpenMassage.Draw(rc);
 	}
 }
