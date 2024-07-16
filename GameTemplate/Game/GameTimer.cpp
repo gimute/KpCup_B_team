@@ -41,20 +41,20 @@ void GameTimer::Update()
 
 void GameTimer::IncreaseTimer()
 {
-	float nowTime = m_minit;
+	float nowTime = m_second;
 	for (; nowTime >= 60.0f;) {
 		nowTime -= 60.0f;
-		m_minit = nowTime;
-		m_timer++;
+		m_second = nowTime;
+		m_minute++;
 	}
-	m_minit += g_gameTime->GetFrameDeltaTime();	// 1f=1/60秒
+	m_second += g_gameTime->GetFrameDeltaTime();	// 1f=1/60秒
 }
 
 void GameTimer::FontSet()
 {
 	wchar_t wcsbuf[256];
 	//制限時間を表示
-	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_timer), int(m_minit));
+	swprintf_s(wcsbuf, 256, L"%02d:%02d", int(m_minute), int(m_second));
 	//表示するテキストを設定
 	m_fontRender.SetText(wcsbuf);
 	//フォントの位置を設定

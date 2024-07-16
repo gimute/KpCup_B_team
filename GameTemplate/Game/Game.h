@@ -38,6 +38,14 @@ public:
 		enEvent
 	};
 
+	//ゲーム開始時、順番に表示するインフォメーションを制御するステート
+	enum EnStartInformationState {
+		enMission,
+		enSousa,
+		enGameStart,
+		enEnd
+	};
+
 	Game();
 	~Game();
 	bool Start();
@@ -118,9 +126,11 @@ public:
 		return m_isPlayerMove;
 	}
 
+	//ゲーム開始時に表示するインフォメーション
+	void GameStarInformation();
+
 	//メンバ変数
 	Player* m_player;
-	Enemy* m_enemy;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	GameClear* m_gameclear;
@@ -128,7 +138,6 @@ public:
 	SpriteRender m_spriterender; //スプライトレンダー。
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
-	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
@@ -137,7 +146,7 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
-	EventCamera* test = nullptr;
+	EventCamera* m_eventCamera = nullptr;
 	MapUi* m_mapUi = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
@@ -177,5 +186,7 @@ private:
 	FontRender m_doorOpenMassage;		//ドアが開いたことを知らせるメッセージ
 	bool m_doorOpenMassageFlag = false;	//ドアが開いたことを知らせるメッセージ表示フラグ
 	float m_massageTimer;				//メッセージを表示する時間を制御するタイマー
+
+	EnStartInformationState m_startInformationState = enMission;	//ゲーム開始時順番に表示するインフォメーションを制御するステート
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "sound/SoundSource.h"
 class Game;
-class GameTimer;
 class Load;
 class GameClear : public IGameObject
 {
@@ -17,12 +16,18 @@ public:
 	//描画処理
 	void Render(RenderContext& rc);
 	
+	/// <summary>
+	/// ゲームクリア画面で表示するクリアタイムを設定する
+	/// </summary>
+	/// <param name="minute">分数</param>
+	/// <param name="seconds">秒数</param>
+	void SetClearTime(int minute, float seconds);
+
 	//メンバ変数
 	SpriteRender m_spriterender;	//スプライトレンダー
 	SpriteRender m_spriterender_moya;	//スプライトレンダー
 	SpriteRender m_pressRender;		//Press A Button レンダー
 	Game* m_game = nullptr;
-	GameTimer* m_gametimer = nullptr;
 	GameClear* m_gameclear;
 	Load* m_load = nullptr;
 	FontRender m_fontRender;
@@ -31,8 +36,8 @@ public:
 
 	bool m_isWaitFadeout = false;
 	bool m_isSaveClearTime = false;
-	float m_clearminit = 0.0f;
-	int m_cleartimer = 0.0f;
+	float m_clearsecond = 0.0f;
+	int m_clearminute = 0.0f;
 
 	//アルファチャンネルの調整用の変数
 	float m_alpha = 0.1f;

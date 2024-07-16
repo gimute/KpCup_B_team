@@ -239,8 +239,10 @@ void Player::Update()
 
 void Player::Move()
 {
+	//プレイヤーが動かないように設定されていたら
 	if (m_game->GetPlayerMove())
 	{
+		//何もしない
 		return;
 	}
 
