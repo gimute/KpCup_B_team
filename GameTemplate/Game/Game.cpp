@@ -541,19 +541,32 @@ void Game::GameStarInformation()
 {
 	switch (m_startInformationState)
 	{
-	case Game::enMission:
+	case Game::enWait:
+		//ゲーム開始時のフェードが終わるのを待つ
 		if (!m_load->IsFade())
 		{
-			if (!m_infoUi->IsInformationOpen())
-			{
-				//ミッションのインフォメーションを出す
-				m_infoUi->InitGOInformation("Mission");
-			}
-			else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
-			{
-				m_infoUi->InformationClose(false);
-				m_startInformationState = enSousa;
-			}
+			//終わったらステートを進める
+			m_startInformationState = enMission;
+		}
+		break;
+
+	case Game::enMission:
+		
+		if (!m_infoUi->IsInformationOpen())
+		{
+			//ミッションのインフォメーションを出す
+			m_infoUi->InitGOInformation("Mission");
+		}
+		//インフォメーションが開ききっている
+		//かつ
+		//Aボタンが押された時
+		else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
+		{
+			//インフォメーションを閉じる
+			m_infoUi->InformationClose(false);
+
+			//ステートを進める
+			m_startInformationState = enSousa;
 		}
 		break;
 
@@ -563,9 +576,14 @@ void Game::GameStarInformation()
 			//操作のインフォメーションを出す
 			m_infoUi->InitGOInformation("Sousa");
 		}
+		//インフォメーションが開ききっている
+		//かつ
+		//Aボタンが押された時
 		else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
 		{
+			//インフォメーションを閉じる
 			m_infoUi->InformationClose(false);
+			//ステートを進める
 			m_startInformationState = enGameStart;
 		}
 		break;
@@ -578,11 +596,13 @@ void Game::GameStarInformation()
 			m_isTimerStart = true;
 			g_gameTime->IsSlowMotion(false);
 
+			//ステートをEndに
 			m_startInformationState = enEnd;
 		}
+		break;
 
 	case Game::enEnd:
-
+		//Endになったら何もしない
 		break;
 
 	default:

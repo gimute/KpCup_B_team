@@ -31,6 +31,7 @@ class InformationUi;
 class Game : public IGameObject
 {
 public:
+	//ゲームのステート
 	enum EnGameState {
 		enIdle,
 		enGameClear,
@@ -40,6 +41,7 @@ public:
 
 	//ゲーム開始時、順番に表示するインフォメーションを制御するステート
 	enum EnStartInformationState {
+		enWait,
 		enMission,
 		enSousa,
 		enGameStart,
@@ -126,7 +128,7 @@ public:
 		return m_isPlayerMove;
 	}
 
-	//ゲーム開始時に表示するインフォメーション
+	//ゲーム開始時に表示するインフォメーションの制御をする関数
 	void GameStarInformation();
 
 	//メンバ変数
@@ -187,6 +189,6 @@ private:
 	bool m_doorOpenMassageFlag = false;	//ドアが開いたことを知らせるメッセージ表示フラグ
 	float m_massageTimer;				//メッセージを表示する時間を制御するタイマー
 
-	EnStartInformationState m_startInformationState = enMission;	//ゲーム開始時順番に表示するインフォメーションを制御するステート
+	EnStartInformationState m_startInformationState = enWait;	//ゲーム開始時順番に表示するインフォメーションを制御するステート
 };
 
