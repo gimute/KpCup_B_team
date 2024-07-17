@@ -200,8 +200,7 @@ void Game::NotifyGameOver()
 
 void Game::Update()
 {
-	//ゲームスタート時のインフォメーション処理
-	GameStarInformation();
+	
 
 	//アルファチャンネルの調整
 	AlphaCalc();
@@ -212,6 +211,11 @@ void Game::Update()
 
 	switch (m_gameState)
 	{
+	case enInformation:
+		//ゲームスタート時のインフォメーション処理
+		GameStarInformation();
+		break;
+
 	case enIdle:
 		if (m_isTimerStart)
 		{
@@ -576,9 +580,6 @@ void Game::GameStarInformation()
 			//操作のインフォメーションを出す
 			m_infoUi->InitGOInformation("Sousa");
 		}
-		//インフォメーションが開ききっている
-		//かつ
-		//Aボタンが押された時
 		else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
 		{
 			//インフォメーションを閉じる
@@ -602,7 +603,9 @@ void Game::GameStarInformation()
 		break;
 
 	case Game::enEnd:
-		//Endになったら何もしない
+		//ゲームのステートをIdleにする
+		m_gameState = enIdle;
+
 		break;
 
 	default:

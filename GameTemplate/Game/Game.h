@@ -36,16 +36,17 @@ public:
 		enIdle,
 		enGameClear,
 		enGameOver,
-		enEvent
+		enEvent,
+		enInformation,
 	};
 
 	//ゲーム開始時、順番に表示するインフォメーションを制御するステート
 	enum EnStartInformationState {
-		enWait,
-		enMission,
-		enSousa,
-		enGameStart,
-		enEnd
+		enWait,			//ゲーム開始時のフェードが終わるのを待つステート
+		enMission,		//ミッションステート
+		enSousa,		//操作説明ステート
+		enGameStart,	//ゲーム開始の準備をするステート
+		enEnd			//インフォーメーション終了
 	};
 
 	Game();
@@ -165,8 +166,10 @@ private:
 
 	PreSpriteRender m_preSpriteRender;
 	SpriteRender m_pncSpriteRender;
-	EnGameState m_gameState = enIdle;
-	EnGameState m_EventAfterState;	//イベントシーン終了後に移行するステート
+	EnGameState m_gameState = enInformation;	//ゲームのステート
+												//最初は操作説明などのインフォメーションから始まる
+
+	EnGameState m_EventAfterState;		//イベントシーン終了後に移行するステート
 
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
 	bool m_alphaCalcBool;
