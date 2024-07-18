@@ -180,14 +180,13 @@ public:
 	/// <returns></returns>
 	bool IsInformationOpen()
 	{
-		if (m_isInfoDraw)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return m_isInfoDraw;
+	}
+
+	//インフォメーションが開ききっているか
+	bool IsInformationFullOpen()
+	{
+		return m_isWipeFullyOpen;
 	}
 };
 

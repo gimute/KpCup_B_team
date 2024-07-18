@@ -6,6 +6,9 @@ class GameCamera;
 class Enemy;
 class Game;
 class Player;
+
+//画面中央あたりに居る敵と、それ以外の敵で、攻撃頻度を変える為に
+//エネミーとカメラの関係を調べるクラス
 class EnemyCamPos
 {
 public:

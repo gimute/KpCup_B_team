@@ -31,11 +31,22 @@ class InformationUi;
 class Game : public IGameObject
 {
 public:
+	//ゲームのステート
 	enum EnGameState {
 		enIdle,
 		enGameClear,
 		enGameOver,
-		enEvent
+		enEvent,
+		enInformation,
+	};
+
+	//ゲーム開始時、順番に表示するインフォメーションを制御するステート
+	enum EnStartInformationState {
+		enWait,			//ゲーム開始時のフェードが終わるのを待つステート
+		enMission,		//ミッションステート
+		enSousa,		//操作説明ステート
+		enGameStart,	//ゲーム開始の準備をするステート
+		enEnd			//インフォーメーション終了
 	};
 
 	Game();
@@ -118,9 +129,11 @@ public:
 		return m_isPlayerMove;
 	}
 
+	//ゲーム開始時に表示するインフォメーションの制御をする関数
+	void GameStarInformation();
+
 	//メンバ変数
 	Player* m_player;
-	Enemy* m_enemy;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	GameClear* m_gameclear;
@@ -128,7 +141,6 @@ public:
 	SpriteRender m_spriterender; //スプライトレンダー。
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
-	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
@@ -137,7 +149,7 @@ public:
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
 	int m_EnemyQua = 0;
-	EventCamera* test = nullptr;
+	EventCamera* m_eventCamera = nullptr;
 	MapUi* m_mapUi = nullptr;
 	bool m_isSaveClearTime = false;
 	bool m_isWaitFadeout = false;
@@ -154,8 +166,10 @@ private:
 
 	PreSpriteRender m_preSpriteRender;
 	SpriteRender m_pncSpriteRender;
-	EnGameState m_gameState = enIdle;
-	EnGameState m_EventAfterState;	//イベントシーン終了後に移行するステート
+	EnGameState m_gameState = enInformation;	//ゲームのステート
+												//最初は操作説明などのインフォメーションから始まる
+
+	EnGameState m_EventAfterState;		//イベントシーン終了後に移行するステート
 
 	bool m_enemyAllKillFlag = false;	//敵を全滅させたか
 	bool m_alphaCalcBool;
@@ -163,8 +177,6 @@ private:
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
 	bool m_isPlayerMove = false;				//プレイヤーが移動できるかどうか
-	bool m_isFirstInfo = false;
-	bool m_isSecondInfo = false;
 	bool m_isTimerStart = false;
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 	float m_slowTime = 0.0f;			//スローモーション時間
@@ -177,5 +189,7 @@ private:
 	FontRender m_doorOpenMassage;		//ドアが開いたことを知らせるメッセージ
 	bool m_doorOpenMassageFlag = false;	//ドアが開いたことを知らせるメッセージ表示フラグ
 	float m_massageTimer;				//メッセージを表示する時間を制御するタイマー
+
+	EnStartInformationState m_startInformationState = enWait;	//ゲーム開始時順番に表示するインフォメーションを制御するステート
 };
 

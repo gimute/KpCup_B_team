@@ -13,16 +13,11 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
-	//ゲームタイマーを削除する
-	DeleteGO(m_gametimer);
-	//ゲームクリアのBGMを削除する
 	DeleteGO(m_clearBgm);
 }
 
 bool GameClear::Start()
 {
-	m_gametimer = FindGO<GameTimer>("gametimer");
-
 	//ゲームクリアの画面を読み込む。
 	m_spriterender.Init("Assets/sprite/Game_Clear2.dds", 1920.0f, 1080.0f);
 	//リザルトを見えやすくするためにモヤモヤの画面を読み込む
@@ -107,30 +102,7 @@ void GameClear::Update()
 	}
 	//クリアタイム表示　一時敵
 	DisplayTime();
-	////Bボタンが押されていたら。
-	//if (g_pad[0]->IsTrigger(enButtonY))
-	//{
-	//	m_load = FindGO<Load>("load");
-	//	m_load->StartFadeOut();
-	//	//タイトルのオブジェクトを作成
-	//	NewGO<Title>(0, "title");
-	//	//自身を削除する。
-	//	DeleteGO(this);
-	//}
 
-	//if (m_isWaitFadeout) {
-	//	if (!m_load->IsFade()) {
-	//		NewGO<Title>(0, "game");
-	//		//自身を削除する
-	//		DeleteGO(this);
-	//	}
-	//}
-	//else {
-	//	//Aボタンを押したら
-	//	if (g_pad[0]->IsTrigger(enButtonA)) {
-	//		m_isWaitFadeout = true;
-	//		m_load->StartFadeOut();
-	//	}
 	AlphaCalc();
 	m_pressRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pressRender.Update();
@@ -139,17 +111,9 @@ void GameClear::Update()
 //クリアタイム表示
 void GameClear::DisplayTime()
 {
-	
-	//クリアタイムのデータを持ってくる
-	if (!m_isSaveClearTime) {
-		m_cleartimer = m_gametimer->m_timer;	//分
-		m_clearminit = int(m_gametimer->m_minit);
-
-		m_isSaveClearTime = true;
-	}
 	wchar_t wcsbuf[256];
 	//ゲームクリアしたタイムを表示
-	swprintf_s(wcsbuf, 256, L"TOTAL TIME  %02d:%02d", int(m_cleartimer), int(m_clearminit));
+	swprintf_s(wcsbuf, 256, L"TOTAL TIME  %02d:%02d", int(m_clearminute), int(m_clearsecond));
 	//表示するテキストを設定
 	m_fontRender.SetText(wcsbuf);
 	//フォントの位置を設定
@@ -168,6 +132,12 @@ void GameClear::DisplayTime()
 	//フォントの色を設定
 	m_fontRender_tensen.SetColor({ 0.0f,0.0f,0.0f,0.7f });
 
+}
+
+void GameClear::SetClearTime(int minute, float seconds)
+{
+	m_clearminute = minute;
+	m_clearsecond = seconds;
 }
 
 //描画処理

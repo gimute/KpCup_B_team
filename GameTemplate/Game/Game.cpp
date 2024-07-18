@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Game.h"
 ///////////////////////////////
 #include "Player.h"
@@ -31,48 +31,49 @@
 
 Game::Game()
 {
-
+	//背景用画像の設定
+	//現在の水色一色の画像を使用中
 	m_preSpriteRender.Init("Assets/sprite/mizuiro.DDS",1920,1080);
 	m_preSpriteRender.SetMulColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-	//HP???s???`???????G?t?F?N?g??????
+	//HPがピンチなときの画面エフェクト画像の設定
+	//少し特殊なシェーダーを使いたいのでSpriteInitDataをこちらで用意する
 	SpriteInitData initData;
-	//DDS?t?@?C???i???f?[?^?j??t?@?C???p?X???w????
-	//HP???s???`???????G?t?F?N?g????f?[?^???w????
+	//画像ファイルパスを設定
 	initData.m_ddsFilePath[0] = "Assets/sprite/LowHpEffect.DDS";
-	//Sprite?\???p??V?F?[?_?[??t?@?C???p?X???w????
+	//シェーダーのファイルパスを設定
 	initData.m_fxFilePath = "Assets/shader/spritePinch.fx";
 	initData.m_expandConstantBuffer = &m_alpha;
 	initData.m_expandConstantBufferSize += sizeof(float);
-	//?X?v???C?g???????????w????
+	//スプライトの幅と高さを設定
 	initData.m_width = static_cast<UINT>(1920);
 	initData.m_height = static_cast<UINT>(1080);
+	//アルファブレンディングを半透明合成に設定
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
-	//
+	//用意したInitDataでスプライトレンダーを初期化
 	m_pncSpriteRender.Init(initData);
-	m_pncSpriteRender.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
 	m_pncSpriteRender.Update();
-	
 
-	//m_load->enState_FadeOut;
-		//?Q?[???J?n?????[?h???\??
+	//ゲーム開始時のロード画面表示
 	m_load = FindGO<Load>("load");
 	m_load->StartFadeIn();
 
-	//?w?i??I?u?W?F?N?g?????B
+	//背景オブジェクトを作成
 	m_background = NewGO<BackGround>(0, "background");
 	
+	//レベルを使ってプレイヤー、ドア、エネミーを配置
 	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
-			//?v???C???[??I?u?W?F?N?g?????B
+			//プレイヤーのポインタは後で使うのでメンバ変数で受け取る
 			m_player = NewGO<Player>(0, "player");
 			m_player->m_position = objData.position;
 			return true;
 		}
 		else if (objData.ForwardMatchName(L"door") == true)
 		{
+			//ドアのポインタは後で使うのでメンバ変数で受け取る
 			door1 = NewGO<Door>(0, "door");
 			door1->m_DoorMainPos = objData.position;
 			door1->SetRotation(objData.rotation);
@@ -80,6 +81,9 @@ Game::Game()
 		}
 		else if (objData.ForwardMatchName(L"enemy") == true)
 		{
+			//エネミーのポインタは
+			//EnemyクラスのStart関数でGameのm_EnemyListに登録するので
+			//ローカル変数で受け取る
 			Enemy* m_enemy = NewGO<Enemy>(0, "enemy");
 			m_enemy->m_position = objData.position;
 
@@ -88,73 +92,75 @@ Game::Game()
 		return true;
 	});
 
-	//?Q?[???J??????I?u?W?F?N?g?????B
+	//ゲームカメラのオブジェクトを作成
 	m_gamecamera = NewGO<GameCamera>(0, "gamecamera");
 
-	test = NewGO<EventCamera>(0,"camera");
+	//イベントカメラクラスのオブジェクトを作成
+	m_eventCamera = NewGO<EventCamera>(0,"camera");
 
-	//HPUI?????
+	//HPUIを作成
 	m_hpui = NewGO<HpUi>(1, "UI");
-	//?c?e????pUI?????
+	//リロードUIを作成
 	m_remainingBulletsUi = NewGO<RemainingBulletsUi>(0, "UI");
-	//???M???\??Ui
+	//危険信号UIを作成
 	m_signalRailUi = NewGO<SignalRailUi>(1, "signalUi");
-	//?C???t?H???[?V?????e?X?g
+	//マップUIを作成
+	m_mapUi = NewGO<MapUi>(1, "mapUi");
+
+	//インフォメーションを作成
 	m_infoUi = NewGO<InformationUi>(1, "UI");
-	//�o�^
+	//ゲーム開始時に表示するインフォメーション画像を設定
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
-	//mapui�e�X�g6
-	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//?Q?[??????BGM???????
+	//インフォメーション中はプレイヤーが動かないように設定
+	IsPlayerMove(true);
+
+	//ゲーム中のBGMを登録する
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/m_main.wav");
-	//?Q?[??????BGM?????????
+	//ゲーム中BGMを再生
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
-	//HP???s???`?????BGM???????
+	//ピンチ時に再生する心臓の音を登録
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
-
+	//心臓の音再生準備
 	m_hpLowBgm = NewGO<SoundSource>(11);
+	m_hpLowBgm->Init(11);
 
-	IsPlayerMove(true);
-
-	//???b?Z?[?W??w?i????
+	//メッセージの背景
 	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
 	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
 	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_massageBackGround.Update();
 
-	// �A���_�[�o�[�摜�̐ݒ�
-	SpriteInitData UnKnDown;
-	//�X�^�[�g�{�^���̉摜�f�[�^���w�肷��
-	UnKnDown.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
-	//Sprite�\���p�̃V�F�[�_�[�̃t�@�C���p�X���w�肷��
-	UnKnDown.m_fxFilePath = "Assets/shader/spriteUnKnDown.fx";
-	UnKnDown.m_expandConstantBuffer = &m_alpha;
-	UnKnDown.m_expandConstantBufferSize += sizeof(float);
-	//Sprite�̕��ƍ������w�肷��
-	UnKnDown.m_width = static_cast<UINT>(25);
-	UnKnDown.m_height = static_cast<UINT>(1.5);
-	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
-
-	m_spRenUnKnDown.Init(UnKnDown);
-	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
-	m_spRenUnKnDown.Update();
-
-	//?h?A???J?????????m?�_?��?b?Z?[?W????
-	m_doorOpenMassage.SetText(L"�ǂ����̔����J�����悤��");
+	//ドアが開いたときに表示するメッセージ
+	m_doorOpenMassage.SetText(L"どこかの扉が開いたようだ");
 	m_doorOpenMassage.SetScale(0.35f);
 	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
+	//メッセージの最後に表示する点滅アンダーバー
+	SpriteInitData UnKnDown;
+	//画像ファイルパスを設定
+	UnKnDown.m_ddsFilePath[0] = "Assets/modelData/maintimer/underBar.DDS";
+	//シェーダーファイルパスを設定
+	UnKnDown.m_fxFilePath = "Assets/shader/spriteUnKnDown.fx";
+	UnKnDown.m_expandConstantBuffer = &m_alpha;
+	UnKnDown.m_expandConstantBufferSize += sizeof(float);
+	//スプライトの幅と高さを設定
+	UnKnDown.m_width = static_cast<UINT>(25);
+	UnKnDown.m_height = static_cast<UINT>(1.5);
+	//アルファブレンディングを半透明合成に設定
+	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
+	//用意したInitDataでスプライトレンダーを初期化
+	m_spRenUnKnDown.Init(UnKnDown);
+	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
+	m_spRenUnKnDown.Update();
 }
 
 Game::~Game()
 {
-	if (m_gameState == enGameClear)
-	{
-		m_gametimer->m_game = nullptr;
-	}
+	//オブジェクト消去処理
 	DeleteGO(m_infoUi);
 	DeleteGO(m_remainingBulletsUi);
 	DeleteGO(m_mapUi);
@@ -166,11 +172,14 @@ Game::~Game()
 	DeleteGO(m_gameBgm);
 	DeleteGO(m_hpLowBgm);
 	DeleteGO(m_player);
+	DeleteGO(m_gametimer);
 }
 
 bool Game::Start()
 {
+	//EnemyCamPosの初期化
 	m_enemyCamPos.Init();
+
 	return true;
 }
 
@@ -184,41 +193,17 @@ void Game::NotifyGameOver()
 {
 	m_gameState = enGameOver;
 	m_load->StartFadeOut();
-	DeleteGO(m_gametimer);
+	
 
 	m_gameBgm->SetVolume(1.0f);
 }
 
 void Game::Update()
 {
-	if (!m_load->IsFade()&& !m_isFirstInfo)
-	{
-		m_infoUi->InitGOInformation("Mission");
-		m_isFirstInfo = true;
-	}
+	
 
-	if (m_isFirstInfo && !m_isSecondInfo && !m_infoUi->IsInformationOpen())
-	{
-		m_infoUi->InitGOInformation("Sousa");
-		m_isSecondInfo = true;
-	}
-
-	if (m_isSecondInfo && !m_isTimerStart && !m_infoUi->IsInformationOpen())
-	{
-		//?Q?[???^?C?}?[?\??
-		m_gametimer = NewGO<GameTimer>(1, "gametimer");
-		m_isTimerStart = true;
-		g_gameTime->IsSlowMotion(false);
-	}
-
-	if (g_pad[0]->IsTrigger(enButtonA) && !m_isTimerStart)
-	{
-		m_infoUi->InformationClose(false);
-	}
-
-	//?A???t?@?`?????l???????
+	//アルファチャンネルの調整
 	AlphaCalc();
-	//m_pncSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 	m_pncSpriteRender.Update();
 	m_spRenUnKnDown.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, fabsf(sinf(m_alpha))));
 
@@ -226,6 +211,11 @@ void Game::Update()
 
 	switch (m_gameState)
 	{
+	case enInformation:
+		//ゲームスタート時のインフォメーション処理
+		GameStarInformation();
+		break;
+
 	case enIdle:
 		if (m_isTimerStart)
 		{
@@ -234,24 +224,22 @@ void Game::Update()
 		break;
 
 	case enGameClear:
-		//?Q?[???N???A????UI??\??
+		//ゲームクリア中はUI非表示
 		EventUiDelete(true);
 
-		//m_hpLowBgm->Stop();
-
 		if (!m_load->IsFade()) {
-			//???g????????B
+			//自信を削除する
 			DeleteGO(this);
-			//?Q?[???N???A??I?u?W?F?N?g???????B
+			//ゲームクリアのオブジェクトを作る
 			m_gameclear = NewGO<GameClear>(0, "gameclear");
-
+			m_gameclear->SetClearTime(m_gametimer->m_minute, m_gametimer->m_second);
 		}
 		break;
 
 	case enGameOver:
 		if (!m_load->IsFade()) {
 
-			//?G?l?~?[??????
+			//エネミー削除処理
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -261,27 +249,28 @@ void Game::Update()
 			{
 				DeleteGO(enemy);
 			}
-			//???g????????B
+			//自信を削除する
 			DeleteGO(this);
-			//?Q?[???I?[?o?[??I?u?W?F?N?g???????B
+			//ゲームオーバーのオブジェクトを作る
 			NewGO<GameOver>(0, "gameover");
 		}
 		break;
 	}
 
-	//?G?l?~?[???????|??????
+	//エネミーが一人もいなければ
 	if (m_EnemyQua == 0)
 	{
-		//?G?l?~?[?S??t???O??ture?????
+		//エネミー全滅フラグを立てる
 		m_enemyAllKillFlag = true;
 	}
 
-	//?v???C???[??HP??25??????
+	//プレイヤーのHPが25以下なら
 	if (m_hpui->GetNowHP() <= 25.0f)
 	{
-		//HP???s???`?????G?t?F?N?g
+		//ピンチ時のエフェクト表示フラグを立てる
 		m_pncDraw = true;
 
+		//心臓の音を流す
 		if (m_hpLowBgm->IsPlaying() == false && m_gameState == enIdle && m_hpui->GetNowHP() > 0.0f)
 		{
 			m_hpLowBgm->Init(11);
@@ -309,25 +298,16 @@ void Game::Update()
 
 	m_enemyAttackPoint.Update(m_player->GetPosition());
 	m_hpui->Update();
-	//m_pncSpriteRender.Update();
 
 
-	//if (g_pad[0]->IsTrigger(enButtonRight))
-	//{
-	//	m_infoUi->InitGOInformation("Sousa");
-	//}
-	//if (g_pad[0]->IsTrigger(enButtonDown))
-	//{
-	//	m_infoUi->InitGOInformation("Mission");
-	//}
-
-
-	//?G?l?~?[???????????A?Q?[???X?e?[?g??Idle???
+	//エネミーが一人も居ない、
+	//かつ、
+	//ゲームステートがIdleなら
 	if (!EnemyListExistence() and m_gameState == enIdle)
 	{
 		if (m_massageTimer <= 6.0f)
 		{
-			//?G?l?~?[???????|?????t???O??true??
+			//ドアが開いたメッセージの表示フラグを立てる
 			m_doorOpenMassageFlag = true;
 
 			m_mapUi->InitGOMapUiPlayerPoint(door1->m_DoorMainPos);
@@ -342,7 +322,7 @@ void Game::Update()
 	}
 }
 
-//?A???t?@?`?????l???????
+//アルファチャンネルの調整
 void Game::AlphaCalc()
 {
 	if (m_hpEffect)
@@ -364,7 +344,7 @@ void Game::AlphaCalc()
 	}
 }
 
-//????????\??
+//制限時間表示
 void Game::DisplayTime()
 {
 	m_gametimer->FontSet();
@@ -449,19 +429,19 @@ void Game::SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpee
 
 void Game::GameStateTransition()
 {
-	//?C?x???g?V?[????????????
-	if (test->IsEvent() == true)
+	//イベントシーンが再生中なら
+	if (m_eventCamera->IsEvent() == true)
 	{
 		m_gameState = enEvent;
 	}
 
-	//?Q?[???X?e?[?g??Idle???
+	//ゲームステートがIdleなら
 	if (m_gameState == enIdle)
 	{
-		//?h?A???J?????????
+		//ドアが開いているなら
 		if (door1->GetDoorOpenFlag())
 		{
-			//?G?l?~?[??????
+			//エネミー削除処理
 			for (auto& enemyhpui : m_EnemyHpUiList)
 			{
 				DeleteGO(enemyhpui);
@@ -475,14 +455,14 @@ void Game::GameStateTransition()
 			m_hpEffect = true;
 			m_gameBgm->SetVolume(1.0f);
 
-			test->StartScene(EventCamera::en_Scene_GameClear);
+			m_eventCamera->StartScene(EventCamera::en_Scene_GameClear);
 
 			m_EventAfterState = enGameClear;
 			m_player->SetEvent(Player::enGameClear);
 			return;
 		}
 
-		//?v???C???[??HP??0??????
+		//プレイヤーのHPが0以下なら
 		if (m_hpui->GetNowHP() <= 0.0f)
 		{
 			m_hpLowBgm->Stop();
@@ -498,23 +478,23 @@ void Game::GameStateTransition()
 			m_hpLowBgm->Stop();
 		}
 
-		//?C?x???g?V?[?????I????????
-		if (test->IsEvent() == false)
+		//イベントシーンが終了したら
+		if (m_eventCamera->IsEvent() == false)
 		{
 			switch (m_EventAfterState)
 			{
 			case enGameClear:
-				//?t?F?[?h?A?E?g???J?n
+				//フェードアウトを開始
 				m_load->StartFadeOut();
-				//?X?e?[?g???Q?[???N???A??
+				//ステートをゲームクリアに
 				m_gameState = enGameClear;
 
 				break;
 
 			case enGameOver:
-				//?t?F?[?h?A?E?g???J?n
+				//フェードアウト開始
 				m_load->StartFadeOut();
-				//?X?e?[?g???Q?[???N???A??
+				//ステートをゲームオーバーに
 				m_gameState = enGameOver;
 
 				DeleteGO(m_gametimer);
@@ -559,6 +539,78 @@ void Game::SlowStart(float slowTime, int SlowStrength)
 {
 	g_gameTime->IsSlowMotion(true,SlowStrength);
 	m_slowTime = slowTime;
+}
+
+void Game::GameStarInformation()
+{
+	switch (m_startInformationState)
+	{
+	case Game::enWait:
+		//ゲーム開始時のフェードが終わるのを待つ
+		if (!m_load->IsFade())
+		{
+			//終わったらステートを進める
+			m_startInformationState = enMission;
+		}
+		break;
+
+	case Game::enMission:
+		
+		if (!m_infoUi->IsInformationOpen())
+		{
+			//ミッションのインフォメーションを出す
+			m_infoUi->InitGOInformation("Mission");
+		}
+		//インフォメーションが開ききっている
+		//かつ
+		//Aボタンが押された時
+		else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
+		{
+			//インフォメーションを閉じる
+			m_infoUi->InformationClose(false);
+
+			//ステートを進める
+			m_startInformationState = enSousa;
+		}
+		break;
+
+	case Game::enSousa:
+		if (!m_infoUi->IsInformationOpen())
+		{
+			//操作のインフォメーションを出す
+			m_infoUi->InitGOInformation("Sousa");
+		}
+		else if (m_infoUi->IsInformationFullOpen() and g_pad[0]->IsTrigger(enButtonA))
+		{
+			//インフォメーションを閉じる
+			m_infoUi->InformationClose(false);
+			//ステートを進める
+			m_startInformationState = enGameStart;
+		}
+		break;
+
+	case Game::enGameStart:
+		if (!m_infoUi->IsInformationOpen())
+		{
+			//タイマーをスタートする
+			m_gametimer = NewGO<GameTimer>(1, "gametimer");
+			m_isTimerStart = true;
+			g_gameTime->IsSlowMotion(false);
+
+			//ステートをEndに
+			m_startInformationState = enEnd;
+		}
+		break;
+
+	case Game::enEnd:
+		//ゲームのステートをIdleにする
+		m_gameState = enIdle;
+
+		break;
+
+	default:
+		break;
+	}
 }
 
 void Game::Render(RenderContext& rc)
