@@ -7,10 +7,10 @@
 namespace{
 	Vector2 SPRITE_SIZE = { 250.0f, 100.0f };
 	//Vector3 SPRITE_POSITION = { -645.0f, -370.0f, 0.0f };
-	Vector3 SPRITE_POSITION = { -700.0f, -400.0f, 0.0f };
+	Vector3 SPRITE_POSITION = { -680.0f, -400.0f, 0.0f };
 
 	//Vector3 FONT_POSITION = { -900.0f, -400.0f, 0.0f };
-	Vector3 FONT_POSITION = { -900.0f, -400.0f, 0.0f };
+	Vector3 FONT_POSITION = { -935.0f, -420.0f, 0.0f };
 }
 
 GameTimer::GameTimer()
@@ -72,7 +72,7 @@ void GameTimer::FontSet()
 	//表示するテキストを設定
 	m_fontRender.SetText(wcsbuf);
 	//フォントの位置を設定
-	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
+	//m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
 	//フォントの大きさを設定
 	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定

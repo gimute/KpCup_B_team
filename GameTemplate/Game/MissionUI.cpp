@@ -6,7 +6,7 @@ namespace {
 	MissionUI::EnMissionState START_MISSION = MissionUI::EnMissionState::enEnemyOllKill;	//最初のミッションは敵をすべて倒せ
 
 	Vector2 MISSION_FRAME_SIZE = { 480.0f,44.0f };		//ミッションフレームのサイズ
-	Vector3 MISSION_FRAME_SCALE = { 1.0f,1.0f,1.0f };	//ミッションフレームのスケール
+	Vector3 MISSION_FRAME_SCALE = { 0.8f,1.0f,1.0f };	//ミッションフレームのスケール
 	Vector2 MISSION_FRAME_PIVOT = { 0.0f,0.0f };		//ミッションフレームのピボット
 														//ゲームタイマーの右下にくっつけるのでピボットは左下に設定
 
@@ -32,6 +32,7 @@ bool MissionUI::Start()
 	m_missionSprite.Init("Assets/sprite/MissionUI/missionUIFrame.DDS", MISSION_FRAME_SIZE.x, MISSION_FRAME_SIZE.y);
 	m_missionSprite.SetScale(MISSION_FRAME_SCALE);
 	m_missionSprite.SetPivot(MISSION_FRAME_PIVOT);
+	m_missionSprite.SetMulColor(Vector4{ 1.5f, 1.5f, 1.5f, 1.0f });
 
 	m_missionSprite.Update();
 
@@ -66,7 +67,7 @@ void MissionUI::Update()
 		m_nowEnemyCount = m_game->GetEnemyListSize();
 
 		wchar_t wcsbuf[256];
-		swprintf_s(wcsbuf, 256, L"敵を全て倒せ  残り%02d/%02d", int(m_nowEnemyCount), int(m_maxEnemyCount));
+		swprintf_s(wcsbuf, 256, L" 敵を全て倒せ  残り%02d/%02d", int(m_nowEnemyCount), int(m_maxEnemyCount));
 
 		m_mission.SetText(wcsbuf);
 		break;
