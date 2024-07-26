@@ -59,7 +59,7 @@ bool Player::Start()
 	m_animationclips[enAnimationClip_Rolling].SetLoopFlag(false);
 	m_animationclips[enAnimationClip_Damage].Load("Assets/modelData/player/proto_player/receivedamage.tka");
 	m_animationclips[enAnimationClip_Damage].SetLoopFlag(false);
-	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/playerV2/un_knockdown.tka");
+	m_animationclips[enAnimationClip_knockdown].Load("Assets/modelData/player/playerV2/un_StandingDeath.tka");
 	m_animationclips[enAnimationClip_knockdown].SetLoopFlag(false);
 
 	m_modelRender.Init("Assets/modelData/player/playerV2/un_player_Pistol.tkm", m_animationclips, enAnimationClip_Num);

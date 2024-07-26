@@ -244,6 +244,7 @@
     <ClCompile Include="MainTimer.cpp" />
     <ClCompile Include="MapUi.cpp" />
     <ClCompile Include="MiniTimer.cpp" />
+    <ClCompile Include="MissionUI.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="MainTimer.h" />
     <ClInclude Include="MapUi.h" />
     <ClInclude Include="MiniTimer.h" />
+    <ClInclude Include="MissionUI.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
     <ClInclude Include="Player.h" />
