@@ -69,6 +69,16 @@ namespace nsK2EngineLow {
 		{
 			return m_d3dDevice;
 		}
+
+		/// <summary>
+		/// D3D12デバイスコンテキストを取得。
+		/// </summary>
+		/// <returns></returns>
+		ID3D12GraphicsCommandList* GetD3DDeviceContext()
+		{
+			return m_pd3dGraphicsCommandList;
+		}
+
 		/// <summary>
 		/// バックバッファの番号を取得。
 		/// </summary>
@@ -323,7 +333,8 @@ namespace nsK2EngineLow {
 			IUnknown* d3dObject;	// リリースするD3Dオブジェクト
 			int delayTime;				// 遅延フレーム。この値は毎フレームデクリメントされ、0になると解放されます。
 		};
-		ID3D12Device5* m_d3dDevice = nullptr;							//D3Dデバイス。
+		ID3D12Device5* m_d3dDevice = nullptr;		//D3Dデバイス。
+		ID3D12GraphicsCommandList* m_pd3dGraphicsCommandList = NULL; 
 		ID3D12CommandQueue* m_commandQueue = nullptr;					// コマンドキュー。
 		ID3D12CommandAllocator* m_commandAllocator[2] = { nullptr };	//コマンドアロケータ。
 		ID3D12GraphicsCommandList4* m_commandList[2] = { nullptr };		//コマンドリスト。

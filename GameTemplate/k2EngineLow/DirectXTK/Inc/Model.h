@@ -59,6 +59,7 @@ namespace DirectX
         DXGI_FORMAT                                             indexFormat;
         SharedGraphicsResource                                  indexBuffer;
         SharedGraphicsResource                                  vertexBuffer;
+        Microsoft::WRL::ComPtr<ID3D12Resource>                  vertexBufferMicrosoftWRL;
         Microsoft::WRL::ComPtr<ID3D12Resource>                  staticIndexBuffer;
         Microsoft::WRL::ComPtr<ID3D12Resource>                  staticVertexBuffer;
         std::shared_ptr<std::vector<D3D12_INPUT_ELEMENT_DESC>>  vbDecl;
@@ -127,6 +128,7 @@ namespace DirectX
         BoundingBox                 boundingBox;
         ModelMeshPart::Collection   opaqueMeshParts;
         ModelMeshPart::Collection   alphaMeshParts;
+        ModelMeshPart::Collection   meshParts;
         std::wstring                name;
 
         using Collection = std::vector<std::shared_ptr<ModelMesh>>;

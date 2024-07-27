@@ -3,6 +3,7 @@
 #include "tkFile/TkmFile.h"
 #include "MeshParts.h"
 #include "Skeleton.h"
+#include <DirectXTK/Inc/Model.h>
 
 namespace nsK2EngineLow {
 	class IShaderResource;
@@ -55,6 +56,8 @@ namespace nsK2EngineLow {
 	class Model : public Noncopyable {
 
 	public:
+		//メッシュが見つかった時のコールバック関数
+		using OnFindMesh = std::function<void(const std::unique_ptr<DirectX::ModelMeshPart>&)>;
 
 		/// <summary>
 		/// tkmファイルから初期化。
@@ -130,6 +133,18 @@ namespace nsK2EngineLow {
 			return m_worldMatrix;
 		}
 		/// <summary>
+		/// メッシュを検索する
+		/// </summary>
+		/// <param name="onFindMesh"></param>
+		void FindMesh(OnFindMesh onFindMesh) const
+		{
+			for (auto& modelMeshs : m_modelDx->meshes){
+				for (std::unique_ptr<DirectX::ModelMeshPart>& mesh : modelMeshs->meshParts){
+					onFindMesh(mesh);
+				}
+			}
+		}
+		/// <summary>
 		/// メッシュに対して問い合わせを行う。
 		/// </summary>
 		/// <param name="queryFunc">問い合わせ関数</param>
@@ -182,5 +197,6 @@ namespace nsK2EngineLow {
 		Skeleton m_skeleton;							//スケルトン。
 		MeshParts m_meshParts;							//メッシュパーツ。
 		EnModelUpAxis m_modelUpAxis = enModelUpAxisY;	//モデルの上方向。
+		DirectX::Model* m_modelDx;						//DirectXTKが提供するモデルクラス。
 	};
 }

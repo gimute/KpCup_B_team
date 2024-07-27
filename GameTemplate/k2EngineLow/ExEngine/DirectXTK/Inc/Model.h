@@ -36,6 +36,7 @@ namespace DirectX
 {
     class IEffect;
     class IEffectFactory;
+    class CommonStates;
     class ModelMesh;
 
     //----------------------------------------------------------------------------------
@@ -127,6 +128,7 @@ namespace DirectX
         BoundingBox                 boundingBox;
         ModelMeshPart::Collection   opaqueMeshParts;
         ModelMeshPart::Collection   alphaMeshParts;
+        ModelMeshPart::Collection   meshParts;
         std::wstring                name;
 
         using Collection = std::vector<std::shared_ptr<ModelMesh>>;

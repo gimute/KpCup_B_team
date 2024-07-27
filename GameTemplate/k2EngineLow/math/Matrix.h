@@ -266,6 +266,24 @@ namespace nsK2EngineLow {
 			);
 			mat = lm;
 		}
+		/*!
+		*@brief	ベクトルと行列の乗算
+		*@param[in,out]		v	乗算されるベクトル。
+		*/
+		void Mul(Vector3& vOut) const
+		{
+			DirectX::XMStoreFloat3(
+				&vOut.vec,
+				DirectX::XMVector3Transform(vOut, *this)
+			);
+		}
+		void Mul(Vector4& vOut) const
+		{
+			DirectX::XMStoreFloat4(
+				&vOut.vec,
+				DirectX::XMVector4Transform(vOut, *this)
+			);
+		}
 
 		/// <summary>
 		/// 行列の代入演算子

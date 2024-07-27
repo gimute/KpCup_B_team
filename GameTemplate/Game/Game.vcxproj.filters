@@ -4,6 +4,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Astar">
+      <UniqueIdentifier>{99469e6c-666d-45bf-a3b4-42057a77b7eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -41,6 +44,12 @@
     <ClCompile Include="MapUi.cpp" />
     <ClCompile Include="RemainingBulletsUi.cpp" />
     <ClCompile Include="InformationUi.cpp" />
+    <ClCompile Include="AstarAlgo.cpp">
+      <Filter>Astar</Filter>
+    </ClCompile>
+    <ClCompile Include="Navimesh.cpp">
+      <Filter>Astar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -77,5 +86,11 @@
     <ClInclude Include="MapUi.h" />
     <ClInclude Include="RemainingBulletsUi.h" />
     <ClInclude Include="InformationUi.h" />
+    <ClInclude Include="AstarAlgo.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
+    <ClInclude Include="Navimesh.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

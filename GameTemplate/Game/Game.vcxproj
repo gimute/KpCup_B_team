@@ -223,6 +223,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AstarAlgo.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Car.cpp" />
@@ -246,6 +247,7 @@
     <ClCompile Include="MiniTimer.cpp" />
     <ClCompile Include="ModelRenderTest.cpp" />
     <ClCompile Include="ModelTest.cpp" />
+    <ClCompile Include="Navimesh.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointYazirushi.cpp" />
     <ClCompile Include="RemainingBulletsUi.cpp" />
@@ -262,6 +264,7 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AstarAlgo.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Car.h" />
@@ -284,6 +287,7 @@
     <ClInclude Include="MiniTimer.h" />
     <ClInclude Include="ModelRenderTest.h" />
     <ClInclude Include="ModelTest.h" />
+    <ClInclude Include="Navimesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointYazirushi.h" />
     <ClInclude Include="RemainingBulletsUi.h" />
