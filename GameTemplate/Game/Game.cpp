@@ -129,14 +129,14 @@ Game::Game()
 
 	//メッセージの背景
 	m_massageBackGround.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
-	m_massageBackGround.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
+	m_massageBackGround.SetPosition(Vector3{ 0.0f,-350.0f,0.0f });
 	m_massageBackGround.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_massageBackGround.Update();
 
 	//ドアが開いたときに表示するメッセージ
 	m_doorOpenMassage.SetText(L"どこかの扉が開いたようだ");
 	m_doorOpenMassage.SetScale(0.35f);
-	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
+	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -400.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	//メッセージの最後に表示する点滅アンダーバー

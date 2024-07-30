@@ -38,8 +38,9 @@ bool GameTimer::Start()
 	//フォントの色を設定。
 	m_fontRender.SetColor({ 255.0f,0.0f,0.0f,1.0f });
 	
+	//ミッションUIを作成
 	m_missionUI = NewGO<MissionUI>(0, "missionui");
-
+	//ミッションUIポジションを設定
 	m_missionUI->SetPosition(Vector3{ SPRITE_POSITION.x + SPRITE_SIZE.x / 2, SPRITE_POSITION.y - SPRITE_SIZE.y / 2, 0.0f });
 
 	return true;
@@ -51,6 +52,18 @@ void GameTimer::Update()
 	IncreaseTimer();
 	//描画処理
 	m_spriteRender.Update();
+
+	//ゲームタイマーを表示しないときはミッションUIも表示しない
+	if (m_game->m_TempDelGameTimer == true)
+	{
+		m_missionUI->SetDrawFlag(true);
+	}
+	else
+	{
+		m_missionUI->SetDrawFlag(false);
+	}
+	
+
 }
 
 void GameTimer::IncreaseTimer()

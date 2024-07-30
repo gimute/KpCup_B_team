@@ -27,19 +27,20 @@ public:
 		m_updateFlag = true;
 	}
 
+	void SetDrawFlag(bool flag)
+	{
+		m_DrawFlag = flag;
+	}
+
 private:
-	SpriteRender m_missionSprite;		//ミッション画像
-	FontRender m_mission;				//ミッション
-
-	Game* m_game = nullptr;				//
-
-	EnMissionState m_missionState = enNone;
-
-	int m_nowEnemyCount = 0;			//現在の敵の数
-	int m_maxEnemyCount = 0;			//元々いた敵の数
-
+	SpriteRender m_missionSprite;		//ミッションフレーム
+	FontRender m_missionString;			//ミッション文
 	Vector3 m_position = Vector3::Zero;	//UIのポジション
-
-	bool m_updateFlag = false;			//諸々のアップデート処理を行うかのフラグ
+	int m_nowEnemyCount = 0;			//現在の敵の数
+	int m_defeatEnemyNumber = 0;		//倒す敵の数
+	Game* m_game = nullptr;				//ゲーム
+	EnMissionState m_missionState = enNone;	//ミッションステート
+	bool m_updateFlag = false;			//アップデート処理を行うかのフラグ
+	bool m_DrawFlag = true;				//描画するかどうかのフラグ
 };
 
