@@ -6,9 +6,11 @@
 
 namespace {
 	//A‚ÌˆÊ’u
-	const Vector3 n_position_A{ -450.0f,342.5f,0.0f };
+	//const Vector3 n_position_A{ -450.0f,342.5f,0.0f };
+	const Vector3 n_position_A{ -470.0f,392.5f,0.0f };
 	//B‚ÆC‚ÌˆÊ’u
-	const Vector3 n_position_BC{ -765.0f,350.0f,0.0f };
+	//const Vector3 n_position_BC{ -765.0f,350.0f,0.0f };
+	const Vector3 n_position_BC{ -785.0f,400.0f,0.0f };
 	//B‚ÆC‚ÌŠî“_
 	const Vector2 n_pivot_BC{ 0,0.5 };
 	//delaytimer‚Ì‰Šúİ’èŠÔ

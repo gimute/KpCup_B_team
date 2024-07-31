@@ -55,7 +55,7 @@ bool Door::Start()
 
 	//文字を見えやすくするためにモヤモヤの画面を読み込む
 	m_spriteRender_moya.Init("Assets/modelData/maintimer/moya.DDS", 700.0f, 100.0f);
-	m_spriteRender_moya.SetPosition(Vector3{ 0.0f,-370.0f,0.0f });
+	m_spriteRender_moya.SetPosition(Vector3{ 0.0f,-350.0f,0.0f });
 	m_spriteRender_moya.SetMulColor({ 0.0f,0.0f,0.0f,0.4f });
 	m_spriteRender_moya.Update();
 
@@ -81,7 +81,7 @@ bool Door::Start()
 	//フォントレンダーの設定
 	m_fontRender.SetText(L"敵をすべて倒さないと開かないようだ");
 	m_fontRender.SetScale(0.35f);
-	m_fontRender.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
+	m_fontRender.SetPosition(Vector3(-350.0f, -400.0f, 0.0f));
 	m_fontRender.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	return true;

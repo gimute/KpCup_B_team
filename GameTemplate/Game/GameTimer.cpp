@@ -2,6 +2,16 @@
 #include "GameTimer.h"
 #include "Gameclear.h"
 #include "Game.h"
+#include "MissionUI.h"
+
+namespace{
+	Vector2 SPRITE_SIZE = { 250.0f, 100.0f };
+	//Vector3 SPRITE_POSITION = { -645.0f, -370.0f, 0.0f };
+	Vector3 SPRITE_POSITION = { -680.0f, -400.0f, 0.0f };
+
+	//Vector3 FONT_POSITION = { -900.0f, -400.0f, 0.0f };
+	Vector3 FONT_POSITION = { -935.0f, -420.0f, 0.0f };
+}
 
 GameTimer::GameTimer()
 {
@@ -10,7 +20,7 @@ GameTimer::GameTimer()
 
 GameTimer::~GameTimer()
 {
-
+	DeleteGO(m_missionUI);
 }
 
 bool GameTimer::Start()
@@ -18,16 +28,21 @@ bool GameTimer::Start()
 	m_game = FindGO<Game>("game");
 
 	//スプライトレンダー設定
-	m_spriteRender.Init("Assets/modelData/maintimer/maintimer.DDS", 250.0f, 100.0f);
+	m_spriteRender.Init("Assets/modelData/maintimer/maintimer.DDS", SPRITE_SIZE.x, SPRITE_SIZE.y);
 	//スプライトレンダーの位置を設定
-	m_spriteRender.SetPosition(Vector3{ -645.0f, -370.0f, 0.0f});
+	m_spriteRender.SetPosition(SPRITE_POSITION);
 	//フォントの位置を設定
-	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
+	m_fontRender.SetPosition(FONT_POSITION);
 	//フォントの大きさを設定
 	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定。
 	m_fontRender.SetColor({ 255.0f,0.0f,0.0f,1.0f });
 	
+	//ミッションUIを作成
+	m_missionUI = NewGO<MissionUI>(0, "missionui");
+	//ミッションUIポジションを設定
+	m_missionUI->SetPosition(Vector3{ SPRITE_POSITION.x + SPRITE_SIZE.x / 2, SPRITE_POSITION.y - SPRITE_SIZE.y / 2, 0.0f });
+
 	return true;
 }
 
@@ -37,6 +52,18 @@ void GameTimer::Update()
 	IncreaseTimer();
 	//描画処理
 	m_spriteRender.Update();
+
+	//ゲームタイマーを表示しないときはミッションUIも表示しない
+	if (m_game->m_TempDelGameTimer == true)
+	{
+		m_missionUI->SetDrawFlag(true);
+	}
+	else
+	{
+		m_missionUI->SetDrawFlag(false);
+	}
+	
+
 }
 
 void GameTimer::IncreaseTimer()
@@ -58,7 +85,7 @@ void GameTimer::FontSet()
 	//表示するテキストを設定
 	m_fontRender.SetText(wcsbuf);
 	//フォントの位置を設定
-	m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
+	//m_fontRender.SetPosition(Vector3(-900.0f, -400.0f, 0.0f));
 	//フォントの大きさを設定
 	m_fontRender.SetScale(1.0f);
 	//フォントの色を設定

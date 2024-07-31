@@ -26,7 +26,7 @@ namespace nsK2EngineLow {
 			m_color,
 			m_rotation,
 			m_scale,
-			Sprite::DEFAULT_PIVOT
+			m_pivot
 		);
 		m_font.End(rc);
 	}

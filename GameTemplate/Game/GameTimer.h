@@ -1,6 +1,7 @@
 #pragma once
 class Game;
 class GameClear;
+class MissionUI;
 
 class GameTimer:public IGameObject
 {
@@ -28,5 +29,9 @@ public:
 
 	float m_second = 0.0f;	//•b”
 	int m_minute = 0.0f;	//•ª”
+
+	MissionUI* m_missionUI = nullptr;
+
+	float tsts = 0;
 };
 

@@ -73,6 +73,17 @@ namespace nsK2EngineLow {
 			return m_color;
 		}
 
+		/// <summary>
+		/// 影のパラメータを設定。
+		/// </summary>
+		/// <param name="isDrawShadow">影を描画する？</param>
+		/// <param name="shadowOffset">影を描画するときのピクセルのオフセット量。</param>
+		/// <param name="shadowColor">影の色。</param>
+		void SetShadowParam(bool isDrawShadow, float shadowOffset, const Vector4& shadowColor)
+		{
+			m_font.SetShadowParam(isDrawShadow, shadowOffset, shadowColor);
+		}
+
 		//描画処理。
 		void Draw(RenderContext& rc);
 
@@ -85,6 +96,7 @@ namespace nsK2EngineLow {
 		float							m_rotation = 0.0f;					//回転。
 		float							m_scale = 1.0f;						//文字の大きさ。
 		Vector4							m_color = g_vec4White;				//文字の色、デフォルトは白。
+		Vector2							m_pivot = Sprite::DEFAULT_PIVOT;	//ピボット。
 
 		wchar_t							m_text[MAX_TEXT_SIZE];				//表示する文字。
 		Font							m_font;
