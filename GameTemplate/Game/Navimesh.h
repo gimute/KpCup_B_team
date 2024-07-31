@@ -4,6 +4,18 @@
 #include "physics/BoxCollider.h"
 //参考：廣田先生のゲームから
 
+//これを定義するとナビメッシュのデータが再作成される。
+//背景データに変更が入ったときに有効にしてください。
+
+#define REBUILD_NAVIMESH_DATA		
+
+//これを定義すると、ナビメッシュのデバッグ表示が有効になる。
+#ifdef _DEBUG
+#define USE_NAVIMESH_DEBUG	//Debug。
+#else
+#define USE_NAVIMESH_DEBUG	//Release.
+#endif
+
 struct CellBinary{
 	Vector3		vecTexPos[3];	//セルの頂点のポジション
 	int			lincCellNo[3];	//セルに隣接しているセル
@@ -60,6 +72,10 @@ private:
 	/// セルを構築する。
 	/// </summary>
 	void BuildCells();
+	/// <summary>
+	/// セルのリンク情報を構築。
+	/// </summary>
+	void BuildLinkCellInfo();
 private:
 	//typedefは既存の型名に新しい名前を付ける。
 	typedef std::vector<Vector3>					VertexBuffer;	//頂点バッファ。

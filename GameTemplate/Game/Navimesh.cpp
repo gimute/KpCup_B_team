@@ -42,6 +42,90 @@ struct NMCallBack : public btCollisionWorld::ConvexResultCallback
 		return 0;
 	}
 };
+/*!
+	*@brief	ストップウォッチクラス。
+	*@details
+	* C#のStopwatchのように使える。</br>
+	*@code
+	サンプルコード
+	Stopwatch sw;
+	sw.Start();		//計測開始。
+	for(int i = 0; i < 100; i++ ){
+	}
+	sw.Stop();		//計測終了
+	printf("経過時間 = %lf(単位：秒)\n", sw.GetElapsed());
+	printf("経過時間 = %lf(単位：ミリ)\n", sw.GetElapsedMillisecond());
+	*@endcode
+	*
+	*/
+class CStopwatch {
+public:
+	/*!
+		*@brief	コンストラクタ。
+		*/
+	CStopwatch()
+	{
+		freq = 0;
+		end = 0;
+		begin = 0;
+		elapsed = 0.0;
+		elapsedMill = 0.0;
+		elapsedMicro = 0.0;
+	}
+	/*!
+		*@brief	デストラクタ。
+		*/
+	~CStopwatch()
+	{
+	}
+	/*!
+		*@brief	計測開始。
+		*/
+	void Start()
+	{
+		::QueryPerformanceCounter((LARGE_INTEGER*)&begin);
+	}
+	/*!
+		*@brief	計測終了
+		*/
+	void Stop()
+	{
+		::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+		::QueryPerformanceCounter((LARGE_INTEGER*)&end);
+		elapsed = double(end - begin) / freq;
+		elapsedMill = elapsed * 1000.0;
+		elapsedMicro = elapsedMill * 1000.0;
+	}
+	/*!
+		*@brief	経過時間を取得(単位:秒)
+		*/
+	double GetElapsed() const
+	{
+		return elapsed;
+	}
+	/*!
+		*@brief	経過時間を取得(単位:ミリ秒)
+		*/
+	double GetElapsedMillisecond() const
+	{
+		return elapsedMill;
+	}
+	/*!
+		*@brief	経過時間を取得(単位:マイクロ秒)
+		*/
+	double GetElapsedMicrosecond() const
+	{
+		return elapsedMicro;
+	}
+private:
+	LONGLONG freq;
+	LONGLONG end;
+	LONGLONG begin;
+	double elapsed;			//経過時間(単位：秒)
+	double elapsedMill;		//経過時間(単位：ミリ秒)
+	double elapsedMicro;	//経過時間(単位：マイクロ秒)
+
+};
 
 void Navimesh::BuildLinkCellInfo(int startCellNo, int endCellNo)
 {
@@ -278,6 +362,84 @@ void Navimesh::BuildCells()
 			all->costFromStart = 0.0f;
 			all->costToGoal = 0.0f;
 			all->parentCell = nullptr;
+		}
+	}
+}
+
+void Navimesh::BuildLinkCellInfo()
+{
+#ifdef _DEBUG
+	//一つのスレッドで調べるセルの数を計算
+	CStopwatch sw;
+	sw.Start();
+#endif
+	int numCellOneThread = m_cells.size() / 3;
+#if 1 //これを0にするとシングルスレッドでの隣接セルの構築になります。
+	//4スレッドに分担して隣接セル情報を構築する。
+	//並列。
+	std::thread buildLinkCellThread00([&] {
+		BuildLinkCellInfo(0, numCellOneThread);
+	});
+
+	std::thread buildLinkCellThread01([&] {
+		BuildLinkCellInfo(numCellOneThread, numCellOneThread * 2);
+	});
+
+	std::thread buildLinkCellThread02([&] {
+		BuildLinkCellInfo(numCellOneThread * 2, numCellOneThread * 3);
+	});
+
+	std::thread buildLinkCellThread03([&] {
+		BuildLinkCellInfo(numCellOneThread * 3, numCellOneThread * 4);
+	});
+#else
+	//直列
+	buildLinkCellThread00.join();
+	buildLinkCellThread01.join();
+	buildLinkCellThread02.join();
+	buildLinkCellThread03.join();
+#endif
+#ifdef _DEBUG
+	//時間計測
+	sw.Stop();
+	char text[256];
+	sprintf(text, "build time = %f\n", sw.GetElapsed());
+	OutputDebugString(text);
+#endif // _DEBUG
+}
+
+void Navimesh::Save()
+{
+	FILE* fp = fopen("stage.hnv", "wb");
+	if (fp == nullptr)
+	{
+		//ファイルオープンに失敗
+		MessageBox(nullptr, L"エラー", L"stage.hnvが開けませんでした。", MB_OK);
+	}
+	int cellNum = m_cells.size();
+	//バイナリデータをファイルに書き込む
+	fwrite(&cellNum, sizeof(int), 1, fp);
+	//セルのデータを構造体に保存する
+	for (auto& cell : m_cells)
+	{
+		CellBinary cellBinary;
+		//頂点
+		for (int i = 0; i < 3; i++)
+		{
+			cellBinary.vecTexPos[i] = cell->vertexPos[i];
+		}
+		//隣接セル
+		for (int i = 0; i < 3; i++)
+		{
+			int count = 0;
+			if (cell->linkCells[i] == nullptr)
+			{
+				cellBinary.lincCellNo[i] = -1;
+			}
+			else
+			{
+
+			}
 		}
 	}
 }
