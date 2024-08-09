@@ -62,7 +62,7 @@ Game::Game()
 	m_background = NewGO<BackGround>(0, "background");
 	
 	//レベルを使ってプレイヤー、ドア、エネミーを配置
-	m_levelRender.Init("Assets/levelData/map2level.tkl", [&](LevelObjectData_Render& objData)
+	m_levelRender.Init("Assets/levelData/mainLevel.tkl", [&](LevelObjectData_Render& objData)
 	{
 		if (objData.ForwardMatchName(L"player") == true)
 		{
@@ -86,6 +86,7 @@ Game::Game()
 			//ローカル変数で受け取る
 			Enemy* m_enemy = NewGO<Enemy>(0, "enemy");
 			m_enemy->m_position = objData.position;
+			m_enemy->m_rotation = objData.rotation;
 
 			return true;
 		}
