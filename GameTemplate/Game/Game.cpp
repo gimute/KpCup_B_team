@@ -135,9 +135,9 @@ Game::Game()
 	m_massageBackGround.Update();
 
 	//ドアが開いたときに表示するメッセージ
-	m_doorOpenMassage.SetText(L"どこかの扉が開いたようだ");
+	m_doorOpenMassage.SetText(L"どこかのゲートが開いたようだ");
 	m_doorOpenMassage.SetScale(0.35f);
-	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -400.0f, 0.0f));
+	m_doorOpenMassage.SetPosition(Vector3(-370.0f, -400.0f, 0.0f));
 	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
 
 	//メッセージの最後に表示する点滅アンダーバー
@@ -155,7 +155,7 @@ Game::Game()
 	UnKnDown.m_alphaBlendMode = AlphaBlendMode_Trans;
 	//用意したInitDataでスプライトレンダーを初期化
 	m_spRenUnKnDown.Init(UnKnDown);
-	m_spRenUnKnDown.SetPosition(Vector3{ 25.0f,-378.0f,0.0f });
+	m_spRenUnKnDown.SetPosition(Vector3{ 55.0f,-368.0f,0.0f });
 	m_spRenUnKnDown.Update();
 }
 
