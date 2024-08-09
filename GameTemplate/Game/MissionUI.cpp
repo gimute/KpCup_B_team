@@ -93,7 +93,7 @@ void MissionUI::Update()
 
 	case MissionUI::enGoDoor:
 		//ミッション文を設定
-		m_missionString.SetText(L" ドアに向かえ");
+		m_missionString.SetText(L" ゲートに向かえ");
 		break;
 
 	case MissionUI::enNone:

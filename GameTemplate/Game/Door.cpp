@@ -74,7 +74,7 @@ bool Door::Start()
 	initData.m_alphaBlendMode = AlphaBlendMode_Trans;
 
 	m_spRen_under.Init(initData);
-	m_spRen_under.SetPosition(Vector3{ 150.0f,-378.0f,0.0f });
+	m_spRen_under.SetPosition(Vector3{ 150.0f,-368.0f,0.0f });
 	//m_spRen_under.SetMulColor({ 1.0f,1.0f,1.0f,1.0f });
 	m_spRen_under.Update();
 
