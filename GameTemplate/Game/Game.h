@@ -27,11 +27,12 @@ class EventCamera;
 class MapUi;
 class RemainingBulletsUi;
 class InformationUi;
+class CountDownUI;
 //
 class Game : public IGameObject
 {
 public:
-	//ƒQ[ƒ€‚ÌƒXƒe[ƒg
+	//ã‚²ãƒ¼ãƒ ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 	enum EnGameState {
 		enIdle,
 		enGameClear,
@@ -40,36 +41,39 @@ public:
 		enInformation,
 	};
 
-	//ƒQ[ƒ€ŠJnA‡”Ô‚É•\¦‚·‚éƒCƒ“ƒtƒHƒ[ƒVƒ‡ƒ“‚ğ§Œä‚·‚éƒXƒe[ƒg
+	//ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã€é †ç•ªã«è¡¨ç¤ºã™ã‚‹ã‚¤ãƒ³ãƒ•ã‚©ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’åˆ¶å¾¡ã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ
 	enum EnStartInformationState {
-		enWait,			//ƒQ[ƒ€ŠJn‚ÌƒtƒF[ƒh‚ªI‚í‚é‚Ì‚ğ‘Ò‚ÂƒXƒe[ƒg
-		enMission,		//ƒ~ƒbƒVƒ‡ƒ“ƒXƒe[ƒg
-		enSousa,		//‘€ìà–¾ƒXƒe[ƒg
-		enGameStart,	//ƒQ[ƒ€ŠJn‚Ì€”õ‚ğ‚·‚éƒXƒe[ƒg
-		enEnd			//ƒCƒ“ƒtƒH[ƒ[ƒVƒ‡ƒ“I—¹
+		enWait,			//ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®ãƒ•ã‚§ãƒ¼ãƒ‰ãŒçµ‚ã‚ã‚‹ã®ã‚’å¾…ã¤ã‚¹ãƒ†ãƒ¼ãƒˆ
+		enMission,		//ãƒŸãƒƒã‚·ãƒ§ãƒ³ã‚¹ãƒ†ãƒ¼ãƒˆ
+		enSousa,		//æ“ä½œèª¬æ˜ã‚¹ãƒ†ãƒ¼ãƒˆ
+		enGameStart,	//ã‚²ãƒ¼ãƒ é–‹å§‹ã®æº–å‚™ã‚’ã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ
+		enEnd			//ã‚¤ãƒ³ãƒ•ã‚©ãƒ¼ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†
 	};
 
 	Game();
 	~Game();
-	bool Start();
-
-	void Update();
-	//
-	void AlphaCalc();
-	//§ŒÀŠÔ
-	void DisplayTime();
-	//ƒQ[ƒ€ƒNƒŠƒA‚ğ’Ê’m‚·‚é
-	void NotifyGameClear();
-	void NotifyGameOver();
-	void Render(RenderContext& rc);
-	void Delete_EnemyVec(const int num);
+	bool Start() override;
+	void Update() override;
+	void Render(RenderContext& rc) override;
 
 	/// <summary>
-	/// ƒGƒlƒ~[‚Ì”z—ñ‚©‚ç”z—ñ”Ô†‚ğ“ü‚ê‚Ä‚»‚ÌˆÊ’u‚ğæ“¾
+	/// ã‚¨ãƒãƒŸãƒ¼ã®é…åˆ—ã‹ã‚‰é…åˆ—ç•ªå·ã‚’å…¥ã‚Œã¦ãã®ä½ç½®ã‚’å–å¾—
 	/// </summary>
 	/// <param name="num"></param>
 	/// <returns></returns>
 	Vector3 GetEnemyListPos(int num);
+
+public:
+	//void TimerStart();
+	//
+	void AlphaCalc();
+	//åˆ¶é™æ™‚é–“
+	void DisplayTime();
+	//ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã‚’é€šçŸ¥ã™ã‚‹
+	void NotifyGameClear();
+	void NotifyGameOver();
+	void Delete_EnemyVec(const int num);
+
 
 	bool EnemyListExistence();
 
@@ -79,15 +83,15 @@ public:
 
 	void SetEnemyAttackState(const int Listnum, const Enemy::EnEnemyAttackSpeed& enemystate);
 
-	//ƒQ[ƒ€‚ÌƒXƒe[ƒg‚ğ‘JˆÚ‚·‚éˆ—
+	//ã‚²ãƒ¼ãƒ ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’é·ç§»ã™ã‚‹å‡¦ç†
 	void GameStateTransition();
-	//‘¼‚ÌƒNƒ‰ƒX‚©‚çŒÄ‚Ô‚½‚ß‚ÌƒQ[ƒ€ƒNƒŠƒAˆ—B
+	//ä»–ã®ã‚¯ãƒ©ã‚¹ã‹ã‚‰å‘¼ã¶ãŸã‚ã®ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢å‡¦ç†ã€‚
 	void GameClearProcess();
-	//ƒXƒ[ƒ‚[ƒWƒ‡ƒ“ƒXƒ^[ƒg
+	//ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ã‚¸ãƒ§ãƒ³ã‚¹ã‚¿ãƒ¼ãƒˆ
 	void SlowStart(float SlowTime,int SlowStrength);
 
 	bool ExistsEnemyListPtr(Enemy* enemy_ptr);
-	//ƒGƒlƒ~[‚ğ‘Sˆõ“|‚µ‚½‚©‚Ìƒtƒ‰ƒO‚ğ•Ô‚·
+	//ã‚¨ãƒãƒŸãƒ¼ã‚’å…¨å“¡å€’ã—ãŸã‹ã®ãƒ•ãƒ©ã‚°ã‚’è¿”ã™
 	bool GetEnemyAllKillFlag()
 	{
 		return m_enemyAllKillFlag;
@@ -129,22 +133,53 @@ public:
 		return m_isPlayerMove;
 	}
 
-	//ƒQ[ƒ€ŠJn‚É•\¦‚·‚éƒCƒ“ƒtƒHƒ[ƒVƒ‡ƒ“‚Ì§Œä‚ğ‚·‚éŠÖ”
+	bool GetTimerStart()
+	{
+		return m_isTimerStart;
+	}
+
+	bool GetThirdCD()
+	{
+		return m_thirdCD;
+	}
+
+	bool GetSecondCD()
+	{
+		return m_secondCD;
+	}
+
+	bool GetFirstCD()
+	{
+		return m_startCD;
+	}
+
+	bool GetStartCD()
+	{
+		return m_startCD;
+	}
+
+public:
+	//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+	//ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã«è¡¨ç¤ºã™ã‚‹ã‚¤ãƒ³ãƒ•ã‚©ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ¶å¾¡ã‚’ã™ã‚‹é–¢æ•°
 	void GameStarInformation();
 
-	//ƒƒ“ƒo•Ï”
+	//ãƒ¡ãƒ³ãƒå¤‰æ•°
 	Player* m_player;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	GameClear* m_gameclear;
 	GameTimer* m_gametimer;
-	SpriteRender m_spriterender; //ƒXƒvƒ‰ƒCƒgƒŒƒ“ƒ_[B
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
+
+	SpriteRender m_spriterender; //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ¬ãƒ³ãƒ€ãƒ¼ã€‚
+	
+	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
 	InformationUi* m_infoUi;
+	CountDownUI* m_coDoUI = nullptr;
 	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
@@ -159,6 +194,9 @@ public:
 	bool m_TempDelGameTimer = true;
 	bool m_TempDelPlayer = false;
 
+	
+	float m_minit = 0.0f;
+
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
 	EnemyCamPos m_enemyCamPos;
@@ -166,30 +204,38 @@ private:
 
 	PreSpriteRender m_preSpriteRender;
 	SpriteRender m_pncSpriteRender;
-	EnGameState m_gameState = enInformation;	//ƒQ[ƒ€‚ÌƒXƒe[ƒg
-												//Å‰‚Í‘€ìà–¾‚È‚Ç‚ÌƒCƒ“ƒtƒHƒ[ƒVƒ‡ƒ“‚©‚çn‚Ü‚é
+	EnGameState m_gameState = enInformation;	//ã‚²ãƒ¼ãƒ ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
+												//æœ€åˆã¯æ“ä½œèª¬æ˜ãªã©ã®ã‚¤ãƒ³ãƒ•ã‚©ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‹ã‚‰å§‹ã¾ã‚‹
 
-	EnGameState m_EventAfterState;		//ƒCƒxƒ“ƒgƒV[ƒ“I—¹Œã‚ÉˆÚs‚·‚éƒXƒe[ƒg
+	EnGameState m_EventAfterState;		//ã‚¤ãƒ™ãƒ³ãƒˆã‚·ãƒ¼ãƒ³çµ‚äº†å¾Œã«ç§»è¡Œã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ
 
-	bool m_enemyAllKillFlag = false;	//“G‚ğ‘S–Å‚³‚¹‚½‚©
+	bool m_enemyAllKillFlag = false;	//æ•µã‚’å…¨æ»…ã•ã›ãŸã‹
 	bool m_alphaCalcBool;
-	bool m_pncDraw = false;				//HPƒsƒ“ƒ`ƒGƒtƒFƒNƒg•\¦‚·‚é‚©
-	bool m_hpEffect = false;			//HPƒsƒ“ƒ`ƒGƒtƒFƒNƒg‚ªŒ»İA•\¦‚³‚ê‚Ä‚¢‚é‚©
-	bool m_hpLowBgmBool = false;		//HPƒsƒ“ƒ`‚ÌBGM‚ª—¬‚ê‚Ä‚¢‚é‚©
-	bool m_isPlayerMove = false;				//ƒvƒŒƒCƒ„[‚ªˆÚ“®‚Å‚«‚é‚©‚Ç‚¤‚©
+	bool m_pncDraw = false;				//HPãƒ”ãƒ³ãƒæ™‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆè¡¨ç¤ºã™ã‚‹ã‹
+	bool m_hpEffect = false;			//HPãƒ”ãƒ³ãƒæ™‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒç¾åœ¨ã€è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹ã‹
+	bool m_hpLowBgmBool = false;		//HPãƒ”ãƒ³ãƒæ™‚ã®BGMãŒæµã‚Œã¦ã„ã‚‹ã‹
+	bool m_isPlayerMove = false;		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç§»å‹•ã§ãã‚‹ã‹ã©ã†ã‹
+	bool m_isTimerStart = false;		// ã‚¿ã‚¤ãƒãƒ¼ãŒã‚¹ã‚¿ãƒ¼ãƒˆã—ã¦ã„ã‚‹ã‹
+	bool m_thirdCD = false;
+	bool m_secondCD = false;
+	bool m_firstCD = false;
+	bool m_startCD = false;
+	
+	bool m_isPlayerMove = false;				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç§»å‹•ã§ãã‚‹ã‹ã©ã†ã‹
 	bool m_isTimerStart = false;
-	float m_alpha = 0.1f;				//ƒAƒ‹ƒtƒ@ƒ`ƒƒƒ“ƒlƒ‹‚Ì’²®—p•Ï”
-	float m_slowTime = 0.0f;			//ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÔ
+	float m_alpha = 0.1f;				//ã‚¢ãƒ«ãƒ•ã‚¡ãƒãƒ£ãƒ³ãƒãƒ«ã®èª¿æ•´ç”¨å¤‰æ•°
+	float m_slowTime = 0.0f;			//ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“
 
 	SoundSource* m_gameBgm;
 	SoundSource* m_hpLowBgm;
 
-	SpriteRender m_massageBackGround;	//ƒƒbƒZ[ƒW”wŒi
-	SpriteRender m_spRenUnKnDown;		//ƒƒbƒZ[ƒW‚ÌÅŒã‚ÉƒAƒ“ƒ_[ƒo[
-	FontRender m_doorOpenMassage;		//ƒhƒA‚ªŠJ‚¢‚½‚±‚Æ‚ğ’m‚ç‚¹‚éƒƒbƒZ[ƒW
-	bool m_doorOpenMassageFlag = false;	//ƒhƒA‚ªŠJ‚¢‚½‚±‚Æ‚ğ’m‚ç‚¹‚éƒƒbƒZ[ƒW•\¦ƒtƒ‰ƒO
-	float m_massageTimer;				//ƒƒbƒZ[ƒW‚ğ•\¦‚·‚éŠÔ‚ğ§Œä‚·‚éƒ^ƒCƒ}[
+	SpriteRender m_massageBackGround;	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸èƒŒæ™¯
+	SpriteRender m_spRenUnKnDown;		//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æœ€å¾Œã«ã‚¢ãƒ³ãƒ€ãƒ¼ãƒãƒ¼
+	FontRender m_doorOpenMassage;		//ãƒ‰ã‚¢ãŒé–‹ã„ãŸã“ã¨ã‚’çŸ¥ã‚‰ã›ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	bool m_doorOpenMassageFlag = false;	//ãƒ‰ã‚¢ãŒé–‹ã„ãŸã“ã¨ã‚’çŸ¥ã‚‰ã›ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤ºãƒ•ãƒ©ã‚°
+	bool m_timerDraw = true;			//ã‚¿ã‚¤ãƒãƒ¼ãŒæç”»ã•ã‚Œã¦ã„ã‚‹ã‹
+	float m_massageTimer;				//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹æ™‚é–“ã‚’åˆ¶å¾¡ã™ã‚‹ã‚¿ã‚¤ãƒãƒ¼
 
-	EnStartInformationState m_startInformationState = enWait;	//ƒQ[ƒ€ŠJn‡”Ô‚É•\¦‚·‚éƒCƒ“ƒtƒHƒ[ƒVƒ‡ƒ“‚ğ§Œä‚·‚éƒXƒe[ƒg
+	EnStartInformationState m_startInformationState = enWait;	//ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚é †ç•ªã«è¡¨ç¤ºã™ã‚‹ã‚¤ãƒ³ãƒ•ã‚©ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’åˆ¶å¾¡ã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆ
 };
 

@@ -27,6 +27,8 @@
 #include "MapUi.h"
 #include "RemainingBulletsUi.h"
 #include "InformationUi.h"
+#include "CountDownUI.h"
+#include "graphics/effect/EffectEmitter.h"
 ///////////////////////////////
 
 Game::Game()
@@ -113,6 +115,17 @@ Game::Game()
 	//ゲーム開始時に表示するインフォメーション画像を設定
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
+	// カウントダウンのスプライトの表示
+	//m_coDoUI = NewGO<CountDownUI>(1, "Third");
+	//m_coDoUI->InitCountDownSprite("Third", "Assets/modelData/ui_countDown/count_3.DDS", 960.0f, 540.0f);
+	//m_coDoUI->InitCountDownSprite("Second", "Assets/modelData/ui_countDown/count_2.DDS", 960.0f, 540.0f);
+	//m_coDoUI->InitCountDownSprite("First", "Assets/modelData/ui_countDown/count_1.DDS", 960.0f, 540.0f);
+	//m_coDoUI->InitCountDownSprite("Start", "Assets/modelData/ui_countDown/count_start.DDS", 960.0f, 540.0f);
+	// 
+	m_coDoUI = NewGO<CountDownUI>(1, "CountDown");
+	//mapui�e�X�g6
+	m_mapUi = NewGO<MapUi>(1, "mapUi");
+	//?Q?[??????BGM???????
 	//インフォメーション中はプレイヤーが動かないように設定
 	IsPlayerMove(true);
 
@@ -122,6 +135,12 @@ Game::Game()
 	m_gameBgm = NewGO<SoundSource>(1);
 	m_gameBgm->Init(1);
 	m_gameBgm->Play(true);
+
+	//エフェクトを読み込む
+	//EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/Simple_SpawnMethod1.efk");
+	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/effect/Laser.efk");
+	//HP???s???`?????BGM???????
+
 	//ピンチ時に再生する心臓の音を登録
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/m_hpLow.wav");
 	//心臓の音再生準備
@@ -157,6 +176,14 @@ Game::Game()
 	m_spRenUnKnDown.Init(UnKnDown);
 	m_spRenUnKnDown.SetPosition(Vector3{ 55.0f,-368.0f,0.0f });
 	m_spRenUnKnDown.Update();
+
+	//?h?A???J?????????m?�_?��?b?Z?[?W????
+	m_doorOpenMassage.SetText(L"�ǂ����̔����J�����悤��");
+	m_doorOpenMassage.SetScale(0.35f);
+	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
+	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
+
+	
 }
 
 Game::~Game()
@@ -201,6 +228,82 @@ void Game::NotifyGameOver()
 
 void Game::Update()
 {
+	// フェード中じゃない時＆ミッションのインフォが非表示時
+	if (!m_load->IsFade() && !m_coDoUI->GetFirstInfo())	
+	{
+		m_infoUi->InitGOInformation("Mission");
+		m_coDoUI->SetFirstInfo(true);
+	}
+	// ミッションのインフォが表示時＆操作説明のインフォが非表示時
+	// 　＆インフォメーション中じゃない時（３つ）
+	//m_coDoUI->SetFirstInfo(true);
+	if (m_coDoUI->GetFirstInfo() && !m_coDoUI->GetSecondInfo() && !m_infoUi->IsInformationOpen())
+	{
+		m_infoUi->InitGOInformation("Sousa");
+		m_coDoUI->SetSecondInfo(true);
+		m_thirdCD = true;
+	}
+	// 操作説明のインフォが表示時＆インフォメーション中である時
+	if (m_coDoUI->GetSecondInfo()  && !m_coDoUI->GetThirdCoDown() && !m_infoUi->IsInformationOpen())
+	{
+		if (m_minit <= 60.0f)
+		{
+			DeleteGO(m_infoUi);
+			m_coDoUI = NewGO<CountDownUI>(1, "Third");
+			m_coDoUI->SetThirdCoDown(true);
+			m_secondCD = true;
+		}
+	}
+	//３のカウントダウンが表示時＆２のカウントダウンが非表示時
+	if (m_coDoUI->GetThirdCoDown() && !m_coDoUI->GetSecondCoDown())
+	{
+		m_coDoUI = NewGO<CountDownUI>(1, "Second");
+		m_coDoUI->SetSecondCoDown(true);
+		m_firstCD = true;
+	}
+	//２のカウントダウンが表示時＆１のカウントダウンが非表示時
+	if (m_coDoUI->GetSecondCoDown() && !m_coDoUI->GetFirstCoDown())
+	{
+		m_coDoUI = NewGO<CountDownUI>(1, "First");
+		m_coDoUI->SetFirstCoDown(true);
+		m_startCD = true;
+	}
+	//１のカウントダウンが表示時＆スタートの画像が非表示時
+	if (m_coDoUI->GetFirstCoDown() && !m_coDoUI->GetStartCoDown())
+	{
+		m_coDoUI = NewGO<CountDownUI>(1,"Start");
+		m_coDoUI->SetStartCoDown(true);
+		//m_coDoUI->SetCountDownClose(true);
+		
+	}
+	////スタートの画像が表示時
+	//// ＆カウントダウンが閉じている時
+	if (m_coDoUI->GetStartCoDown())
+	{
+		if (m_coDoUI->GetCountDownClose())
+		{
+			if (m_timerDraw)
+			{
+				m_gametimer = NewGO<GameTimer>(1, "gametimer");
+				m_timerDraw = false;
+			}
+			m_isTimerStart = true;
+			g_gameTime->IsSlowMotion(false);
+			m_isPlayerMove = true;
+			DeleteGO(m_coDoUI);
+		}
+
+	}
+	
+	if (g_pad[0]->IsTrigger(enButtonA) && !m_isTimerStart)
+	{
+		m_infoUi->InformationClose(false);
+	}
+	
+	//if (m_coDoUI->GetCountDownClose())
+	//{
+	//	TimerStart();
+	//}
 	
 
 	//アルファチャンネルの調整
@@ -323,6 +426,20 @@ void Game::Update()
 	}
 }
 
+//void Game::TimerStart()
+//{
+//	//スタートの画像が表示時＆タイマーが開始していないとき
+//// ＆カウントダウンが閉じている時
+//	if (m_coDoUI->GetStartCoDown())
+//	{
+//		m_gametimer = NewGO<GameTimer>(1, "gametimer");
+//		m_isTimerStart = true;
+//		g_gameTime->IsSlowMotion(false);
+//		DeleteGO(m_coDoUI);
+//	}
+//}
+
+//?A???t?@?`?????l???????
 //アルファチャンネルの調整
 void Game::AlphaCalc()
 {
