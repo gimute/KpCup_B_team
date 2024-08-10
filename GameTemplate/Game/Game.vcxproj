@@ -226,7 +226,6 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Car.cpp" />
-    <ClCompile Include="CountDownUI.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyAttackPoint.cpp" />
@@ -267,7 +266,6 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Car.h" />
-    <ClInclude Include="CountDownUI.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAttackPoint.h" />

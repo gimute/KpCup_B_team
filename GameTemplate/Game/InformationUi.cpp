@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "InformationUi.h"
 #include "Game.h"
-#include "CountDownUI.h"
 
 InformationUi::InformationUi()
 {
