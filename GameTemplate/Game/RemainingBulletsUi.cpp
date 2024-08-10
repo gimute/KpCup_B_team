@@ -13,8 +13,8 @@ RemainingBulletsUi::~RemainingBulletsUi()
 }
 
 namespace {
-	const Vector3 UI_BASE_POS = { -640.0f,250.0f,0.0f };
-	const Vector3 REMAINING_BULLET_UI_POS = { -820.0f,345.0f,0.0f };
+	const Vector3 UI_BASE_POS = { -660.0f,300.0f,0.0f };
+	const Vector3 REMAINING_BULLET_UI_POS = { -850.0f,405.0f,0.0f };
 	const float REMAINING_BULLET_UI_SCALE = 0.8;
 	const Vector4 REMAINING_BULLET_UI_COLOR = { 0.1f, 0.1f, 0.1f, 1.0f };
 	const float REMAINING_BULLET_RELOAD_UI_WIPEMAX = -286.0f;

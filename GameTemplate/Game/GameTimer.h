@@ -1,6 +1,7 @@
 #pragma once
 class Game;
 class GameClear;
+class MissionUI;
 
 class GameTimer:public IGameObject
 {
@@ -26,7 +27,11 @@ public:
 
 	bool m_isSaveClearTime = false;
 
-	float m_minit = 0.0f;	//•b”
-	int m_timer = 0.0f;		//•ª”
+	float m_second = 0.0f;	//•b”
+	int m_minute = 0.0f;	//•ª”
+
+	MissionUI* m_missionUI = nullptr;
+
+	float tsts = 0;
 };
 

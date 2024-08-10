@@ -42,6 +42,7 @@
     <ClCompile Include="RemainingBulletsUi.cpp" />
     <ClCompile Include="InformationUi.cpp" />
     <ClCompile Include="CountDownUI.cpp" />
+    <ClCompile Include="MissionUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -79,5 +80,6 @@
     <ClInclude Include="RemainingBulletsUi.h" />
     <ClInclude Include="InformationUi.h" />
     <ClInclude Include="CountDownUI.h" />
+    <ClInclude Include="MissionUI.h" />
   </ItemGroup>
 </Project>

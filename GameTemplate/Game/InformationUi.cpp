@@ -23,14 +23,6 @@ namespace {
 
 bool InformationUi::Start()
 {
-	//InformationSprite* info_Mission = new InformationSprite;
-	//info_Mission->InitInformationSpriteParam("Assets/modelData/ui_information/Mission.DDS", 1920.0f / 2, 1080.0f / 2);
-	//InitInformationList("Mission", info_Mission);
-
-	//InformationSprite* info_Sousa = new InformationSprite;
-	//info_Sousa->InitInformationSpriteParam("Assets/modelData/ui_information/Sousa.DDS", 1920.0f / 2, 1080.0f / 2);
-	//InitInformationList("Sousa", info_Sousa);
-
 	m_game = FindGO<Game>("game");
 
 	return true;
@@ -78,11 +70,14 @@ void InformationUi::WipeCalc()
 
 		m_informationListIterator->second->m_informationWipeParam.m_infoWipeSizeY += HEIGHT_WIPE_SPEED;
 
+
+		m_isWipeFullyOpen = false;
+
 		if (GetNowIteratorWipeSizeX() >= 0)
 		{
 			m_isInfoDraw = false;
 			m_isInfoWipe = true;
-			m_isWipeFullyOpen = false;
+			
 		}
 	}
 
