@@ -27,6 +27,7 @@ class EventCamera;
 class MapUi;
 class RemainingBulletsUi;
 class InformationUi;
+class CountDownUI;
 //
 class Game : public IGameObject
 {
@@ -40,18 +41,9 @@ public:
 
 	Game();
 	~Game();
-	bool Start();
-
-	void Update();
-	//
-	void AlphaCalc();
-	//制限時間
-	void DisplayTime();
-	//ゲームクリアを通知する
-	void NotifyGameClear();
-	void NotifyGameOver();
-	void Render(RenderContext& rc);
-	void Delete_EnemyVec(const int num);
+	bool Start() override;
+	void Update() override;
+	void Render(RenderContext& rc) override;
 
 	/// <summary>
 	/// エネミーの配列から配列番号を入れてその位置を取得
@@ -59,6 +51,18 @@ public:
 	/// <param name="num"></param>
 	/// <returns></returns>
 	Vector3 GetEnemyListPos(int num);
+
+public:
+	//void TimerStart();
+	//
+	void AlphaCalc();
+	//制限時間
+	void DisplayTime();
+	//ゲームクリアを通知する
+	void NotifyGameClear();
+	void NotifyGameOver();
+	void Delete_EnemyVec(const int num);
+
 
 	bool EnemyListExistence();
 
@@ -118,21 +122,50 @@ public:
 		return m_isPlayerMove;
 	}
 
-	//メンバ変数
+	bool GetTimerStart()
+	{
+		return m_isTimerStart;
+	}
+
+	bool GetThirdCD()
+	{
+		return m_thirdCD;
+	}
+
+	bool GetSecondCD()
+	{
+		return m_secondCD;
+	}
+
+	bool GetFirstCD()
+	{
+		return m_startCD;
+	}
+
+	bool GetStartCD()
+	{
+		return m_startCD;
+	}
+
+public:
+	//インスタンス
 	Player* m_player;
 	Enemy* m_enemy;
 	BackGround* m_background;
 	GameCamera* m_gamecamera;
 	GameClear* m_gameclear;
 	GameTimer* m_gametimer;
-	SpriteRender m_spriterender; //スプライトレンダー。
 	HpUi* m_hpui = nullptr;
 	Load* m_load = nullptr;
+
+	SpriteRender m_spriterender; //スプライトレンダー。
+	
 	//Load* m_load2 = nullptr;
 	Door* door1;
 	SignalRailUi* m_signalRailUi = nullptr;
 	RemainingBulletsUi* m_remainingBulletsUi = nullptr;
 	InformationUi* m_infoUi;
+	CountDownUI* m_coDoUI = nullptr;
 	
 	std::vector<Enemy*> m_EnemyList;
 	std::vector<EnemyHpUi*> m_EnemyHpUiList;
@@ -146,6 +179,9 @@ public:
 	bool m_TempDelSignalUi = true;
 	bool m_TempDelGameTimer = true;
 	bool m_TempDelPlayer = false;
+
+	
+	float m_minit = 0.0f;
 
 private:
 	EnemyAttackPoint m_enemyAttackPoint;
@@ -162,10 +198,13 @@ private:
 	bool m_pncDraw = false;				//HPピンチ時エフェクト表示するか
 	bool m_hpEffect = false;			//HPピンチ時エフェクトが現在、表示されているか
 	bool m_hpLowBgmBool = false;		//HPピンチ時のBGMが流れているか
-	bool m_isPlayerMove = false;				//プレイヤーが移動できるかどうか
-	bool m_isFirstInfo = false;
-	bool m_isSecondInfo = false;
-	bool m_isTimerStart = false;
+	bool m_isPlayerMove = false;		//プレイヤーが移動できるかどうか
+	bool m_isTimerStart = false;		// タイマーがスタートしているか
+	bool m_thirdCD = false;
+	bool m_secondCD = false;
+	bool m_firstCD = false;
+	bool m_startCD = false;
+	
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 	float m_slowTime = 0.0f;			//スローモーション時間
 
@@ -176,6 +215,7 @@ private:
 	SpriteRender m_spRenUnKnDown;		//メッセージの最後にアンダーバー
 	FontRender m_doorOpenMassage;		//ドアが開いたことを知らせるメッセージ
 	bool m_doorOpenMassageFlag = false;	//ドアが開いたことを知らせるメッセージ表示フラグ
+	bool m_timerDraw = true;			//タイマーが描画されているか
 	float m_massageTimer;				//メッセージを表示する時間を制御するタイマー
 };
 
