@@ -1,6 +1,7 @@
 #pragma once
 #include "Game.h"
 
+
 class Game;
 
 class InformationUi : public IGameObject
@@ -144,8 +145,13 @@ public:
 		if (m_informationListIterator != m_informationList.end())
 		{
 			m_isInfoDraw = true;
-			m_game->IsPlayerMove(true);
-			m_game->SlowStart(true, 0);
+			//m_game->IsPlayerMove(true);
+			//m_game->SlowStart(true, 0);
+			
+			//if (m_informationListIterator == m_informationList.end())
+			//{
+			//	m_countDownUI->m_isCountDraw = true;
+			//}
 		}
 
 	}
@@ -168,7 +174,7 @@ public:
 		}
 
 		m_isInfoWipe = false;
-		m_game->IsPlayerMove(false);
+		//m_game->IsPlayerMove(false);
 		if (slowBool)
 		{
 			g_gameTime->IsSlowMotion(false);
