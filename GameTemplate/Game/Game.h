@@ -5,7 +5,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "sound/SoundSource.h"
-
+#include "player.h"
 
 ///////////////////////////////
 class Player;
@@ -39,6 +39,7 @@ public:
 		enGameOver,
 		enEvent,
 		enInformation,
+		enGameStartCountDown
 	};
 
 	//ゲーム開始時、順番に表示するインフォメーションを制御するステート
@@ -158,6 +159,9 @@ public:
 		return m_startCD;
 	}
 
+	void CountDownProcess();
+
+
 public:
 	//インスタンス
 	//ゲーム開始時に表示するインフォメーションの制御をする関数
@@ -193,7 +197,8 @@ public:
 	bool m_TempDelSignalUi = true;
 	bool m_TempDelGameTimer = true;
 	bool m_TempDelPlayer = false;
-
+	
+	//bool m_isPlayerMove = false;		//プレイヤーが移動できるかどうか
 	
 	float m_minit = 0.0f;
 
@@ -221,8 +226,6 @@ private:
 	bool m_firstCD = false;
 	bool m_startCD = false;
 	
-	bool m_isPlayerMove = false;				//プレイヤーが移動できるかどうか
-	bool m_isTimerStart = false;
 	float m_alpha = 0.1f;				//アルファチャンネルの調整用変数
 	float m_slowTime = 0.0f;			//スローモーション時間
 
