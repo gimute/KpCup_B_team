@@ -99,7 +99,7 @@ bool Player::Start()
 
 	m_sphereCollider.Create(1.0f);
 
-	m_game = FindGO<Game>("game");
+	
 
 	//音を読み込む
 	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/m_gunSound.wav");
@@ -118,6 +118,7 @@ bool Player::Start()
 	m_playerStance->Init(14);
 
 	//m_gunStance = NewGO<SoundSource>(13);
+	m_game = FindGO<Game>("game");
 	return true;
 }
 
@@ -185,6 +186,7 @@ void Player::Update()
 	PlayAnimation();
 	//ステートの遷移処理
 	ManageState();
+	
 
 	if (m_playerstate == enPlayerState_KnockDown)
 	{

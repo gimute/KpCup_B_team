@@ -8,7 +8,16 @@ class InformationUi;
 class CountDownUI : public IGameObject
 {
 public:
-	
+	enum Draw
+	{
+		enStanby,
+		enThirdDraw,
+		enSecondDraw,
+		enFirsrDraw,
+		enStartDraw,
+		enEnd
+	};
+
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
@@ -35,86 +44,90 @@ public:
 	/// <param name="rc"></param>
 	void Render(RenderContext& rc);
 
-	bool GetFirstInfo()
-	{
-		return m_isFirstInfo;
-	}
 
-	void SetFirstInfo(bool FirstInfo)
-	{
-		m_isFirstInfo = FirstInfo;
-		return;
-	}
+	void CountDownStart();
 
-	bool GetSecondInfo()
+	const Draw GetState()
 	{
-		return m_isSecondInfo;
+		return m_state;
 	}
+	//bool GetFirstInfo()
+	//{
+	//	return m_isFirstInfo;
+	//}
 
-	void SetSecondInfo(bool SecondInfo)
-	{
-		m_isSecondInfo = SecondInfo;
-	}
-	
-	bool GetThirdCoDown()
-	{
-		return m_isThirdCoDown;
-	}
+	//void SetFirstInfo(bool FirstInfo)
+	//{
+	//	m_isFirstInfo = FirstInfo;
+	//	return;
+	//}
 
-	void SetThirdCoDown(bool ThirdCoDown)
-	{
-		m_isThirdCoDown = ThirdCoDown;
-	}
+	//bool GetSecondInfo()
+	//{
+	//	return m_isSecondInfo;
+	//}
 
-	bool GetSecondCoDown()
-	{
-		return m_isSecondCoDown;
-	}
+	//void SetSecondInfo(bool SecondInfo)
+	//{
+	//	m_isSecondInfo = SecondInfo;
+	//}
+	//
+	//bool GetThirdCoDown()
+	//{
+	//	return m_isThirdCoDown;
+	//}
 
-	void SetSecondCoDown(bool SecondCoDown)
-	{
-		m_isSecondCoDown = SecondCoDown;
-	}
+	//void SetThirdCoDown(bool ThirdCoDown)
+	//{
+	//	m_isThirdCoDown = ThirdCoDown;
+	//}
 
-	bool GetFirstCoDown()
-	{
-		return m_isFirstCoDown;
-	}
+	//bool GetSecondCoDown()
+	//{
+	//	return m_isSecondCoDown;
+	//}
 
-	void SetFirstCoDown(bool FirstCoDown)
-	{
-		m_isFirstCoDown = FirstCoDown;
-	}
+	//void SetSecondCoDown(bool SecondCoDown)
+	//{
+	//	m_isSecondCoDown = SecondCoDown;
+	//}
 
-	bool GetStartCoDown()
-	{
-		return m_isStartCoDown;
-	}
+	//bool GetFirstCoDown()
+	//{
+	//	return m_isFirstCoDown;
+	//}
 
-	void SetStartCoDown(bool StartCoDown)
-	{
-		m_isStartCoDown = StartCoDown;
-	}
+	//void SetFirstCoDown(bool FirstCoDown)
+	//{
+	//	m_isFirstCoDown = FirstCoDown;
+	//}
 
-	bool GetCountDownClose()
-	{
-		return m_isCountDownClose;
-	}
+	//bool GetStartCoDown()
+	//{
+	//	return m_isStartCoDown;
+	//}
 
-	void SetCountDownClose(bool CountDownClose)
-	{
-		m_isCountDownClose = CountDownClose;
-	}
+	//void SetStartCoDown(bool StartCoDown)
+	//{
+	//	m_isStartCoDown = StartCoDown;
+	//}
+
+	//bool GetCountDownClose()
+	//{
+	//	return m_isCountDownClose;
+	//}
+
+	//void SetCountDownClose(bool CountDownClose)
+	//{
+	//	m_isCountDownClose = CountDownClose;
+	//}
 
 
 private:
-	enum m_Draw
-	{
-		ThirdDraw,
-		SecondDraw,
-		FirsrDraw,
-		StartDraw
-	};
+	
+	Draw m_state = enStanby;
+	float m_countDownTimer = 0.0f;
+
 	SpriteRender	 m_spriteRenderThird;			// 「３」のスプライトレンダー
 	SpriteRender	 m_spriteRenderSecond;			// 「２」のスプライトレンダー
 	SpriteRender	 m_spriteRenderFirst;			// 「１」のスプライトレンダー
