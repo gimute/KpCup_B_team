@@ -115,17 +115,10 @@ Game::Game()
 	//ゲーム開始時に表示するインフォメーション画像を設定
 	m_infoUi->InitInformationSprite("Sousa", "Assets/modelData/ui_information/Sousa.DDS",960.0f,540.0f);
 	m_infoUi->InitInformationSprite("Mission", "Assets/modelData/ui_information/Mission.DDS", 960.0f, 540.0f);
+
 	// カウントダウンのスプライトの表示
-	//m_coDoUI = NewGO<CountDownUI>(1, "Third");
-	//m_coDoUI->InitCountDownSprite("Third", "Assets/modelData/ui_countDown/count_3.DDS", 960.0f, 540.0f);
-	//m_coDoUI->InitCountDownSprite("Second", "Assets/modelData/ui_countDown/count_2.DDS", 960.0f, 540.0f);
-	//m_coDoUI->InitCountDownSprite("First", "Assets/modelData/ui_countDown/count_1.DDS", 960.0f, 540.0f);
-	//m_coDoUI->InitCountDownSprite("Start", "Assets/modelData/ui_countDown/count_start.DDS", 960.0f, 540.0f);
-	// 
 	m_coDoUI = NewGO<CountDownUI>(1, "CountDown");
-	//mapui�e�X�g6
-	m_mapUi = NewGO<MapUi>(1, "mapUi");
-	//?Q?[??????BGM???????
+
 	//インフォメーション中はプレイヤーが動かないように設定
 	IsPlayerMove(true);
 
@@ -176,14 +169,6 @@ Game::Game()
 	m_spRenUnKnDown.Init(UnKnDown);
 	m_spRenUnKnDown.SetPosition(Vector3{ 55.0f,-368.0f,0.0f });
 	m_spRenUnKnDown.Update();
-
-	//?h?A???J?????????m?�_?��?b?Z?[?W????
-	m_doorOpenMassage.SetText(L"�ǂ����̔����J�����悤��");
-	m_doorOpenMassage.SetScale(0.35f);
-	m_doorOpenMassage.SetPosition(Vector3(-350.0f, -420.0f, 0.0f));
-	m_doorOpenMassage.SetColor({ 1.0f,1.0f,1.0f,1.0f });
-
-	
 }
 
 Game::~Game()
